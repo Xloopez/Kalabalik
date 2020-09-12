@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.DecelerateInterpolator
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
@@ -70,50 +72,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val strPlayerCurrentCount: String
 
         when(v?.id){
             R.id.btn_continue -> {
 
                 when (counter) {
                     0 -> {
+
                         GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
-                        counter++
-                       // Log.d(TAG, "$counter")
-                        strPlayerCurrentCount = "Enter the name of Player $counter"
-                        clearEditTextForNewInput(
-                            newInputType = InputType.TYPE_CLASS_TEXT,
-                            newInfoStr = strPlayerCurrentCount
-                        )
-                        btnContinue.text = "ADD PLAYER"
-                        //Log.v(TAG, Integer.parseInt(et_input.text.toString()).toString())
+                        increaseCounterByOne()
+                        clearEditTextForNewInput(newInputType = InputType.TYPE_CLASS_TEXT, newInfoStr = "Enter the name of Player $counter")
+                        btnSetText(btnContinue, getString(R.string.add_player))
+
                     }
                     in 1 until GameSettings.playerCount -> {
 
-                        val newPlayer = Player(name = etInput.text.toString())
-                        GameSettings.addPlayerToList(player = newPlayer)
-                        counter++
-                        strPlayerCurrentCount = "Enter the name of Player $counter"
-                        clearEditTextForNewInput(
-                            newInputType = InputType.TYPE_CLASS_TEXT,
-                            newInfoStr = strPlayerCurrentCount
-                        )
+                        addAdditionalPlayer(Player(name = etInput.text.toString()))
+                        increaseCounterByOne()
+                        clearEditTextForNewInput(newInputType = InputType.TYPE_CLASS_TEXT, newInfoStr = "Enter the name of Player $counter")
 
                     }
                     GameSettings.playerCount -> {
 
-                        val newPlayer = Player(name = etInput.text.toString())
-                        GameSettings.addPlayerToList(player = newPlayer)
-                        counter ++
+                        addAdditionalPlayer(Player(name = etInput.text.toString()))
+                        increaseCounterByOne()
                         setViewVisibility(etInput, visible = false)
                         setViewVisibility(tvInputInfo, visible = false)
-                        btnContinue.text = "START GAME"
-
+                        btnSetText(btnContinue, getString(R.string.start_game))
                         animButton(btnContinue)
-                        //Log.v(TAG, "${GameSettings.playerCount}")
-                        GameSettings.listOfPlayers.forEach {
-                            Log.v(TAG, "${it.name}")
-                        }
+
                     }
                     GameSettings.playerCount.plus(1) -> {
                           val intent = Intent(this, GamingActivity::class.java)
@@ -126,8 +113,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun addPlayer(player: Player){
-
+    private fun addAdditionalPlayer(newPlayer: Player){
+        GameSettings.addPlayerToList(player = newPlayer)
+    }
+    private fun btnSetText(btn: AppCompatButton, text: String){
+        btn.text = text
+    }
+    private fun increaseCounterByOne(){
+        counter ++
     }
 
     private fun clearEditTextForNewInput(newInputType: Int, newInfoStr: String){
@@ -138,18 +131,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvInputInfo.text = newInfoStr
     }
 
-    private fun setViewVisibility(view: View, visible: Boolean){
-        when (visible) {
-            true -> {
-                view.visibility = View.VISIBLE
-                //TODO view animation fade in
-                fadeInAnim(view)
-            }
-            false -> {
-                view.visibility = View.INVISIBLE
-                //TODO view-animation fade out
-                fadeOutAnim(view)
-            }
+    private fun setViewVisibility(view: View, visible: Boolean) = when (visible) {
+        true -> {
+            view.visibility = View.VISIBLE
+            //TODO view animation fade in
+            fadeInAnim(view)
+        }
+        false -> {
+            view.visibility = View.INVISIBLE
+            //TODO view-animation fade out
+            fadeOutAnim(view)
         }
     }
 
@@ -185,7 +176,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .scaleYBy(1.5f)
             .start()
 
-
     }
 
 }
+
+//                        GameSettings.listOfPlayers.forEach {
+//                            Log.v(TAG, "${it.name}")
+//                        }
