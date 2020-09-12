@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/kalabalik"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="103dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="16dp"
+        android:background="#A1A9B4"
+        android:backgroundTint="#D08F959E"
+        android:text="Nästa"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amountOfPlayers"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/amountOfPlayers"
+        android:layout_width="304dp"
+        android:layout_height="57dp"
+        android:background="#EEFFFFFF"
+        android:backgroundTint="#EEF6F5F5"
+        android:ems="10"
+        android:hint="Antalet spelare (max 5)"
+        android:inputType="number"
+        android:textColorHint="#C80C0A0A"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
