@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     0 -> {
                         GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
                         counter++
-                        Log.d(TAG, "$counter")
+                       // Log.d(TAG, "$counter")
                         strPlayerCurrentCount = "Enter the name of Player $counter"
                         clearEditTextForNewInput(
                             newInputType = InputType.TYPE_CLASS_TEXT,
@@ -124,6 +124,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    private fun addPlayer(player: Player){
+
     }
 
     private fun clearEditTextForNewInput(newInputType: Int, newInfoStr: String){
