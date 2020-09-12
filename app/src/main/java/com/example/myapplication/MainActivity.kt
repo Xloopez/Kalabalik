@@ -6,6 +6,7 @@ import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.TextView
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
    // val GameSettings: GameSettings? = GameSettings()
    // TODO CLEAN LIST ON START?
+    val animationz = Animationz
 
     private lateinit var tvAppName: AppCompatTextView
     private lateinit var tvInputInfo: AppCompatTextView
@@ -99,10 +101,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         setViewVisibility(etInput, visible = false)
                         setViewVisibility(tvInputInfo, visible = false)
                         btnSetText(btnContinue, getString(R.string.start_game))
-                        animButton(btnContinue)
+                        Animationz.animButton(btnContinue)
 
                     }
                     GameSettings.playerCount.plus(1) -> {
+
                           val intent = Intent(this, GamingActivity::class.java)
                           startActivity(intent)
                           /* FINISH "DELETE" THE ACTIVITY */
@@ -134,49 +137,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun setViewVisibility(view: View, visible: Boolean) = when (visible) {
         true -> {
             view.visibility = View.VISIBLE
-            //TODO view animation fade in
-            fadeInAnim(view)
+            Animationz.fadeInAnim(view)
         }
         false -> {
             view.visibility = View.INVISIBLE
-            //TODO view-animation fade out
-            fadeOutAnim(view)
+            Animationz.fadeOutAnim(view)
         }
     }
 
-
-    fun fadeInAnim(view: View){
-
-        val fadeIn = AlphaAnimation(0f, 1f)
-        fadeIn.apply {
-            interpolator = DecelerateInterpolator()
-            duration = 300
-        }
-        view.animation = fadeIn
-        fadeIn.start()
-
-    }
-
-    fun fadeOutAnim(view: View){
-        val fadeIOut = AlphaAnimation(1f, 0f)
-        fadeIOut.apply {
-            interpolator = DecelerateInterpolator()
-            duration = 300
-        }
-        view.animation = fadeIOut
-        fadeIOut.start()
-    }
-
-    fun animButton(view: View){
-
-        val translateYAmount = (+ view.height + 150f)
-        view.animate()
-            .translationYBy(translateYAmount)
-            .scaleXBy(1.5f)
-            .scaleYBy(1.5f)
-            .start()
-
-    }
 
 }
 
