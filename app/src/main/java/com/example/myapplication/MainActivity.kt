@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     in 1 until GameSettings.playerCount -> {
 
-                        addAdditionalPlayer(Player(name = etInput.text.toString()))
+                        addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                         increaseCounterByOne()
                         inputPlayers.includeCounterValue(count = counter)
                         clearEditTextForNewInput(inputPlayers)
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     GameSettings.playerCount -> {
 
-                        addAdditionalPlayer(Player(name = etInput.text.toString()))
+                        addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                         increaseCounterByOne()
                         setViewVisibility(etInput, visible = false)
                         setViewVisibility(tvInputInfo, visible = false)

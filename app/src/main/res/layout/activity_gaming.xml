@@ -9,34 +9,49 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_title"
         style="@style/TitleViews"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="ROUND .. OUT OF 15"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ROUND .. OUT OF 15" />
 
     <RadioGroup
         android:id="@+id/radioGroup_players"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="5dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title">
-
-    </RadioGroup>
-
-
+        app:layout_constraintTop_toBottomOf="@+id/textView_title"></RadioGroup>
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/InformationTextViewStyle"
         android:id="@+id/textView_gaming_info"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title"
+        style="@style/InformationTextViewStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="INPUT INFORMATION TEXTVIEW"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView_title"
+        tools:text="INPUT INFORMATION TEXTVIEW" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_Fail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="FAIL"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_Success"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SUCCESS"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

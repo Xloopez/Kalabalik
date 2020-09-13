@@ -11,5 +11,8 @@ object GameSettings {
         listOfPlayers.add(player)
     }
 
+    fun getPlayerNameByNum(pNum: Int) : Player? {
+        return listOfPlayers.find { player -> player.playerNum == pNum }
+    }
 
 }
