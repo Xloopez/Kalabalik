@@ -1,8 +1,10 @@
 package com.example.myapplication
 
-class Player(
+class Player
+    (
     var name: String? = "",
-    var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf())
+    var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf()
+    )
 {
 
     fun listAddRoundAndPoints(pair: Pair<Int, Double>){

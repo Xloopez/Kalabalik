@@ -3,54 +3,52 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.AnimationSet
-import android.view.animation.DecelerateInterpolator
-import android.widget.Button
-import android.widget.TextView
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import kotlinx.coroutines.Job
+import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-    private var TAG = this::class.java.simpleName
 
    // val GameSettings: GameSettings? = GameSettings()
    // TODO CLEAN LIST ON START?
     val animationz = Animationz
 
-    private lateinit var tvAppName: AppCompatTextView
+    private lateinit var tvTitle: AppCompatTextView
     private lateinit var tvInputInfo: AppCompatTextView
 
-    private lateinit var etInput: AppCompatEditText
+    private lateinit var etInput: EditText
 
     lateinit var btnContinue: AppCompatButton
     var counter: Int = 0
+    //private lateinit var binding:
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         title = "Kalabalik alltså"
 
+        binding.apply {
         /*TEXT-VIEWS*/
-        tvAppName = findViewById(R.id.tv_app_title)
-        tvInputInfo = findViewById(R.id.tv_input_info)
+            tvTitle = textViewAppTitle
+            tvInputInfo = textViewInputInfo
 
-        /*EDIT-TEXTS*/
-        etInput = findViewById(R.id.et_input)
+            /*EDIT-TEXTS*/
+            etInput = etInput
 
-        /*BUTTONS*/
-        btnContinue = findViewById(R.id.btn_continue)
+            /*BUTTONS*/
+            btnContinue = buttonContinue
+
+        }
 
         /* SET START-TEXT OF TEXTVIEWS */
-        tvAppName.text = "KALABALIK"
+        tvTitle.text = "KALABALIK"
         tvInputInfo.text = "Enter amount of players, 1-5!"
-
 
         /* SET THIS ACTIVITY AS VIEW.ONCLICKLISTENER FOR THE BUTTON */
         btnContinue.setOnClickListener(this)
@@ -76,7 +74,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
 
         when(v?.id){
-            R.id.btn_continue -> {
+            R.id.button_continue -> {
 
                 when (counter) {
                     0 -> {

@@ -6,8 +6,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.forEach
-import androidx.core.view.forEachIndexed
 import androidx.core.view.iterator
 
 class GamingActivity : AppCompatActivity() {
@@ -38,7 +36,6 @@ class GamingActivity : AppCompatActivity() {
         }
 
         addPlayersToRadioGroup()
-
         startRounds()
 
     }
