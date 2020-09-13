@@ -7,7 +7,7 @@
     tools:context=".GamingActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_app_title"
+        android:id="@+id/textView_title"
         style="@style/TitleViews"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,14 +16,14 @@
         />
 
     <RadioGroup
-        android:id="@+id/rg_players"
+        android:id="@+id/radioGroup_players"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_app_title">
+        app:layout_constraintTop_toBottomOf="@+id/textView_title">
 
     </RadioGroup>
 
@@ -31,8 +31,8 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/InformationTextViewStyle"
-        android:id="@+id/tv_gaming_info"
-        app:layout_constraintTop_toBottomOf="@+id/tv_app_title"
+        android:id="@+id/textView_gaming_info"
+        app:layout_constraintTop_toBottomOf="@+id/textView_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="INPUT INFORMATION TEXTVIEW"/>

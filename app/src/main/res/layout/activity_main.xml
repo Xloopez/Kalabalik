@@ -20,7 +20,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/InformationTextViewStyle"
         android:id="@+id/textView_input_info"
-        app:layout_constraintTop_toBottomOf="@+id/tv_app_title"
+        app:layout_constraintTop_toBottomOf="@+id/textView_app_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="INPUT INFORMATION TEXTVIEW"
@@ -39,7 +39,7 @@
         android:textAlignment="center"
         android:inputType="number"
         android:autofillHints=""
-        />
+        tools:ignore="LabelFor" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_continue"

@@ -13,8 +13,7 @@ import com.example.myapplication.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
    // val GameSettings: GameSettings? = GameSettings()
-   // TODO CLEAN LIST ON START?
-    val animationz = Animationz
+   // TODO CLEAN LIST ON RE-START?
 
     private lateinit var tvTitle: AppCompatTextView
     private lateinit var tvInputInfo: AppCompatTextView
@@ -22,10 +21,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var etInput: EditText
 
     lateinit var btnContinue: AppCompatButton
-    var counter: Int = 0
-    //private lateinit var binding:
-    private lateinit var binding: ActivityMainBinding
 
+    var counter: Int = 0
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,18 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         title = "Kalabalik alltså"
 
-        binding.apply {
-        /*TEXT-VIEWS*/
-            tvTitle = textViewAppTitle
-            tvInputInfo = textViewInputInfo
-
-            /*EDIT-TEXTS*/
-            etInput = etInput
-
-            /*BUTTONS*/
-            btnContinue = buttonContinue
-
-        }
+        applyViewBinding()
 
         /* SET START-TEXT OF TEXTVIEWS */
         tvTitle.text = "KALABALIK"
@@ -54,7 +41,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnContinue.setOnClickListener(this)
 
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
-       // setViewVisibility(btnContinue, visible = false)
+        setViewVisibility(btnContinue, visible = false)
 
         /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
         //TODO Min-Length?
@@ -68,7 +55,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //            }
 //        }
 
+    }
 
+    private fun applyViewBinding() {
+        binding.apply {
+
+            /*TEXT-VIEWS*/
+            tvTitle = textViewAppTitle
+            tvInputInfo = textViewInputInfo
+
+            /*EDIT-TEXTS*/
+            etInput = editTextInput
+
+            /*BUTTONS*/
+            btnContinue = buttonContinue
+
+        }
     }
 
     override fun onClick(v: View?) {

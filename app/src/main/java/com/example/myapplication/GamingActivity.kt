@@ -23,10 +23,10 @@ class GamingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_gaming)
         title = "Game started"
 
-        tvTitle = findViewById(R.id.tv_app_title)
-        tvGamingInfo = findViewById(R.id.tv_gaming_info)
+        tvTitle = findViewById(R.id.textView_title)
+        tvGamingInfo = findViewById(R.id.textView_gaming_info)
 
-        rgPlayers = findViewById(R.id.rg_players)
+        rgPlayers = findViewById(R.id.radioGroup_players)
 
         tvTitle.apply {
             text = "Now playing round .. out of 15"
