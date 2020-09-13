@@ -10,9 +10,13 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.example.myapplication.databinding.ActivityMainBinding
 
+const val strEnterName = "Enter the name of Player"
+const val hintAmount = "Amount of players"
+const val hintPlayer = "Player"
+
+
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-   // val GameSettings: GameSettings? = GameSettings()
    // TODO CLEAN LIST ON RE-START?
 
     private lateinit var tvTitle: AppCompatTextView
@@ -20,9 +24,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var etInput: EditText
 
-    lateinit var btnContinue: AppCompatButton
+    private lateinit var btnContinue: AppCompatButton
 
-    var counter: Int = 0
+    private var counter: Int = 0
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,14 +38,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         applyViewBinding()
 
         /* SET START-TEXT OF TEXTVIEWS */
-        tvTitle.text = "KALABALIK"
-        tvInputInfo.text = "Enter amount of players, 1-5!"
+        tvTitle.text = getString(R.string.app_name)
 
         /* SET THIS ACTIVITY AS VIEW.ONCLICKLISTENER FOR THE BUTTON */
         btnContinue.setOnClickListener(this)
 
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
-        setViewVisibility(btnContinue, visible = false)
+        setViewVisibility(btnContinue, visible = true)
+
+        clearEditTextForNewInput(
+            newInputType = InputType.TYPE_CLASS_TEXT,
+            newInfoStr = "Enter amount of players, 2-5!",
+            newHint = "Amount of players"
+        )
 
         /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
         //TODO Min-Length?
@@ -83,7 +92,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
                         increaseCounterByOne()
-                        clearEditTextForNewInput(newInputType = InputType.TYPE_CLASS_TEXT, newInfoStr = "Enter the name of Player $counter")
+                        clearEditTextForNewInput(
+                            newInputType = InputType.TYPE_CLASS_TEXT,
+                            newInfoStr = "$strEnterName $counter",
+                            newHint = "$hintPlayer $counter"
+                        )
                         btnSetText(btnContinue, getString(R.string.add_player))
 
                     }
@@ -91,7 +104,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         addAdditionalPlayer(Player(name = etInput.text.toString()))
                         increaseCounterByOne()
-                        clearEditTextForNewInput(newInputType = InputType.TYPE_CLASS_TEXT, newInfoStr = "Enter the name of Player $counter")
+                        clearEditTextForNewInput(
+                            newInputType = InputType.TYPE_CLASS_TEXT,
+                            newInfoStr = "$strEnterName $counter",
+                            newHint = "$hintPlayer $counter"
+                        )
 
                     }
                     GameSettings.playerCount -> {
@@ -126,9 +143,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         counter ++
     }
 
-    private fun clearEditTextForNewInput(newInputType: Int, newInfoStr: String){
+    private fun clearEditTextForNewInput(newInputType: Int, newInfoStr: String, newHint: String){
         etInput.apply {
             inputType = newInputType
+            hint = newHint
             setText("")
         }
         tvInputInfo.text = newInfoStr
@@ -144,7 +162,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Animationz.fadeOutAnim(view)
         }
     }
-
 
 }
 

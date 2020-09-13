@@ -34,7 +34,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_input_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:hint="EDITTEXT HINT HERE"
         tools:text="EDITTEXT"
         android:textAlignment="center"
         android:inputType="number"
