@@ -15,7 +15,6 @@ const val hintAmount = "Amount of players"
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
    // TODO CLEAN LIST ON RE-START?
-
     private lateinit var tvTitle: AppCompatTextView
     private lateinit var tvInputInfo: AppCompatTextView
 

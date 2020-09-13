@@ -6,7 +6,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.iterator
 
 class GamingActivity : AppCompatActivity() {
 
@@ -57,25 +56,45 @@ class GamingActivity : AppCompatActivity() {
 
     private fun startRounds() {
 
-        for (i in 1..GameSettings.amountOfRounds){
+        val testList0 = arrayListOf("Konsekvens", "Kamp")
+        val testList1 = arrayListOf("Quest1","Quest2","Quest3","Quest4","Quest5")
+        val testList2 = arrayListOf("Kamp1","Kamp2","Kamp3","Kamp4","Kamp5")
 
-                for (p in GameSettings.listOfPlayers) {
-                    for (rb in rgPlayers.iterator()){
-                        val id = rb.id
-                        val rbId = rgPlayers.findViewById<RadioButton>(id)
-                        when(rbId.text == p.name){
-                            true -> {
-                                rbId.isChecked = true
-                            }
-                        }
-                    }
-                    Log.d("A","Now playing round $i out of 15, ${p.name}")
+        val roundsToPlay = GameSettings.amountOfRounds
+        val totalRounds = (roundsToPlay.times(GameSettings.listOfPlayers.count()))
+
+        for (i in 1..totalRounds) {
+
+            when (testList0.random()) {
+                "Konsekvens" -> {
+                    Log.d("!", testList1.random())
+                }
+                "Kamp" -> {
+                    Log.d("!", testList2.random())
                 }
 
-                tvTitle.let {
-                    it.text = "Now playing round $i out of 15"
-                }
+            }
 
         }
+
+
+//                for (p in GameSettings.listOfPlayers) {
+//                    for (rb in rgPlayers.iterator()){
+//                        val id = rb.id
+//                        val rbId = rgPlayers.findViewById<RadioButton>(id)
+//                        when(rbId.text == p.name){
+//                            true -> {
+//                                rbId.isChecked = true
+//                            }
+//                        }
+//                    }
+//                    Log.d("A","Now playing round $i out of 15, ${p.name}")
+//                }
+//
+//                tvTitle.let {
+//                    it.text = "Now playing round $i out of 15"
+//                }
+
+//        }
     }
 }
