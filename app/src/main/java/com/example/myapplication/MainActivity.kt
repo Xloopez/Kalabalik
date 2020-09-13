@@ -10,10 +10,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.example.myapplication.databinding.ActivityMainBinding
 
-const val strEnterName = "Enter the name of Player"
 const val hintAmount = "Amount of players"
-const val hintPlayer = "Player"
-
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -28,6 +25,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private var counter: Int = 0
     private lateinit var binding: ActivityMainBinding
+
+    private val inputNumbers = InputObject(inputType = InputType.TYPE_CLASS_NUMBER, inputHint = "Enter amount of players, 2-5!", infoStr = hintAmount)
+    private val inputPlayers = InputObject(inputType = InputType.TYPE_CLASS_TEXT, inputHint = "", infoStr = "" )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,24 +45,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
         setViewVisibility(btnContinue, visible = true)
-
-        clearEditTextForNewInput(
-            newInputType = InputType.TYPE_CLASS_TEXT,
-            newInfoStr = "Enter amount of players, 2-5!",
-            newHint = "Amount of players"
-        )
+        clearEditTextForNewInput(inputNumbers)
 
         /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
-        //TODO Min-Length?
-//        etInput.doAfterTextChanged {
-//
-//        }
-//        etInput.doOnTextChanged { text, start, count, after ->
-//            when {
-//               count >= 1 -> { setViewVisibility(btnContinue, visible = false) }
-//               else -> { setViewVisibility(btnContinue, visible = true) }
-//            }
-//        }
+        //TODO
 
     }
 
@@ -92,11 +78,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
                         increaseCounterByOne()
-                        clearEditTextForNewInput(
-                            newInputType = InputType.TYPE_CLASS_TEXT,
-                            newInfoStr = "$strEnterName $counter",
-                            newHint = "$hintPlayer $counter"
-                        )
+                        inputPlayers.includeCounterValue(count = counter)
+                        clearEditTextForNewInput(inputPlayers)
                         btnSetText(btnContinue, getString(R.string.add_player))
 
                     }
@@ -104,11 +87,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         addAdditionalPlayer(Player(name = etInput.text.toString()))
                         increaseCounterByOne()
-                        clearEditTextForNewInput(
-                            newInputType = InputType.TYPE_CLASS_TEXT,
-                            newInfoStr = "$strEnterName $counter",
-                            newHint = "$hintPlayer $counter"
-                        )
+                        inputPlayers.includeCounterValue(count = counter)
+                        clearEditTextForNewInput(inputPlayers)
 
                     }
                     GameSettings.playerCount -> {
@@ -143,13 +123,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         counter ++
     }
 
-    private fun clearEditTextForNewInput(newInputType: Int, newInfoStr: String, newHint: String){
+    private fun clearEditTextForNewInput(inputObj: InputObject){
+
         etInput.apply {
-            inputType = newInputType
-            hint = newHint
+                inputType = inputObj.inputType
+                hint = inputObj.inputHint
             setText("")
         }
-        tvInputInfo.text = newInfoStr
+        tvInputInfo.text = inputObj.infoStr
     }
 
     private fun setViewVisibility(view: View, visible: Boolean) = when (visible) {
@@ -163,8 +144,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-}
+    class InputObject(var inputType: Int, var inputHint: String, var infoStr: String){
 
-//                        GameSettings.listOfPlayers.forEach {
-//                            Log.v(TAG, "${it.name}")
-//                        }
+        private val strEnterName = "Enter the name of Player"
+        private val hintPlayer = "Player"
+
+        fun includeCounterValue(count: Int){
+            inputHint = "$hintPlayer $count"
+            infoStr = "$strEnterName $count"
+        }
+    }
+}
