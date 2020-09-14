@@ -2,4 +2,6 @@
     <string name="app_name">KALABALIK</string>
     <string name="add_player">ADD PLAYER</string>
     <string name="start_game">START GAME</string>
+    <string name="now_playing_round">Now playing round %d out of %d</string>
+
 </resources>

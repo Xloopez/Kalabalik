@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title"></RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_gaming_info"
