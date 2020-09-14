@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ class GamingActivity : AppCompatActivity() {
     private var pCount = GameSettings.playerCount
     private var currRound = 1
     private var currTurn = 1
+    private var totalRounds = GameSettings.amountOfRounds
 
     private var newTitle: String = ""
 
@@ -50,26 +52,37 @@ class GamingActivity : AppCompatActivity() {
         }
 
         addPlayersToRadioGroup()
+        activatePlayerRadioBtn(currTurn)
 
         btnSuccess.setOnClickListener {
             var cPlayer = GameSettings.getPlayerNameByNum(currTurn)
-            //println("${cPlayer?.name.toString()}, ${randomizeCard()}")
-            var newCard = randomizeCard()
+
+            val newCard = randomizeCard()
             tvGamingInfo.text = newCard
             nextPlayerTurn()
+            activatePlayerRadioBtn(playerNum = cPlayer?.playerNum)
 
-            when(currTurn > pCount){
-                true ->  {
-                    currTurn = 1
-                    nextRound()
-                    newTitle = "Now playing round $currRound out of 15"
-                    tvTitle.text = newTitle
+            when(currRound){
+                in 1..totalRounds -> {
+
+                    Log.d("!", "Round $currRound - Turn $currTurn")
+
+                    when(currTurn == pCount){
+                        true ->  {
+                            currTurn = 0
+                            nextRound()
+                            newTitle = "Now playing round $currRound out of 15"
+                            tvTitle.text = newTitle
+                        }
+                    }
                 }
+                totalRounds.plus(1) -> {
+                    Log.d("!", "GAME ENDED")
+                }
+
             }
+
         }
-
-        //startRounds()
-
     }
 
     private fun addPlayersToRadioGroup() {
@@ -80,11 +93,17 @@ class GamingActivity : AppCompatActivity() {
             rb.apply {
                 text = p.name
                 isClickable = false
+                tag = p.playerNum
             }
             rgPlayers.addView(rb)
 
         }
 
+    }
+
+    private fun activatePlayerRadioBtn(playerNum: Int?){
+        val v = rgPlayers.findViewWithTag<RadioButton>(playerNum).id
+        rgPlayers.check(v)
     }
 
     private fun nextPlayerTurn(){

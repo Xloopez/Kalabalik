@@ -15,4 +15,8 @@ object GameSettings {
         return listOfPlayers.find { player -> player.playerNum == pNum }
     }
 
+    fun totalRounds(): Int {
+        return (amountOfRounds.times(playerCount))
+    }
+
 }
