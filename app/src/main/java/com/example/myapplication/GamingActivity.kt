@@ -69,7 +69,6 @@ class GamingActivity : AppCompatActivity() {
                 in 1..totalRounds -> {
 
                     Log.d("!", "Round $currRound - Turn $currTurn")
-
                     when (currRound) {
                         totalRounds -> {
                             /* MAX ROUNDS REACHED, PLAYER 1 HAS STARTED */
