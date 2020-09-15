@@ -10,17 +10,18 @@ import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_player.*
 
 class PlayerActivity : AppCompatActivity() {
+    lateinit var playerAmount: EditText
     lateinit var playerName: EditText
     lateinit var buttonStartG: Button
+    var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-
+        playerAmount = findViewById(R.id.personName1)
         buttonStartG = findViewById(R.id.buttonStartGame)
         buttonStartG.setOnClickListener{
-            playerNames()
         }
 
     }

@@ -8,14 +8,6 @@ object GameSettings {
     var listOfPlayers: MutableList<String> = mutableListOf()
 
     fun addPlayerToList(player: String){
-
-
-        for (i in 0 until playerCount) {
-            listOfPlayers.add(player + "$i")
-        }
-
-
-
-
+            listOfPlayers.add(player)
     }
 }

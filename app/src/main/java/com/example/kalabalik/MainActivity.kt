@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         //playerAmount = findViewById(R.id.amountOfPlayers)
         buttonNext = findViewById(R.id.buttonNext)
 
-
         buttonNext.setOnClickListener{
             buttonNextPage()
         }
@@ -34,29 +33,4 @@ class MainActivity : AppCompatActivity() {
         //intent.putExtra("amount", amount)
         startActivity(intent)
     }
-
-    /*override fun onClick(v: View?) {
-
-        when(v?.id) {
-            R.id.buttonNext -> {
-
-                when (counter) {
-                    0 -> {
-                        GameSettings.playerCount = Integer.parseInt(playerAmount.text.toString())
-                        increaseCounterByOne()
-                    }
-                    in 1 until GameSettings.playerCount -> {
-                        var playerNames = findViewById<>(R.)
-
-                    }
-
-
-
-                }
-            }
-        }
-    }
-    fun increaseCounterByOne(){
-        counter++
-    }*/
 }
