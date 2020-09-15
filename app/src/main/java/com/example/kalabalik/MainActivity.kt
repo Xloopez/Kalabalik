@@ -3,51 +3,60 @@ package com.example.kalabalik
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var amountOfPlayers: EditText
+    lateinit var playerAmount: EditText
     lateinit var buttonNext: Button
+    //var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        amountOfPlayers = findViewById(R.id.amountOfPlayers)
+        //playerAmount = findViewById(R.id.amountOfPlayers)
         buttonNext = findViewById(R.id.buttonNext)
+
 
         buttonNext.setOnClickListener{
             buttonNextPage()
         }
     }
     fun buttonNextPage(){
-        val amount = amountOfPlayers.text.toString().toInt()
+        playerAmount = findViewById(R.id.amountOfPlayers)
+        GameSettings.playerCount = playerAmount.text.toString().toInt()
+
         //När next button klickas kommer vi till nästa vy
-        val intent = Intent(this, PlayerNames::class.java)
-        intent.putExtra("amount", amount)
+        val intent = Intent(this, PlayerActivity::class.java)
+        //intent.putExtra("amount", amount)
         startActivity(intent)
     }
 
-   /* override fun onClick(v: View?) {
-        when(amountOfPlayers?.id) {
+    /*override fun onClick(v: View?) {
+
+        when(v?.id) {
             R.id.buttonNext -> {
-                Log.d("!!!", "BUTTON KLICKED")
+
+                when (counter) {
+                    0 -> {
+                        GameSettings.playerCount = Integer.parseInt(playerAmount.text.toString())
+                        increaseCounterByOne()
+                    }
+                    in 1 until GameSettings.playerCount -> {
+                        var playerNames = findViewById<>(R.)
+
+                    }
+
+
+
+                }
             }
-            amountOfPlayers.apply {
-                inputType = InputType.TYPE_CLASS_TEXT
-                setText("")
-            }*/
-        //}
-    //}
-
-
-
-
+        }
+    }
+    fun increaseCounterByOne(){
+        counter++
+    }*/
 }
