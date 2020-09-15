@@ -11,8 +11,9 @@ object GameSettings {
         listOfPlayers.add(player)
     }
 
-    fun getPlayerNameByNum(pNum: Int) : Player? {
-        return listOfPlayers.find { player -> player.playerNum == pNum }
+    fun getPlayerNameByNum(pNum: Int) : Player {
+        //return listOfPlayers.find { player -> player.playerNum == pNum }
+        return listOfPlayers[pNum]
     }
 
     fun totalRounds(): Int {
