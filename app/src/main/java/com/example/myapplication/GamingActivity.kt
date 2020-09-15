@@ -1,15 +1,14 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
+import com.example.myapplication.databinding.ActivityGamingBinding
 
 class GamingActivity : AppCompatActivity() {
 
@@ -20,14 +19,17 @@ class GamingActivity : AppCompatActivity() {
 
     private lateinit var btnSuccess: AppCompatButton
 
-    private val testList0 = arrayListOf("Konsekvens", "Kamp")
-    private val testList1 = arrayListOf("Konsekvens1","Konsekvens2","Konsekvens3","Konsekvens4","Konsekvens5")
-    private val testList2 = arrayListOf("Kamp1","Kamp2","Kamp3","Kamp4","Kamp5")
+
+    private val testList0 by lazy { resources.getStringArray(R.array.ConsequencesOrBattle) }
+    private val testList1 by lazy { resources.getStringArray(R.array.Consequences) }
+    private val testList2  by lazy { resources.getStringArray(R.array.Battle) }
 
     private var pCount = GameSettings.playerCount
     private var currRound = 1
     private var currTurn = 1
     private var totalRounds = GameSettings.amountOfRounds
+
+    private lateinit var binding: ActivityGamingBinding
 
     private var newTitle: String = ""
 
@@ -36,15 +38,10 @@ class GamingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gaming)
+        binding = ActivityGamingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         title = "Game started"
-
-        tvTitle = findViewById(R.id.textView_title)
-        tvGamingInfo = findViewById(R.id.textView_gaming_info)
-
-        rgPlayers = findViewById(R.id.radioGroup_players)
-
-        btnSuccess = findViewById(R.id.button_Success)
+        setUpViews()
 
         newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
         tvTitle.apply {
@@ -55,50 +52,82 @@ class GamingActivity : AppCompatActivity() {
         }
 
         addPlayersToRadioGroup()
-//        activatePlayerRadioBtn(currTurn)
+        activatePlayerRadioBtn(currTurn)
 
         btnSuccess.setOnClickListener {
 
-            val newCard = randomizeCard()
-            tvGamingInfo.text = newCard
-            nextPlayerTurn()
-            val cPlayer = GameSettings.getPlayerNameByNum(currTurn)
-            activatePlayerRadioBtn(playerNum = cPlayer!!.playerNum)
+            when(endGame()){
+                true -> {
+                   //TODO start next activity
+                    Log.d("!", "GAME ENDED")
+                    btnSuccess.visibility = View.GONE
+                }
+                false -> {
 
-            when(currRound){
-                in 1..totalRounds -> {
+                    nextPlayerTurn()
 
-                    Log.d("!", "Round $currRound - Turn $currTurn - Player ${cPlayer.name}")
-                    when (currRound) {
-                        totalRounds -> {
-                            /* MAX ROUNDS REACHED, PLAYER 1 HAS STARTED */
-                            when (cPlayer.playerNum) {
-                                1 -> {
-                                    //TODO DISPLAY FINAL ROUND ANIMATION
-                                    Log.d("!", "FINAL ROUND")
+                    val cPlayer = GameSettings.getPlayerNameByNum(currTurn)
+                    activatePlayerRadioBtn(playerNum = cPlayer!!.playerNum)
+
+                    when(currRound){
+                        in 1..totalRounds -> {
+
+                            Log.d("!", "Round $currRound - Turn $currTurn - Player ${cPlayer.name}")
+
+                            /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED */
+                            when(lastRoundAndPlayerOne(cPlayer = cPlayer)){
+                                true -> {
+                                     //TODO DISPLAY FINAL ROUND STRING AND ANIMATE
+                                     Log.d("!", "FINAL ROUND")
+                                }
+                            }
+
+                            when(currTurn == pCount){
+                                true ->  {
+                                    currTurn = 0
+                                    nextRound()
+//                                  newTitle = "Now playing round $currRound out of 15"
+                                    newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
+                                    tvTitle.text = newTitle
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+    }
 
-                    when(currTurn == pCount){
-                        true ->  {
-                            currTurn = 0
-                            nextRound()
-//                          newTitle = "Now playing round $currRound out of 15"
-                            newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
-                            tvTitle.text = newTitle
-                        }
+    private fun lastRoundAndPlayerOne(cPlayer: Player): Boolean {
+        when (currRound) {
+            totalRounds -> {
+                when (cPlayer.playerNum) {
+                    1 -> {
+                        return true
                     }
                 }
-                totalRounds.plus(1) -> {
-                    //TODO PUT IN OUTER WHEN FUNCTION TO END GAME
-                    Log.d("!", "GAME ENDED")
-                    btnSuccess.visibility = View.GONE
-                }
-
             }
+        }
+        return false
+    }
 
+    private fun endGame(): Boolean = when (currRound) {
+        totalRounds.plus(1) -> true
+        else -> false
+    }
+
+    private fun setUpViews(){
+
+        binding.apply {
+            /* TEXTVIEWS */
+            tvTitle = textViewTitle
+            tvGamingInfo = textViewGamingInfo
+
+            /* RADIOGROUPS */
+            rgPlayers = radioGroupPlayers
+
+            /* BUTTONS */
+            btnSuccess = buttonSuccess
         }
     }
 
@@ -119,13 +148,15 @@ class GamingActivity : AppCompatActivity() {
     }
 
     private fun activatePlayerRadioBtn(playerNum: Int){
-        val v = rgPlayers.findViewWithTag<AppCompatRadioButton>(playerNum)
-        Log.d("!", "Pnum $playerNum")
-        v.isChecked = true
+        //Log.d("!", "Pnum $playerNum")
+        val rdBtn = rgPlayers.findViewWithTag<AppCompatRadioButton>(playerNum)
+        rdBtn.isChecked = true
     }
 
     private fun nextPlayerTurn(){
         currTurn++
+        val newCard = randomizeCard()
+        tvGamingInfo.text = newCard
     }
 
     private fun nextRound(){
@@ -133,8 +164,8 @@ class GamingActivity : AppCompatActivity() {
     }
 
     private fun randomizeCard() = when (testList0.random()) {
-        "Konsekvens" ->  testList1.random()
-        "Kamp" ->  testList2.random()
+        "Consequences" ->  testList1.random()
+        "Battle" ->  testList2.random()
         else -> ""
     }
 

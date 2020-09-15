@@ -8,6 +8,7 @@
     android:layout_margin="10dp"
     tools:context=".MainActivity">
 
+
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TitleViews"
         android:id="@+id/textView_app_title"

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ConsequencesOrBattle">
+        <item>Consequences</item>
+        <item>Battle</item>
+    </string-array>
+
+    <string-array name="Consequences">
+        <item>K1</item>
+        <item>K2</item>
+        <item>K3</item>
+        <item>K4</item>
+        <item>K5</item>
+    </string-array>
+
+    <string-array name="Battle">
+        <item>B1</item>
+        <item>B2</item>
+        <item>B3</item>
+        <item>B4</item>
+        <item>B5</item>
+    </string-array>
+
+</resources>
