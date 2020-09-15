@@ -19,15 +19,15 @@ class GamingActivity : AppCompatActivity() {
 
     private lateinit var btnSuccess: AppCompatButton
 
-
     private val testList0 by lazy { resources.getStringArray(R.array.ConsequencesOrBattle) }
     private val testList1 by lazy { resources.getStringArray(R.array.Consequences) }
-    private val testList2  by lazy { resources.getStringArray(R.array.Battle) }
+    private val testList2 by lazy { resources.getStringArray(R.array.Battle) }
 
     private var pCount = GameSettings.playerCount
     private var currRound = 1
     private var currTurn = 1
     private var totalRounds = GameSettings.amountOfRounds
+    private lateinit var currPlayer: Player
 
     private lateinit var binding: ActivityGamingBinding
 
@@ -64,23 +64,16 @@ class GamingActivity : AppCompatActivity() {
                     nextPlayerTurn()
                     val newCard = randomizeCard() // new Card
                     tvGamingInfo.text = newCard // new Card
-                    val cPlayer = GameSettings.getPlayerNameByNum(currTurn -1)
-                    activatePlayerRadioBtn(playerNum = cPlayer.playerNum)
-                    Log.d("!", "Round $currRound - Turn $currTurn - Player ${cPlayer.playerNum} ")
+                    currPlayer = GameSettings.getPlayerNameByNum(currTurn - 1)
+                    activatePlayerRadioBtn(playerNum = currPlayer.playerNum)
+                    Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")
 
                     /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
-                    when (currRound) {
-                        totalRounds -> {
-                            when (cPlayer.playerNum) {
-                                1 -> {
-                                    Log.d("!", "FINAL ROUND")
-                                }
-                            }
-                        }
-                    }
 
-                    when(currTurn == pCount){
-                        true ->  {
+                    isFinalRound()
+
+                    when (currTurn == pCount) {
+                        true -> {
                             currTurn = 0
                             nextRound()
 //                          newTitle = "Now playing round $currRound out of 15"
@@ -95,6 +88,18 @@ class GamingActivity : AppCompatActivity() {
                 }
             }
 
+        }
+    }
+
+    private fun isFinalRound() {
+        when (currRound) {
+            totalRounds -> {
+                when (currPlayer.playerNum) {
+                    1 -> {
+                        Log.d("!", "FINAL ROUND")
+                    }
+                }
+            }
         }
     }
 
