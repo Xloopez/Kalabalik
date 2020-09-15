@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         //När next button klickas kommer vi till nästa vy
         val intent = Intent(this, PlayerActivity::class.java)
-        //intent.putExtra("amount", amount)
+        intent.putExtra("amount", amount)
         startActivity(intent)
     }
 }
