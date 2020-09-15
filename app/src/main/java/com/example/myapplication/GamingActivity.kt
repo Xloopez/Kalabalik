@@ -50,15 +50,30 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         setUpViews()
         addPlayersToRadioGroup()
         nextPlayerTurn()
-//        currPlayer = GameSettings.getPlayerNameByNum(currTurn)
-//        activatePlayerRadioBtn(currTurn)
-//        updateTitleView()
+        updateTitleView()
 
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
 
+    }
 
 
+    private fun setUpViews(){
+
+        binding.apply {
+
+            /* TEXTVIEWS */
+            tvTitle = textViewTitle
+            tvGamingInfo = textViewGamingInfo
+
+            /* RADIOGROUPS */
+            rgPlayers = radioGroupPlayers
+
+            /* BUTTONS */
+            btnSuccess = buttonSuccess
+            btnFail = buttonFail
+
+        }
     }
 
     private fun isFinalRound() {
@@ -70,22 +85,6 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
-        }
-    }
-
-    private fun setUpViews(){
-
-        binding.apply {
-            /* TEXTVIEWS */
-            tvTitle = textViewTitle
-            tvGamingInfo = textViewGamingInfo
-
-            /* RADIOGROUPS */
-            rgPlayers = radioGroupPlayers
-
-            /* BUTTONS */
-            btnSuccess = buttonSuccess
-            btnFail = buttonFail
         }
     }
 
@@ -102,7 +101,6 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
             rgPlayers.addView(rb)
 
         }
-
     }
 
     private fun activatePlayerRadioBtn(playerNum: Int){
@@ -112,20 +110,19 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun nextPlayerTurn(){
         currTurn++
-        val newCard = randomizeCard() // new Card
-        tvGamingInfo.text = newCard // new Card
-        currPlayer = GameSettings.getPlayerNameByNum(currTurn - 1)
-        activatePlayerRadioBtn(playerNum = currPlayer.playerNum)
+        val newCard = randomizeCard() /* Generate new random card */
+        tvGamingInfo.text = newCard /* Update card-info */
+        currPlayer = GameSettings.getPlayerNameByNum(currTurn - 1) /* Find(PlayerNum - 1) because of viewIndex starts from 0 */
+        activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG search from(currPlayer) */
     }
-    // TODO EDIT
 
-      private fun updateTitleView(){
-          newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
-          tvTitle.text = newTitle
-      }
+    private fun updateTitleView(){
+      newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
+      tvTitle.text = newTitle
+    }
 
     private fun nextRound(){
-        currTurn = 0
+        currTurn = 0 /* Reset to 0 when new round, btnClick adds 1 directly = Turn 1 on round start */
         currRound++
     }
 
@@ -139,9 +136,11 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.button_Success -> {
                 doNext(OPERATION.SUCCESS)
+                Log.d("!", "SUCCESSFUL")
             }
             R.id.button_Fail -> {
                 doNext(OPERATION.FAIL)
+                Log.d("!", "UNSUCCESSFUL")
             }
         }
 
@@ -181,14 +180,12 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
                 Log.d("!", "GAME ENDED")
 
                 for(p in GameSettings.listOfPlayers){
-                    Log.d("!", "${p.name} ${p.sumPointsFromListPair()}")
+                    Log.d("!", "${p.name} ${p.listOfRoundAndPoints}")
                 }
 
                 btnSuccess.visibility = View.GONE
             }
         }
     }
-
-
 
 }
