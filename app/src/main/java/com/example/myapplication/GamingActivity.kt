@@ -69,7 +69,7 @@ class GamingActivity : AppCompatActivity() {
                     Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")
 
                     /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
-
+//
                     isFinalRound()
 
                     when (currTurn == pCount) {
