@@ -151,6 +151,7 @@ class GamingActivity : AppCompatActivity() {
         //Log.d("!", "Pnum $playerNum")
         val rdBtn = rgPlayers.findViewWithTag<AppCompatRadioButton>(playerNum)
         rdBtn.isChecked = true
+        ///ª
     }
 
     private fun nextPlayerTurn(){
