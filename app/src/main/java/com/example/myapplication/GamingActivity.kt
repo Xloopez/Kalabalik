@@ -148,6 +148,12 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun doNext(operation: OPERATION) {
 
+        when (currTurn == pCount) {
+            true -> {
+                nextRound()
+            }
+        }
+
         when (operation) {
             OPERATION.SUCCESS -> {
                 currPlayer.listOfRoundAndPoints.add(Pair(currRound, 2.0))
@@ -167,13 +173,6 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
                 /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
                 isFinalRound()
-
-                /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
-                when (currTurn == pCount) {
-                    true -> {
-                        nextRound()
-                    }
-                }
             }
             totalRounds.plus(1) -> {
                 //TODO start next activity
