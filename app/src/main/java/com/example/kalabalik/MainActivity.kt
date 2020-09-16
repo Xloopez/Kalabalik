@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //playerAmount = findViewById(R.id.amountOfPlayers)
+        playerAmount = findViewById(R.id.amountOfPlayers)
         buttonNext = findViewById(R.id.buttonNext)
 
         buttonNext.setOnClickListener{
@@ -25,12 +25,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
     fun buttonNextPage(){
-        playerAmount = findViewById(R.id.amountOfPlayers)
         GameSettings.playerCount = playerAmount.text.toString().toInt()
 
         //När next button klickas kommer vi till nästa vy
         val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("amount", amount)
+        //intent.putExtra("amount", playerAmount)
         startActivity(intent)
     }
 }

@@ -15,7 +15,7 @@
         android:background="#F1EDED"
         android:backgroundTint="#EDFFFFFF"
         android:ems="10"
-        android:hint="Namn 1"
+        android:hint="Spelare 1"
         android:inputType="textPersonName"
         android:textColorHint="#BA050505"
         android:textSize="24sp"
@@ -25,13 +25,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonStartGame"
+        android:id="@+id/buttonNextName"
         android:layout_width="176dp"
         android:layout_height="64dp"
         android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:backgroundTint="#C8A0A7B2"
-        android:text="Starta Spelet"
+        android:text="Nästa"
         android:textSize="24sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
