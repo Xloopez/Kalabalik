@@ -50,7 +50,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         setUpViews()
         addPlayersToRadioGroup()
         nextPlayerTurn()
-        currPlayer = GameSettings.listOfPlayers[currTurn -1]
+        //currPlayer = GameSettings.listOfPlayers[currTurn -1]
         updateTitleView()
 
         btnSuccess.setOnClickListener(this)
@@ -113,8 +113,8 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         currTurn++
         val newCard = randomizeCard() /* Generate new random card */
         tvGamingInfo.text = newCard /* Update card-info */
-        currPlayer = GameSettings.getPlayerNameByNum(currTurn - 1) /* Find(PlayerNum - 1) because of viewIndex starts from 0 */
-        activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG search from(currPlayer) */
+        currPlayer = GameSettings.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.  */
+        activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
     }
 
     private fun updateTitleView(){
@@ -185,6 +185,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
                 }
 
                 btnSuccess.visibility = View.GONE
+                btnFail.visibility = View.GONE
             }
         }
     }

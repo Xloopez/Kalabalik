@@ -7,19 +7,21 @@
     </string-array>
 
     <string-array name="Consequences">
-        <item>K1</item>
-        <item>K2</item>
-        <item>K3</item>
-        <item>K4</item>
-        <item>K5</item>
+        <item>Ät en matsked majonnäs.+3</item>
+        <item>Viska resten av spelet.+4</item>
+        <item>Ta och posta en selfie med mat mellan tänderna.+5</item>
+        <item>Upprepa den förra konsekvensen som utfördes.+2</item>
+        <item>Svälj en tesked kanel.+4</item>
+        <item>Låt en valfri spelare rita något du inte vet vad det är på ditt ansikte.+3</item>
     </string-array>
 
     <string-array name="Battle">
-        <item>B1</item>
-        <item>B2</item>
-        <item>B3</item>
-        <item>B4</item>
-        <item>B5</item>
+        <item>Stå på ett ben, sätt dig på en stol och ställ dig upp på ett ben igen. Du får inte använda händerna. +1</item>
+        <item>Rör dina fingrar bakom ryggen, med ena armen över huvudet och andra underifrån. +1</item>
+        <item>Stå upp, lyft en stol och håll den framför dig med raka armar tills det är din tur igen. +2</item>
+        <item>Lägg detta kort på huvudet och gå baklänges runt bordet. Kortet får inte falla innan du satt dig. +2</item>
+        <item>Läs upp alfabetet baklänges. Vid varje fel får du börja från början. Du har 3 försök. +3</item>
+        <item>Plocka upp din telefon från golvet med din fot och lägg den på bordet. Du har ett försök. +2</item>
     </string-array>
 
 </resources>
