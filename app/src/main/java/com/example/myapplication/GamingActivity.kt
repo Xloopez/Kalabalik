@@ -50,6 +50,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         setUpViews()
         addPlayersToRadioGroup()
         nextPlayerTurn()
+        currPlayer = GameSettings.listOfPlayers[currTurn -1]
         updateTitleView()
 
         btnSuccess.setOnClickListener(this)
@@ -148,18 +149,18 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun doNext(operation: OPERATION) {
 
-        when (currTurn == pCount) {
-            true -> {
-                nextRound()
-            }
-        }
-
         when (operation) {
             OPERATION.SUCCESS -> {
                 currPlayer.listOfRoundAndPoints.add(Pair(currRound, 2.0))
             }
             OPERATION.FAIL -> {
                 currPlayer.listOfRoundAndPoints.add(Pair(currRound, -1.0))
+            }
+        }
+
+        when (currTurn == pCount) {
+            true -> {
+                nextRound()
             }
         }
 
@@ -175,6 +176,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
                 isFinalRound()
             }
             totalRounds.plus(1) -> {
+
                 //TODO start next activity
                 Log.d("!", "GAME ENDED")
 
