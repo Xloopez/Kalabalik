@@ -1,5 +1,6 @@
 package com.example.kalabalik
 
+import android.content.Intent
 import android.location.GnssMeasurement
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,44 +13,48 @@ import kotlinx.android.synthetic.main.activity_player.*
 class PlayerActivity : AppCompatActivity() {
     lateinit var playerAmount: EditText
     lateinit var playerName: EditText
-    lateinit var buttonStartG: Button
-    var counter = 0
+    lateinit var buttonAddName: Button
+    var counter = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        playerAmount = findViewById(R.id.personName1)
-        buttonStartG = findViewById(R.id.buttonStartGame)
-        buttonStartG.setOnClickListener{
+        playerName = findViewById(R.id.personName1)
+        buttonAddName = findViewById(R.id.buttonNextName)
+
+        buttonAddName.setOnClickListener{
+            onClick()
         }
 
     }
 
+    fun onClick() {
+        var  name = playerName.text.toString()
 
-
-    override fun onClick(v: View?) {
-
-        when(v?.id) {
-            R.id.buttonNext -> {
-
-                when (counter) {
-                    0 -> {
-                        GameSettings.playerCount = Integer.parseInt(playerAmount.text.toString())
-                        increaseCounterByOne()
+        when (counter){
+                in 1 until GameSettings.playerCount -> {
+                    GameSettings.addPlayerToList(name)
+                    increaseCounterByOne()
+                    playerName.text.clear()
+                    playerName.setHint("Spelare $counter")
+                    when (counter){
+                        GameSettings.playerCount -> buttonNextName.setText(R.string.button_start_game)  //buttonNextName.setText("Starta spelet")
                     }
-                    in 1 until GameSettings.playerCount -> {
-                        var playerNames = findViewById<>(R.)
-
-                    }
-
-
-
+                }
+                GameSettings.playerCount -> {
+                    GameSettings.addPlayerToList(name)
+                    increaseCounterByOne()
+                    val intent = Intent(this, GameActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }
-    }
+
     fun increaseCounterByOne(){
         counter++
     }
+
+
+
 }
