@@ -13,29 +13,36 @@ import com.example.myapplication.databinding.ActivityGamingBinding
 class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var tvTitle: AppCompatTextView
-    private lateinit var tvGamingInfo: AppCompatTextView
+    private lateinit var tvCard: AppCompatTextView
 
     private lateinit var rgPlayers: RadioGroup
 
     private lateinit var btnSuccess: AppCompatButton
     private lateinit var btnFail: AppCompatButton
 
-    private val testList0 by lazy { resources.getStringArray(R.array.ConsequencesOrBattle) }
-    private val testList1 by lazy { resources.getStringArray(R.array.Consequences) }
-    private val testList2 by lazy { resources.getStringArray(R.array.Battle) }
+    private val testList0 = EnumRandom.values()
+    private val listOfConsequences by lazy { resources.getStringArray(R.array.Consequences) }
+    private val listOfMissions by lazy { resources.getStringArray(R.array.Mission) }
+    private val listOfConsequencesPoints by lazy { resources.getIntArray(R.array.ConsequencesPoints) }
+    private val listOfMissionsPoints by lazy { resources.getIntArray(R.array.MissionPoints) }
 
     private var pCount = GameSettings.playerCount
     private var currRound = 1
     private var currTurn = 0
     private var totalRounds = GameSettings.amountOfRounds
+    private var pointsToAdd = 0
     private lateinit var currPlayer: Player
 
     private lateinit var binding: ActivityGamingBinding
 
     private var newTitle: String = ""
 
-    private enum class OPERATION {
+    private enum class EnOperation {
         SUCCESS, FAIL;
+    }
+
+    private enum class EnumRandom {
+        CONSEQUENCES, MISSION;
     }
 
     //TODO Button Cancel before done? Show final score?
@@ -65,7 +72,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
             /* TEXTVIEWS */
             tvTitle = textViewTitle
-            tvGamingInfo = textViewGamingInfo
+            tvCard = textViewGamingInfo
 
             /* RADIOGROUPS */
             rgPlayers = radioGroupPlayers
@@ -112,7 +119,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     private fun nextPlayerTurn(){
         currTurn++
         val newCard = randomizeCard() /* Generate new random card */
-        tvGamingInfo.text = newCard /* Update card-info */
+        tvCard.text = newCard /* Update card-info */
         currPlayer = GameSettings.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.  */
         activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
     }
@@ -128,32 +135,42 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun randomizeCard() = when (testList0.random()) {
-        "Consequences" ->  testList1.random()
-        "Battle" ->  testList2.random()
-        else -> ""
+        EnumRandom.CONSEQUENCES -> {
+
+            val r = (0 until listOfConsequences.count()).random()
+            pointsToAdd = listOfConsequencesPoints[r]
+            Log.d("!", "$r Con: $pointsToAdd")
+            listOfConsequences[r]
+        }
+        EnumRandom.MISSION -> {
+            val r = (0 until listOfMissions.count()).random()
+            pointsToAdd = listOfMissionsPoints[r]
+            Log.d("!", "$r Miss: $pointsToAdd")
+            listOfMissions[r]
+        }
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_Success -> {
-                doNext(OPERATION.SUCCESS)
+                doNext(EnOperation.SUCCESS)
                 //Log.d("!", "SUCCESSFUL")
             }
             R.id.button_Fail -> {
-                doNext(OPERATION.FAIL)
+                doNext(EnOperation.FAIL)
                 //Log.d("!", "UNSUCCESSFUL")
             }
         }
 
     }
 
-    private fun doNext(operation: OPERATION) {
+    private fun doNext(operation: EnOperation) {
 
         when (operation) {
-            OPERATION.SUCCESS -> {
+            EnOperation.SUCCESS -> {
                 currPlayer.listOfRoundAndPoints.add(Pair(currRound, 2.0))
             }
-            OPERATION.FAIL -> {
+            EnOperation.FAIL -> {
                 currPlayer.listOfRoundAndPoints.add(Pair(currRound, -1.0))
             }
         }
@@ -169,6 +186,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
                 isFinalRound()
                 nextPlayerTurn()
+                Animationz.animatorSetFadeOutIn(tvCard)
                 updateTitleView()
 
                 Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")

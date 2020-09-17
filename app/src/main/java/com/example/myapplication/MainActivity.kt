@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val inputNumbers = InputObject(inputType = InputType.TYPE_CLASS_NUMBER, inputHint = "Enter amount of players, 2-5!", infoStr = hintAmount)
     private val inputPlayers = InputObject(inputType = InputType.TYPE_CLASS_TEXT, inputHint = "", infoStr = "" )
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,7 +45,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnContinue.setOnClickListener(this)
 
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
-        setViewVisibility(btnContinue, visible = true)
+        //setViewVisibility(btnContinue, visible = true)
+        Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
         clearEditTextForNewInput(inputNumbers)
 
         /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
@@ -94,8 +97,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                         increaseCounterByOne()
-                        setViewVisibility(etInput, visible = false)
-                        setViewVisibility(tvInputInfo, visible = false)
+                        Util.setViewVisibilityFadeInOut(etInput, visible = false)
+                        Util.setViewVisibilityFadeInOut(tvInputInfo, visible = false)
                         btnSetText(btnContinue, getString(R.string.start_game))
                         Animationz.animButton(btnContinue)
 
@@ -130,17 +133,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             setText("")
         }
         tvInputInfo.text = inputObj.infoStr
-    }
-
-    private fun setViewVisibility(view: View, visible: Boolean) = when (visible) {
-        true -> {
-            view.visibility = View.VISIBLE
-            Animationz.fadeInAnim(view)
-        }
-        false -> {
-            view.visibility = View.INVISIBLE
-            Animationz.fadeOutAnim(view)
-        }
     }
 
     class InputObject(var inputType: Int, var inputHint: String, var infoStr: String){
