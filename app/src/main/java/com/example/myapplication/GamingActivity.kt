@@ -137,11 +137,11 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.button_Success -> {
                 doNext(OPERATION.SUCCESS)
-                Log.d("!", "SUCCESSFUL")
+                //Log.d("!", "SUCCESSFUL")
             }
             R.id.button_Fail -> {
                 doNext(OPERATION.FAIL)
-                Log.d("!", "UNSUCCESSFUL")
+                //Log.d("!", "UNSUCCESSFUL")
             }
         }
 
@@ -167,13 +167,14 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         when (currRound) {
             in 1..totalRounds -> {
 
+                isFinalRound()
                 nextPlayerTurn()
                 updateTitleView()
 
                 Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")
 
                 /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
-                isFinalRound()
+
             }
             totalRounds.plus(1) -> {
 
