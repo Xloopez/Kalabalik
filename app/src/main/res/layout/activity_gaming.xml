@@ -27,10 +27,19 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_gaming_info"
         style="@style/InformationTextViewStyle"
+        android:background="@android:color/white"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title"
-        tools:text="INPUT INFORMATION TEXTVIEW" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+        tools:text="INPUT INFORMATION TEXTVIEW"
+
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_Fail"
@@ -39,7 +48,7 @@
         android:text="FAIL"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -50,8 +59,22 @@
         android:text="SUCCESS"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="90dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="640dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
