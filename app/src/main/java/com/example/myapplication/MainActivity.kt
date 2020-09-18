@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
@@ -25,10 +26,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var counter: Int = 0
     private lateinit var binding: ActivityMainBinding
 
-    private val inputNumbers = InputObject(inputType = InputType.TYPE_CLASS_NUMBER, inputHint = "Enter amount of players, 2-5!", infoStr = hintAmount)
-    private val inputPlayers = InputObject(inputType = InputType.TYPE_CLASS_TEXT, inputHint = "", infoStr = "" )
-
-
+    private val inputNumbers = InputObject(
+        inputType = InputType.TYPE_CLASS_NUMBER,
+        inputHint = "Enter amount of players, 2-5!",
+        infoStr = hintAmount,
+        arrayOfMinMaxVal = (2..5)
+    )
+    private val inputPlayers = InputObject(
+        inputType = InputType.TYPE_CLASS_TEXT,
+        inputHint = "",
+        infoStr = "",
+        arrayOfMinMaxChar = (3..10)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,14 +137,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun clearEditTextForNewInput(inputObj: InputObject){
 
         etInput.apply {
-                inputType = inputObj.inputType
-                hint = inputObj.inputHint
+            inputType = inputObj.inputType
+            hint = inputObj.inputHint
             setText("")
         }
         tvInputInfo.text = inputObj.infoStr
+
+
     }
 
-    class InputObject(var inputType: Int, var inputHint: String, var infoStr: String){
+    class InputObject(
+        var inputType: Int,
+        var inputHint: String,
+        var infoStr: String,
+        var arrayOfMinMaxVal: IntRange? = null,
+        var arrayOfMinMaxChar: IntRange? = null
+        ){
 
         private val strEnterName = "Enter the name of Player"
         private val hintPlayer = "Player"

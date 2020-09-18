@@ -1,13 +1,18 @@
 package com.example.myapplication
 
+import android.graphics.Color
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.iterator
 import com.example.myapplication.databinding.ActivityGamingBinding
 
 class GamingActivity : AppCompatActivity(), View.OnClickListener {
@@ -20,7 +25,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var btnSuccess: AppCompatButton
     private lateinit var btnFail: AppCompatButton
 
-    private val testList0 = EnumRandom.values()
+    private val testList0 = EnRandom.values()
     private val listOfConsequences by lazy { resources.getStringArray(R.array.Consequences) }
     private val listOfMissions by lazy { resources.getStringArray(R.array.Mission) }
     private val listOfConsequencesPoints by lazy { resources.getIntArray(R.array.ConsequencesPoints) }
@@ -30,7 +35,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     private var currRound = 1
     private var currTurn = 0
     private var totalRounds = GameSettings.amountOfRounds
-    private var pointsToAdd = 0
+    private var pointsToAdd: Double = 0.0
     private lateinit var currPlayer: Player
 
     private lateinit var binding: ActivityGamingBinding
@@ -41,7 +46,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         SUCCESS, FAIL;
     }
 
-    private enum class EnumRandom {
+    private enum class EnRandom {
         CONSEQUENCES, MISSION;
     }
 
@@ -57,14 +62,12 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         setUpViews()
         addPlayersToRadioGroup()
         nextPlayerTurn()
-        //currPlayer = GameSettings.listOfPlayers[currTurn -1]
         updateTitleView()
 
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
 
     }
-
 
     private fun setUpViews(){
 
@@ -89,6 +92,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
             totalRounds -> {
                 when (currPlayer.playerNum) {
                     1 -> {
+                        //TODO SHOW FINAL ROUND ANIMATION
                         Log.d("!", "FINAL ROUND")
                     }
                 }
@@ -99,12 +103,31 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     private fun addPlayersToRadioGroup() {
 
         GameSettings.listOfPlayers.forEach { p ->
-
-            val rb = AppCompatRadioButton(this)
+            val themeWrapper = ContextThemeWrapper(this, R.style.RadioButtonStyle)
+            val rb = AppCompatRadioButton(themeWrapper)
             rb.apply {
                 text = p.name
                 isClickable = false
                 tag = p.playerNum
+                buttonDrawable = StateListDrawable()
+                setOnCheckedChangeListener { compoundButton, b ->
+                    when(b){
+                        true -> {
+                            compoundButton.apply {
+                                setBackgroundColor(Color.DKGRAY)
+                                textSize = 16f
+                                setTextColor(Color.WHITE)
+                            }
+                        }
+                        false -> {
+                            compoundButton.apply {
+                                setBackgroundColor(Color.TRANSPARENT)
+                                textSize = 12f
+                                setTextColor(Color.BLACK)
+                            }
+                        }
+                    }
+                }
             }
             rgPlayers.addView(rb)
 
@@ -114,7 +137,29 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     private fun activatePlayerRadioBtn(playerNum: Int){
         val rdBtn = rgPlayers.findViewWithTag<AppCompatRadioButton>(playerNum)
         rdBtn.isChecked = true
+//        enhanceRadioButtonActive()
     }
+
+//    private fun enhanceRadioButtonActive() {
+//
+//        for(rb in rgPlayers.iterator()){
+//            when(rb){
+//                is AppCompatRadioButton -> {
+//                    rb.apply {
+//                        when(rb.isChecked){
+//                            true -> {
+//                                setBackgroundColor(Color.MAGENTA)
+//                            }
+//                            false -> {
+//                                setBackgroundColor(Color.TRANSPARENT)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
     private fun nextPlayerTurn(){
         currTurn++
@@ -124,28 +169,28 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
     }
 
-    private fun updateTitleView(){
-      newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
-      tvTitle.text = newTitle
-    }
-
     private fun nextRound(){
         currTurn = 0 /* Reset to 0 when new round, btnClick adds 1 directly = Turn 1 on round start */
         currRound++
     }
 
+    private fun updateTitleView(){
+        newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
+        tvTitle.text = newTitle
+    }
+
     private fun randomizeCard() = when (testList0.random()) {
-        EnumRandom.CONSEQUENCES -> {
+        EnRandom.CONSEQUENCES -> {
 
             val r = (0 until listOfConsequences.count()).random()
-            pointsToAdd = listOfConsequencesPoints[r]
-            Log.d("!", "$r Con: $pointsToAdd")
+            pointsToAdd = listOfConsequencesPoints[r].toDouble()
+            //Log.d("!", "$r Con: $pointsToAdd")
             listOfConsequences[r]
         }
-        EnumRandom.MISSION -> {
+        EnRandom.MISSION -> {
             val r = (0 until listOfMissions.count()).random()
-            pointsToAdd = listOfMissionsPoints[r]
-            Log.d("!", "$r Miss: $pointsToAdd")
+            pointsToAdd = listOfMissionsPoints[r].toDouble()
+            //Log.d("!", "$r Miss: $pointsToAdd")
             listOfMissions[r]
         }
     }
@@ -154,11 +199,9 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.button_Success -> {
                 doNext(EnOperation.SUCCESS)
-                //Log.d("!", "SUCCESSFUL")
             }
             R.id.button_Fail -> {
                 doNext(EnOperation.FAIL)
-                //Log.d("!", "UNSUCCESSFUL")
             }
         }
 
@@ -166,18 +209,26 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun doNext(operation: EnOperation) {
 
-        when (operation) {
-            EnOperation.SUCCESS -> {
-                currPlayer.listOfRoundAndPoints.add(Pair(currRound, 2.0))
+        currPlayer.listAddRoundAndPoints(
+             when (operation) {
+                EnOperation.SUCCESS -> { Pair(currRound, pointsToAdd) }
+                EnOperation.FAIL -> { Pair(currRound, -1.0) }
             }
-            EnOperation.FAIL -> {
-                currPlayer.listOfRoundAndPoints.add(Pair(currRound, -1.0))
-            }
-        }
+        )
+
+//        when (operation) {
+//            EnOperation.SUCCESS -> {
+//                currPlayer.listOfRoundAndPoints.add(Pair(currRound, pointsToAdd))
+//            }
+//            EnOperation.FAIL -> {
+//                currPlayer.listOfRoundAndPoints.add(Pair(currRound, -1.0))
+//            }
+//        }
 
         when (currTurn == pCount) {
             true -> {
                 nextRound()
+                updateTitleView()
             }
         }
 
@@ -187,11 +238,9 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
                 isFinalRound()
                 nextPlayerTurn()
                 Animationz.animatorSetFadeOutIn(tvCard)
-                updateTitleView()
+
 
                 Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")
-
-                /* CHECK LAST ROUND REACHED AND PLAYER 1 HAS STARTED (move check first) */
 
             }
             totalRounds.plus(1) -> {
