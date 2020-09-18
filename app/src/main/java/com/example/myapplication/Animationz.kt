@@ -4,8 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 
 
@@ -50,7 +48,7 @@ object Animationz {
 
     }
 
-    fun animatorSetFadeOutIn(view: View) {
+    fun slideOutRightSlideInLeft(view: View) {
 
         val list = mutableListOf(slideOutRight(view), slideInLeft(view))
 

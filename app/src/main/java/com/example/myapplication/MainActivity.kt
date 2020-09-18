@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.doOnTextChanged
 import com.example.myapplication.databinding.ActivityMainBinding
 
 const val hintAmount = "Amount of players"
@@ -26,17 +28,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var counter: Int = 0
     private lateinit var binding: ActivityMainBinding
 
+    private val playerRangeNum = (2..5)
+
     private val inputNumbers = InputObject(
         inputType = InputType.TYPE_CLASS_NUMBER,
         inputHint = "Enter amount of players, 2-5!",
         infoStr = hintAmount,
-        arrayOfMinMaxVal = (2..5)
     )
     private val inputPlayers = InputObject(
         inputType = InputType.TYPE_CLASS_TEXT,
         inputHint = "",
         infoStr = "",
-        arrayOfMinMaxChar = (3..10)
+       // arrayOfMinMaxChar = (3..10)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +59,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
         //setViewVisibility(btnContinue, visible = true)
         Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
-        clearEditTextForNewInput(inputNumbers)
-
+        clearEditTextForNewInput(inputObj = inputNumbers)
+        
         /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
-        //TODO
+        etInput.doOnTextChanged { text, start, before, count ->
 
+            var b = false
+
+            if (count >= 1) {
+                when (etInput.inputType) {
+                    InputType.TYPE_CLASS_TEXT -> {
+                        Log.d("!", "Text $count")
+                        //TODO FUNCTION() checkValidText()
+                        //TODO SET ERROR TEXT
+                        //TODO CHANGE BOOLEAN TO SHOW BTN
+                    }
+                    InputType.TYPE_CLASS_NUMBER -> {
+                        Log.d("!", "Number $count")
+                        checkValidNumber(charSequence = text)
+                        //TODO SET ERROR TEXT
+                        //TODO CHANGE BOOLEAN TO SHOW BTN
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkValidNumber(charSequence: CharSequence?){
+        try {
+            when(val parseNum = Integer.parseInt(charSequence.toString())){
+                in playerRangeNum -> {
+                    Log.d("!", "CORRECT NUMBER $parseNum")
+                }
+                else -> {
+                    Log.d("!", "INCORRECT - NUMBER NOT IN RANGE $parseNum")
+                }
+            }
+        }catch (e: Exception){
+            Log.d("!", "Number: $e")
+        }
     }
 
     private fun applyViewBinding() {
@@ -80,46 +117,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-
         when(v?.id){
-            R.id.button_continue -> {
+            R.id.button_continue -> { doNext() }
+        }
+    }
+    
+    private fun doNext(){
+        when (counter) {
+            0 -> {
 
-                when (counter) {
-                    0 -> {
+                GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
+                increaseCounterByOne()
+                inputPlayers.includeCounterValue(count = counter)
+                clearEditTextForNewInput(inputPlayers)
+                btnSetText(btnContinue, getString(R.string.add_player))
 
-                        GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
-                        increaseCounterByOne()
-                        inputPlayers.includeCounterValue(count = counter)
-                        clearEditTextForNewInput(inputPlayers)
-                        btnSetText(btnContinue, getString(R.string.add_player))
+            }
+            in 1 until GameSettings.playerCount -> {
 
-                    }
-                    in 1 until GameSettings.playerCount -> {
+                addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
+                increaseCounterByOne()
+                inputPlayers.includeCounterValue(count = counter)
+                clearEditTextForNewInput(inputPlayers)
 
-                        addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
-                        increaseCounterByOne()
-                        inputPlayers.includeCounterValue(count = counter)
-                        clearEditTextForNewInput(inputPlayers)
+            }
+            GameSettings.playerCount -> {
 
-                    }
-                    GameSettings.playerCount -> {
+                addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
+                increaseCounterByOne()
+                Util.setViewVisibilityFadeInOut(etInput, visible = false)
+                Util.setViewVisibilityFadeInOut(tvInputInfo, visible = false)
+                btnSetText(btnContinue, getString(R.string.start_game))
+                Animationz.animButton(btnContinue)
 
-                        addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
-                        increaseCounterByOne()
-                        Util.setViewVisibilityFadeInOut(etInput, visible = false)
-                        Util.setViewVisibilityFadeInOut(tvInputInfo, visible = false)
-                        btnSetText(btnContinue, getString(R.string.start_game))
-                        Animationz.animButton(btnContinue)
-
-                    }
-                    GameSettings.playerCount.plus(1) -> {
-
-                          val intent = Intent(this, GamingActivity::class.java)
-                          startActivity(intent)
-                          /* FINISH "DELETE" THE ACTIVITY */
-                          this.finish()
-                    }
-                }
+            }
+            GameSettings.playerCount.plus(1) -> {
+                
+                startActivity(Intent(this, GamingActivity::class.java))
+                this.finish() /* FINISH "DELETE" THE ACTIVITY */
+                
             }
         }
     }
@@ -127,9 +163,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun addAdditionalPlayer(newPlayer: Player){
         GameSettings.addPlayerToList(player = newPlayer)
     }
+    
     private fun btnSetText(btn: AppCompatButton, text: String){
         btn.text = text
     }
+    
     private fun increaseCounterByOne(){
         counter ++
     }
@@ -142,16 +180,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             setText("")
         }
         tvInputInfo.text = inputObj.infoStr
-
-
+        
     }
 
     class InputObject(
         var inputType: Int,
         var inputHint: String,
-        var infoStr: String,
-        var arrayOfMinMaxVal: IntRange? = null,
-        var arrayOfMinMaxChar: IntRange? = null
+        var infoStr: String
         ){
 
         private val strEnterName = "Enter the name of Player"
