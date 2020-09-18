@@ -26,4 +26,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playerNameTurn" />
+
+    <TextView
+        android:id="@+id/card_Front"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="Front Card"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNextPlayerTurn" />
+
+    <TextView
+        android:id="@+id/card_back"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:alpha="0"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="Back Card"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNextPlayerTurn"
+        app:layout_constraintVertical_bias="0.849" />
 </androidx.constraintlayout.widget.ConstraintLayout>
