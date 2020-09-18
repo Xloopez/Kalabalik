@@ -63,7 +63,6 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun applyViewBinding(){
-
         binding.apply {
 
             /* TEXTVIEWS */
@@ -81,6 +80,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isFinalRound(): Boolean = (currRound == totalRounds) && (currPlayer.playerNum == 1)
+
     private fun displayFinalRoundStarted(){
         Log.d("!", "Final Round")
     }

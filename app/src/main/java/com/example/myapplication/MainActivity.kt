@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         //TODO FUNCTION() checkValidText()
                         //TODO SET ERROR TEXT
                         //TODO CHANGE BOOLEAN TO SHOW BTN
+
                     }
                     InputType.TYPE_CLASS_NUMBER -> {
                         Log.d("!", "Number $count")
