@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
 import android.view.View
@@ -28,7 +27,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var counter: Int = 0
     private lateinit var binding: ActivityMainBinding
 
-    private val playerRangeNum = (2..5)
+    private val playerAmountNumRange = (2..5)
+    private val playerNameMinMaxLength = (3..10)
 
     private val inputNumbers = InputObject(
         inputType = InputType.TYPE_CLASS_NUMBER,
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         //TODO FUNCTION() checkValidText()
                         //TODO SET ERROR TEXT
                         //TODO CHANGE BOOLEAN TO SHOW BTN
+                        checkValidTextLength(start, before)
 
                     }
                     InputType.TYPE_CLASS_NUMBER -> {
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun checkValidNumber(charSequence: CharSequence?){
         try {
             when(val parseNum = Integer.parseInt(charSequence.toString())){
-                in playerRangeNum -> {
+                in playerAmountNumRange -> {
                     Log.d("!", "CORRECT NUMBER $parseNum")
                 }
                 else -> {
@@ -99,6 +100,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }catch (e: Exception){
             Log.d("!", "Number: $e")
         }
+    }
+
+    private fun checkValidTextLength(start: Int, end: Int){
+
+        if(start >= playerNameMinMaxLength.first && end <= playerNameMinMaxLength.last){
+            Log.d("!", "VALID TEXT LENGTH")
+        }else{
+            Log.d("!", "INVALID TEXT LENGTH")
+        }
+
     }
 
     private fun applyViewBinding() {
