@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
         clearEditTextForNewInput(inputObj = inputNumbers)
         
-        /* TEXT-WATCHER TO CHECK FOR CHANGES, DISPLAY BUTTON IF CERTAIN CRITERIA IS MET  */
+        /* TEXT-WATCHER TO CHECK FOR CHANGES, DISPLAY BUTTON IF CERTAIN CRITERIA IS MET   */
         etInput.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 Log.d("!", "$count")
