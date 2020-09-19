@@ -17,23 +17,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
+        sharedViewModel.apply {
+            amountOfRounds.postValue(3)
+        }
+
         sharedViewModel.currentFragmentPos.observe(this, {
             when (it) {
-                0 -> {
-                    newFragmentInstance(GameInputFragment(), "GameInput", false)
-                }
-                1 -> {
-                    newFragmentInstance(GamingFragment(), "Gaming", true)
-                }
-                2 -> {
-                   // newFragmentInstanceNoBStackMain(GamingFragment(), "Score", true)
-                }
+                0 ->  newFragmentInstance(GameInputFragment(), "GameInput", false)
+                1 ->  newFragmentInstance(GamingFragment(), "Gaming", true)
+                2 ->  newFragmentInstance(GameScoreFragment(), "Score", true)
             }
 
         })
-
-
-
 
     }
 
@@ -58,6 +53,5 @@ class MainActivity : AppCompatActivity() {
         }.commit()
 
     }
-
 
 }

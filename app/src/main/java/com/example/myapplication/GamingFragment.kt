@@ -19,6 +19,8 @@ import com.example.myapplication.databinding.FragmentGamingBinding
 class GamingFragment : Fragment(), View.OnClickListener {
 
     lateinit var sharedViewModel: SharedViewModel
+    lateinit var gamingViewModel: GamingViewModel
+
     private var _binding: FragmentGamingBinding? = null
     private val binding get() = _binding!!
 
@@ -36,24 +38,33 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private val listOfConsequencesPoints by lazy { resources.getIntArray(R.array.ConsequencesPoints) }
     private val listOfMissionsPoints by lazy { resources.getIntArray(R.array.MissionPoints) }
 
-    private var pCount = GameSettings.playerCount
-    private var totalRounds = GameSettings.amountOfRounds
-    private var currRound = 1
+    private var pCount = 0
+    private var maxRounds = 0
+    private var currRound = 0
     private var currTurn = 0
     private var pointsToAdd: Double = 0.0
+    private var currentCardType: String = ""
+    private var totalRounds = 0
 
     private lateinit var currPlayer: Player
 
     private var newTitle: String = ""
 
     private enum class EnOperation { SUCCESS, FAIL; }
-    private enum class EnRandom { CONSEQUENCES, MISSION; }
+    private enum class EnRandom { CONSEQUENCES, MISSION;
 
-    //TODO Button Cancel before done? Show final score?
+        fun getEnumString(): String = when(this) {
+            CONSEQUENCES -> "Consequence"
+            MISSION -> "Mission"
+        }
+    }
+
+    //TODO Button Cancel before done? Show final score?3
     //TODO Override backbutton?
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        gamingViewModel =  ViewModelProvider(this).get(GamingViewModel::class.java) // SCOPE TO ACTIVITY? MAYBE..
         _binding = FragmentGamingBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -66,8 +77,55 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnFail.setOnClickListener(this)
 
         addPlayersToRadioGroup()
-        nextPlayerTurn()
+
+        pCount =  sharedViewModel.playerCount.value!!
+        maxRounds = sharedViewModel.amountOfRounds.value!!
+        totalRounds = maxRounds.times(pCount)
+
+        gamingViewModel.currentTurn.value = gamingViewModel.currentTurn.value?.plus(1)
+        Log.d("!", "TOTALROUNDS: ${totalRounds}")
         titleViewUpdateRounds()
+
+        gamingViewModel.currentTurn.observe(this, {
+            currTurn = it
+            titleViewUpdateRounds()
+            if(isFinalRound()){ displayFinalRoundStarted() }
+            when (currTurn == pCount.plus(1)) {
+                true -> {
+                    nextRound()
+                }
+                false ->  {
+                    nextPlayerTurn()
+                }
+            }
+
+        })
+
+        gamingViewModel.currentRound.observe(this, {
+            currRound = it
+
+            Log.d("!", "oCurrRound: $currRound oCurrTurn: $currTurn")
+            Log.d("!", "CURRENT ROUND TIMES TURN: ${currRound*currTurn}")
+
+            when ((currRound * currTurn) == (totalRounds + maxRounds)) {
+                true -> {
+
+                    logScores()
+                    //TODO DISPLAY BUTTON GO TO SCORES
+                    sharedViewModel.currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
+                   // tvTitle.text = "GAME ENDED"
+                   // btnSuccess.visibility = View.GONE
+                   // btnFail.visibility = View.GONE
+
+                }
+                false -> {
+                    nextRoundStart()
+                }
+
+            }
+
+        })
+
     }
 
     private fun applyViewBinding(){
@@ -87,15 +145,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun isFinalRound(): Boolean = (currRound == totalRounds) && (currPlayer.playerNum == 1)
-
-    private fun displayFinalRoundStarted(){
-        Log.d("!", "Final Round")
-    }
-
     private fun addPlayersToRadioGroup() {
 
-        GameSettings.listOfPlayers.forEach { p ->
+        sharedViewModel.listOfPlayers.forEach { p ->
 
             val themeWrapper = ContextThemeWrapper(requireActivity(), R.style.RadioButtonStyle)
             val rb = AppCompatRadioButton(themeWrapper)
@@ -133,29 +185,52 @@ class GamingFragment : Fragment(), View.OnClickListener {
         rdBtn.isChecked = true
     }
 
+    private fun nextRoundStart() {
+        gamingViewModel.currentTurn.postValue(1)
+    }
+    private fun nextRound() {
+        gamingViewModel.currentRound.postValue(gamingViewModel.currentRound.value?.plus(1))
+    }
+
+    private fun logScores() {
+        for (p in sharedViewModel.listOfPlayers) {
+            Log.d("!", "${p.name} ${p.listOfRoundAndPoints}")
+        }
+    }
+
+    private fun isFinalRound(): Boolean = (currRound == maxRounds) && (currPlayer.playerNum == 1)
+
+    private fun displayFinalRoundStarted(){
+        Log.d("!", "Final Round")
+    }
+
     private fun nextPlayerTurn(){
-        currTurn++
         val newCard = randomizeCard() /* Generate new random card */
-        tvCard.text = newCard /* Update card-info */
-        currPlayer = GameSettings.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.  */
+        Animationz.slideOutRightSlideInLeft(tvCard)
+
+        val strBuilder = StringBuilder().apply {
+            append(currentCardType)
+            appendLine()
+            append(newCard)
+        }
+
+        tvCard.text = strBuilder /* Update card-info */
+        currPlayer = sharedViewModel.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.  */
         activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
     }
 
-    private fun nextRound(){
-        currTurn = 0 /* Reset to 0 when new round, btnClick adds 1 directly = Turn 1 on round start */
-        currRound++
-    }
 
     private fun titleViewUpdateRounds(){
-        newTitle = getString(R.string.now_playing_round, currRound, totalRounds)
+        newTitle = getString(R.string.now_playing_round, (currRound +1), maxRounds)
         tvTitle.text = newTitle
     }
 
-    private fun randomizeCard() = when (arrayOfEnRandoms.random()) {
+    private fun randomizeCard() = when (val ran = arrayOfEnRandoms.random()) {
         EnRandom.CONSEQUENCES -> {
 
             val r = (0 until listOfConsequences.count()).random()
             pointsToAdd = listOfConsequencesPoints[r].toDouble()
+            currentCardType = ran.getEnumString()
             //Log.d("!", "$r Con: $pointsToAdd")
             listOfConsequences[r]
 
@@ -164,6 +239,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
             val r = (0 until listOfMissions.count()).random()
             pointsToAdd = listOfMissionsPoints[r].toDouble()
+            currentCardType = ran.getEnumString()
             //Log.d("!", "$r Miss: $pointsToAdd")
             listOfMissions[r]
 
@@ -178,40 +254,17 @@ class GamingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun doNext(operation: EnOperation) {
+        updatePlayerPoints(operation)
+        gamingViewModel.currentTurn.postValue(gamingViewModel.currentTurn.value?.plus(1))
+    }
 
+    private fun updatePlayerPoints(operation: EnOperation) {
         currPlayer.listAddRoundAndPoints(
-             when (operation) {
+            when (operation) {
                 EnOperation.SUCCESS -> Pair(currRound, pointsToAdd)
                 EnOperation.FAIL -> Pair(currRound, -1.0)
             }
         )
-
-        when (currTurn == pCount) {
-            true -> {
-                nextRound()
-                titleViewUpdateRounds()
-            }
-        }
-
-        when (currRound) {
-            in 1..totalRounds -> {
-
-                nextPlayerTurn()
-                when(isFinalRound()) { true -> displayFinalRoundStarted() }
-                Animationz.slideOutRightSlideInLeft(tvCard)
-                Log.d("!", "Round $currRound - Turn $currTurn - Player ${currPlayer.playerNum} ")
-
-            }
-            totalRounds.plus(1) -> {
-                //TODO start next activity
-                Log.d("!", "GAME ENDED")
-//                for(p in GameSettings.listOfPlayers){
-//                    Log.d("!", "${p.name} ${p.listOfRoundAndPoints}")
-//                }
-                btnSuccess.visibility = View.GONE
-                btnFail.visibility = View.GONE
-            }
-        }
     }
 
 }

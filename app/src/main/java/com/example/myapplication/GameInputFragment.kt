@@ -1,9 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,10 +33,12 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
     private var bVisible = false
 
+    private var playerCount = 0
+
     private val inputNumbers = InputObject(
         inputType = InputType.TYPE_CLASS_NUMBER,
-        inputHint = getString(R.string.enter_amount_of_players_2_5),
-        infoStr = getString(R.string.amount_of_players),
+        inputHint = "Enter amount of players, 2-5!",
+        infoStr = "Amount of players",
     )
 
     private val inputPlayers = InputObject(
@@ -57,7 +57,8 @@ class GameInputFragment: Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
-    /* SET START-TEXT OF TEXTVIEWS */
+
+        /* SET START-TEXT OF TEXTVIEWS */
         tvTitle.text = getString(R.string.app_name)
 
         /* SET THIS ACTIVITY AS VIEW.ONCLICKLISTENER FOR THE BUTTON */
@@ -68,33 +69,37 @@ class GameInputFragment: Fragment(), View.OnClickListener {
         Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
         clearEditTextForNewInput(inputObj = inputNumbers)
 
-        /* TEXT-WATCHER TO CHECK FOR CHANGES, DISPLAY BUTTON IF CERTAIN CRITERIA IS MET   */
-        etInput.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.d("!", "$count")
-                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible) //ENABLE DISABLE BUTTON ANIM
-            }
-
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-
-                bVisible = false
-
-                if (charSequence.toString().isNotEmpty()) {
-                    when (etInput.inputType) {
-                        InputType.TYPE_CLASS_TEXT -> {
-                            when(checkValidTextLength(charSequence)) {true -> { bVisible = true} }
-                        }
-                        InputType.TYPE_CLASS_NUMBER -> {
-                            when(checkValidNumber(charSequence)) {true -> { bVisible = true} }
-                        }
-                    }
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
-            }
+        sharedViewModel.playerCount.observe(this, {
+            playerCount = it
         })
+
+        /* TEXT-WATCHER TO CHECK FOR CHANGES, DISPLAY BUTTON IF CERTAIN CRITERIA IS MET   */
+//        etInput.addTextChangedListener(object: TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//                Log.d("!", "$count")
+//                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible) //ENABLE DISABLE BUTTON ANIM
+//            }
+//
+//            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+//
+//                bVisible = false
+//
+//                if (charSequence.toString().isNotEmpty()) {
+//                    when (etInput.inputType) {
+//                        InputType.TYPE_CLASS_TEXT -> {
+//                            when(checkValidTextLength(charSequence)) {true -> { bVisible = true} }
+//                        }
+//                        InputType.TYPE_CLASS_NUMBER -> {
+//                            when(checkValidNumber(charSequence)) {true -> { bVisible = true} }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
+//            }
+//        })
     }
 
     private fun checkValidNumber(charSequence: CharSequence?): Boolean =
@@ -154,10 +159,11 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     }
 
     private fun doNext(){
+
         when (counter) {
             0 -> {
 
-                GameSettings.playerCount = Integer.parseInt(etInput.text.toString())
+                sharedViewModel.playerCount.postValue(Integer.parseInt(etInput.text.toString()))
                 increaseCounterByOne()
                 inputPlayers.includeCounterValue(count = counter)
                 clearEditTextForNewInput(inputPlayers)
@@ -165,7 +171,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 btnSetText(btnContinue, getString(R.string.add_player))
 
             }
-            in 1 until GameSettings.playerCount -> {
+            in 1 until playerCount -> {
 
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
@@ -174,7 +180,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 clearEditTextForNewInput(inputPlayers)
 
             }
-            GameSettings.playerCount -> {
+            playerCount -> {
 
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
@@ -184,7 +190,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 Animationz.animButton(btnContinue)
 
             }
-            GameSettings.playerCount.plus(1) -> {
+            playerCount.plus(1) -> {
 
                 sharedViewModel.currentFragmentPos.postValue(1)
 
@@ -193,7 +199,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     }
 
     private fun addAdditionalPlayer(newPlayer: Player){
-        GameSettings.addPlayerToList(player = newPlayer)
+        sharedViewModel.addPlayerToList(player = newPlayer)
     }
 
     private fun btnSetText(btn: AppCompatButton, text: String){

@@ -2,7 +2,7 @@ package com.example.myapplication
 
 class Player(
     var name: String,
-    private var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf(),
+    var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf(),
     var playerNum: Int,
     )
 {

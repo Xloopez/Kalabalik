@@ -5,12 +5,20 @@ import androidx.lifecycle.ViewModel
 
 class SharedViewModel: ViewModel() {
 
-    var playerCount: Int = 0
-    var amountOfRounds: Int = 3 //15
+    var playerCount = MutableLiveData<Int>().apply {
+        value = 0
+    }
+    var amountOfRounds = MutableLiveData<Int>().apply {
+        value = 3
+    }
     var listOfPlayers = mutableListOf<Player>()
 
     var currentFragmentPos= MutableLiveData<Int>().apply {
         value = 0
+    }
+
+    fun addPlayerToList(player: Player){
+        listOfPlayers.add(player)
     }
 
 }
