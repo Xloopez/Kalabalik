@@ -215,7 +215,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
 
         tvCard.text = strBuilder /* Update card-info */
-        currPlayer = sharedViewModel.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.  */
+        currPlayer = sharedViewModel.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.   */
         activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
     }
 
