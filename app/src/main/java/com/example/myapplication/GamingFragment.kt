@@ -4,16 +4,23 @@ import android.graphics.Color
 import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
-import com.example.myapplication.databinding.ActivityGamingBinding
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.databinding.FragmentGamingBinding
 
-class GamingActivity : AppCompatActivity(), View.OnClickListener {
+class GamingFragment : Fragment(), View.OnClickListener {
+
+    lateinit var sharedViewModel: SharedViewModel
+    private var _binding: FragmentGamingBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tvTitle: AppCompatTextView
     private lateinit var tvCard: AppCompatTextView
@@ -22,8 +29,6 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var btnSuccess: AppCompatButton
     private lateinit var btnFail: AppCompatButton
-
-    private lateinit var binding: ActivityGamingBinding
 
     private val arrayOfEnRandoms = EnRandom.values()
     private val listOfConsequences by lazy { resources.getStringArray(R.array.Consequences) }
@@ -47,12 +52,15 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
     //TODO Button Cancel before done? Show final score?
     //TODO Override backbutton?
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        _binding = FragmentGamingBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-        super.onCreate(savedInstanceState)
-        binding = ActivityGamingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        title = "Game started"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         applyViewBinding()
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
@@ -89,7 +97,7 @@ class GamingActivity : AppCompatActivity(), View.OnClickListener {
 
         GameSettings.listOfPlayers.forEach { p ->
 
-            val themeWrapper = ContextThemeWrapper(this, R.style.RadioButtonStyle)
+            val themeWrapper = ContextThemeWrapper(requireActivity(), R.style.RadioButtonStyle)
             val rb = AppCompatRadioButton(themeWrapper)
 
             rb.apply {
