@@ -2,14 +2,15 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.doOnTextChanged
 import com.example.myapplication.databinding.ActivityMainBinding
 
 const val hintAmount = "Amount of players"
@@ -30,16 +31,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val playerAmountNumRange = (2..5)
     private val playerNameMinMaxLength = (3..10)
 
+    private var bVisible = false
+
     private val inputNumbers = InputObject(
         inputType = InputType.TYPE_CLASS_NUMBER,
         inputHint = "Enter amount of players, 2-5!",
         infoStr = hintAmount,
     )
+
     private val inputPlayers = InputObject(
         inputType = InputType.TYPE_CLASS_TEXT,
         inputHint = "",
         infoStr = "",
-       // arrayOfMinMaxChar = (3..10)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,56 +64,68 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
         clearEditTextForNewInput(inputObj = inputNumbers)
         
-        /* CHECK IF INPUT LENGTH/COUNT IS ABOVE A CERTAIN COUNT, 0 AT THE MOMENT */
-        etInput.doOnTextChanged { text, start, before, count ->
+        /* TEXT-WATCHER TO CHECK FOR CHANGES, DISPLAY BUTTON IF CERTAIN CRITERIA IS MET  */
+        etInput.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Log.d("!", "$count")
+                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible) //ENABLE DISABLE BUTTON ANIM
+            }
 
-            var b = false
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
 
-            if (count >= 1) {
-                when (etInput.inputType) {
-                    InputType.TYPE_CLASS_TEXT -> {
-                        Log.d("!", "Text $count")
-                        //TODO FUNCTION() checkValidText()
-                        //TODO SET ERROR TEXT
-                        //TODO CHANGE BOOLEAN TO SHOW BTN
-                        checkValidTextLength(start, before)
+                bVisible = false
 
-                    }
-                    InputType.TYPE_CLASS_NUMBER -> {
-                        Log.d("!", "Number $count")
-                        checkValidNumber(charSequence = text)
-                        //TODO SET ERROR TEXT
-                        //TODO CHANGE BOOLEAN TO SHOW BTN
+                if (charSequence.toString().isNotEmpty()) {
+                    when (etInput.inputType) {
+                        InputType.TYPE_CLASS_TEXT -> {
+                            when(checkValidTextLength(charSequence)) {true -> { bVisible = true} }
+                        }
+                        InputType.TYPE_CLASS_NUMBER -> {
+                            when(checkValidNumber(charSequence)) {true -> { bVisible = true} }
+                        }
                     }
                 }
             }
-        }
+
+            override fun afterTextChanged(p0: Editable?) {
+                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
+            }
+        })
     }
 
-    private fun checkValidNumber(charSequence: CharSequence?){
+    private fun checkValidNumber(charSequence: CharSequence?): Boolean =
         try {
             when(val parseNum = Integer.parseInt(charSequence.toString())){
                 in playerAmountNumRange -> {
                     Log.d("!", "CORRECT NUMBER $parseNum")
+                    true
                 }
                 else -> {
                     Log.d("!", "INCORRECT - NUMBER NOT IN RANGE $parseNum")
+                    false
                 }
             }
         }catch (e: Exception){
-            Log.d("!", "Number: $e")
-        }
-    }
-
-    private fun checkValidTextLength(start: Int, end: Int){
-
-        if(start >= playerNameMinMaxLength.first && end <= playerNameMinMaxLength.last){
-            Log.d("!", "VALID TEXT LENGTH")
-        }else{
-            Log.d("!", "INVALID TEXT LENGTH")
+            Log.d("!", "checkValidNumber: $e")
+            false
         }
 
-    }
+    private fun checkValidTextLength(charSequence: CharSequence?): Boolean =
+        try {
+            when(val length = charSequence.toString().length){
+                in playerNameMinMaxLength -> {
+                    Log.d("!", "VALID $length TEXT LENGTH")
+                    true
+                }
+                else -> {
+                    Log.d("!", "INVALID $length TEXT LENGTH")
+                    false
+                }
+            }
+        }catch (e: Exception){
+            Log.d("!", "checkValidTextLength: $e")
+            false
+        }
 
     private fun applyViewBinding() {
         binding.apply {
@@ -142,6 +157,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 increaseCounterByOne()
                 inputPlayers.includeCounterValue(count = counter)
                 clearEditTextForNewInput(inputPlayers)
+                Animationz.slideOutRightSlideInLeft(etInput)
                 btnSetText(btnContinue, getString(R.string.add_player))
 
             }
@@ -150,6 +166,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
                 inputPlayers.includeCounterValue(count = counter)
+                Animationz.slideOutRightSlideInLeft(etInput)
                 clearEditTextForNewInput(inputPlayers)
 
             }
