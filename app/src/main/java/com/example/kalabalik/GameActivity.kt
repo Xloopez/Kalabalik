@@ -1,5 +1,7 @@
 package com.example.kalabalik
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,11 +9,17 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlin.math.round
 
 class GameActivity : AppCompatActivity() {
+    //
+    lateinit var frontAnimation: AnimatorSet
+    lateinit var backAnimation: AnimatorSet
+    var isFront = true
 
+    //
     lateinit var displayPlayerName: TextView
     lateinit var btnNext: Button
     var counter = 0
@@ -23,12 +31,23 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        //Animator object
-
-
         btnNext = findViewById(R.id.btnNextPlayerTurn)
         displayPlayerName = findViewById(R.id.playerNameTurn)
-        //displayPlayerName.setText("$name: s tur!")
+
+        //Animator object
+        //modified camera scale
+        val scale: Float = applicationContext.resources.displayMetrics.density
+        card_Front.cameraDistance = 8000 * scale
+        card_back.cameraDistance = 8000 * scale
+
+        //front animation
+        frontAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.front_animator) as AnimatorSet
+        backAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.back_animator) as AnimatorSet
+
+        //Setting the event listener
+        flip_btn.setOnClickListener{
+            flipCard()
+        }
 
         btnNext.setOnClickListener{
             playerTurn()
@@ -63,6 +82,21 @@ class GameActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+    fun flipCard(){
+        if(isFront) {
+            frontAnimation.setTarget(card_Front)
+            backAnimation.setTarget(card_back)
+            frontAnimation.start()
+            backAnimation.start()
+            isFront = false
+        } else {
+            frontAnimation.setTarget(card_back)
+            backAnimation.setTarget(card_Front)
+            backAnimation.start()
+            frontAnimation.start()
+            isFront = true
         }
     }
 

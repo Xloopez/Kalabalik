@@ -56,5 +56,17 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnNextPlayerTurn"
-        app:layout_constraintVertical_bias="0.849" />
+        app:layout_constraintVertical_bias="0.502" />
+
+    <Button
+        android:id="@+id/flip_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Flip"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_Front" />
 </androidx.constraintlayout.widget.ConstraintLayout>
