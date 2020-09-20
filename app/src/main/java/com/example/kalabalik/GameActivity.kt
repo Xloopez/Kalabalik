@@ -2,16 +2,13 @@ package com.example.kalabalik
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_game.*
-import kotlinx.android.synthetic.main.activity_player.*
-import kotlin.math.round
+import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
     //
@@ -22,6 +19,11 @@ class GameActivity : AppCompatActivity() {
     //
     lateinit var displayPlayerName: TextView
     lateinit var btnNext: Button
+    lateinit var backCardText: TextView
+
+    //val arrayConsequence = resources.getStringArray(R.array.Consequence)
+    //val arrayMission = resources.getStringArray(R.array.Mission)
+
     var counter = 0
     var amountOfRounds = GameSettings.amountOfRounds
     var currentRound = 1
@@ -31,7 +33,6 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        btnNext = findViewById(R.id.btnNextPlayerTurn)
         displayPlayerName = findViewById(R.id.playerNameTurn)
 
         //Animator object
@@ -44,19 +45,22 @@ class GameActivity : AppCompatActivity() {
         frontAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.front_animator) as AnimatorSet
         backAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.back_animator) as AnimatorSet
 
+        backCardText = findViewById(R.id.card_back)
+
+        displayPlayerName = findViewById(R.id.playerNameTurn)
+        //displayPlayerName.setText("$name: s tur!")
         //Setting the event listener
         flip_btn.setOnClickListener{
             flipCard()
         }
 
-        btnNext.setOnClickListener{
+        /*btnNext.setOnClickListener{
             playerTurn()
-        }
+        }*/
     }
 
     fun playerTurn() {
         val name = GameSettings.listOfPlayers.get(counter)//.text.toString()
-
         when (currentRound) {
             1 -> {
                 Log.d("!!!", "Round $currentRound")
@@ -66,14 +70,14 @@ class GameActivity : AppCompatActivity() {
                 //Log.d("!!!", "Round $currentRound")
                 increaseCounterByOne()
                 displayPlayerName.setText("$name:s tur!")
-                //increaseCounterByOne()
 
+                //increaseCounterByOne()
                 if (counter == GameSettings.playerCount) {
                     Log.d("!!!", "Round $currentRound")
                     increaseRounds()
                     restartcounter()
                 }
-                
+
                 when (currentRound) {
                     amountOfRounds -> {
                         Log.d("!!!", "Last Round!")
@@ -84,8 +88,11 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
+
     fun flipCard(){
         if(isFront) {
+            consequenceOrMission()
+            playerTurn()
             frontAnimation.setTarget(card_Front)
             backAnimation.setTarget(card_back)
             frontAnimation.start()
@@ -109,7 +116,24 @@ class GameActivity : AppCompatActivity() {
     fun restartcounter(){
         counter = 0
     }
-    fun rightClick(points: Int){
 
+    fun consequenceOrMission () {
+        val arrayConsequence = resources.getStringArray(R.array.Consequence).random()
+        //val consequencePoints = resources.getIntArray(arrayConsequence.toInt())
+
+        val arrayMission = resources.getStringArray(R.array.Mission).random()
+
+        val randomIndex = mutableListOf<String>(arrayConsequence, arrayMission).random()
+
+        when(randomIndex) {
+            arrayConsequence -> {
+                //arrayConsequence.toInt()
+                //val consequencePoints = resources.getIntArray(arrayConsequence.toInt())
+                backCardText.setText(randomIndex)
+            }
+            arrayMission -> {
+                backCardText.setText(randomIndex)
+            }
+        }
     }
 }
