@@ -17,16 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnNextPlayerTurn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="@string/button_next_page"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerNameTurn" />
-
     <TextView
         android:id="@+id/card_Front"
         android:layout_width="250dp"
@@ -39,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnNextPlayerTurn" />
+        app:layout_constraintTop_toBottomOf="@+id/playerNameTurn" />
 
     <TextView
         android:id="@+id/card_back"
@@ -48,14 +38,14 @@
         android:alpha="0"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:text="Back Card"
+        android:text="lllllll"
         android:textAlignment="center"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnNextPlayerTurn"
+        app:layout_constraintTop_toBottomOf="@+id/playerNameTurn"
         app:layout_constraintVertical_bias="0.502" />
 
     <Button

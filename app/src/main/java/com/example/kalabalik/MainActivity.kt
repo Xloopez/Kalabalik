@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var playerAmount: EditText
     lateinit var buttonNext: Button
-    //var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         //När next button klickas kommer vi till nästa vy
         val intent = Intent(this, PlayerActivity::class.java)
-        //intent.putExtra("amount", playerAmount)
         startActivity(intent)
     }
 }

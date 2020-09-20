@@ -30,7 +30,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun onClick() {
-        var  name = playerName.text.toString()
+        val  name = playerName.text.toString()
 
         when (counter){
                 in 1 until GameSettings.playerCount -> {
