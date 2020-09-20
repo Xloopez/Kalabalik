@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.FragmentGameScoreListBinding
-import kotlinx.android.synthetic.main.fragment_game_score.view.*
+import kotlinx.android.synthetic.main.fragment_item_game_score.view.*
 //TODO TA VÄCK SYNTETHICS ERS. MED viewBinding
 
 class GameScoreFragment : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
-    private var scoreAdapter: GameScoreRecyclerViewAdapter? = null
+    private var scoreAdapter: GameScoreRecyclerViewAdapter<Player>? = null
     private var _binding: FragmentGameScoreListBinding? = null
     private val binding get() = _binding!!
 
@@ -31,7 +31,7 @@ class GameScoreFragment : Fragment() {
 
         recyclerView = binding.recyclerView
 
-        scoreAdapter = object: GameScoreRecyclerViewAdapter(sharedViewModel.listOfPlayers){
+        scoreAdapter = object: GameScoreRecyclerViewAdapter<Player>(R.layout.fragment_item_game_score,sharedViewModel.listOfPlayers){
 
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)
@@ -45,7 +45,6 @@ class GameScoreFragment : Fragment() {
 
         }
         recyclerView.adapter = scoreAdapter
-
     }
 
 }

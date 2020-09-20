@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+<!--    <color name="colorPrimary">#6200EE</color>-->
+    <color name="colorPrimary">#F69CB6</color>
+    <color name="colorPrimaryDark">#492F7A</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="deep_purple_200">#A497BC</color>
+    <color name="deep_purple_800">#492F7A</color>
+    <color name="light_green_50">#F4F8E7</color>
+    <color name="pink_200">#F69CB6</color>
+    <color name="teal_50">#E8F4F4</color>
+    <color name="teal_200">#7AC5C1</color>
+
 </resources>

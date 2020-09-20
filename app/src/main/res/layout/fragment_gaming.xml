@@ -1,18 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GamingActivity">
+    android:background="@color/colorPrimaryDark"
+    tools:background="@color/colorPrimaryDark"
+    tools:context=".MainActivity">
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="30dp"
+        android:layout_height="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="205dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_card_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_card_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_title"
+        android:id="@+id/textView_amount_of_rounds"
+        style="@style/RoundsStyle"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="1"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:layout_marginTop="3dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_current_round"
+        app:layout_constraintStart_toEndOf="@+id/space"
+        app:layout_constraintTop_toTopOf="@+id/space"
+        android:textSize="14sp"
+        tools:text="out of 15" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_current_round"
+        style="@style/RoundsStyle"
+        android:elevation="2dp"
+        android:shadowColor="@android:color/white"
+        android:shadowDx="1"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/space"
+        app:layout_constraintEnd_toStartOf="@+id/space"
+        app:layout_constraintStart_toEndOf="@+id/space"
+        tools:text="Round 15" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_playerName"
         style="@style/TitleViews"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="ROUND .. OUT OF 15" />
+        app:layout_constraintBottom_toTopOf="@id/guideline_card_top"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible"
+        android:textColor="@android:color/white"
+        tools:text="Playername" />
 
     <RadioGroup
         android:id="@+id/radioGroup_players"
@@ -20,9 +91,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_current_round" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_gaming_info"
@@ -33,17 +105,17 @@
         android:textAlignment="center"
         android:gravity="center"
         android:elevation="4dp"
-        app:layout_constraintHeight_percent="0.5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
+        app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom"
         tools:text="INPUT INFORMATION TEXTVIEW"
 
         />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_Fail"
+        style="@style/ButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="FAIL"
@@ -55,6 +127,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_Success"
+        style="@style/ButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="SUCCESS"
@@ -63,6 +136,8 @@
         app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

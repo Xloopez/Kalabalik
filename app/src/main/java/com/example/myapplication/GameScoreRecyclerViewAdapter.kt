@@ -6,25 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.extensions.LayoutContainer
 
-abstract class GameScoreRecyclerViewAdapter(private val values: MutableList<Player>,) : RecyclerView.Adapter<GameScoreRecyclerViewAdapter.ViewHolder>() {
+abstract class GameScoreRecyclerViewAdapter<T>(private val layoutId: Int, private val mutableList: MutableList<T>?) : RecyclerView.Adapter<GameScoreRecyclerViewAdapter<T>.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_game_score, parent, false))
+        return ViewHolder((LayoutInflater.from(parent.context).inflate(layoutId, parent, false)))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        ViewHolder(holder.containerView).bind(values[position], position)
+        ViewHolder(holder.containerView).bind(mutableList!![position], position)
+
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = mutableList?.size ?: 0
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: Player, position: Int){
+        fun bind(item: T, position: Int){
             binder(containerView, item, position)
         }
     }
 
-    open fun binder(containerView: View, item: Player, position: Int){}
+    open fun binder(containerView: View, item: T, position: Int){}
 
 
 }

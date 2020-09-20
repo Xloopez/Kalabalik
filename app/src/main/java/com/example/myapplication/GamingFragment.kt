@@ -24,7 +24,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentGamingBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var tvTitle: AppCompatTextView
+    private lateinit var tvPlayerName: AppCompatTextView
+    private lateinit var tvCurrRound: AppCompatTextView
+    private lateinit var tvTotalRounds: AppCompatTextView
     private lateinit var tvCard: AppCompatTextView
 
     private lateinit var rgPlayers: RadioGroup
@@ -44,18 +46,18 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private var currTurn = 0
     private var pointsToAdd: Double = 0.0
     private var currentCardType: String = ""
-    private var totalRounds = 0
+    private var totalTurns = 0
 
     private lateinit var currPlayer: Player
 
-    private var newTitle: String = ""
+//    private var newTitle: String = ""
 
     private enum class EnOperation { SUCCESS, FAIL; }
     private enum class EnRandom { CONSEQUENCES, MISSION;
 
         fun getEnumString(): String = when(this) {
-            CONSEQUENCES -> "Consequence"
-            MISSION -> "Mission"
+            CONSEQUENCES -> "Konsekvens"
+            MISSION -> "Uppdrag"
         }
     }
 
@@ -76,26 +78,49 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
 
-        addPlayersToRadioGroup()
+//        addPlayersToRadioGroup()
 
         pCount =  sharedViewModel.playerCount.value!!
         maxRounds = sharedViewModel.amountOfRounds.value!!
-        totalRounds = maxRounds.times(pCount)
-
-        gamingViewModel.currentTurn.value = gamingViewModel.currentTurn.value?.plus(1)
-        Log.d("!", "TOTALROUNDS: ${totalRounds}")
-        titleViewUpdateRounds()
+        //Log.d("!", "MAXROUNDS: ${maxRounds}")
+        totalTurns = maxRounds.times(pCount).plus(maxRounds)
+        tvTotalRounds.apply { text = "out of $maxRounds" }
+        gamingViewModel.currentTurn.value = 0
+        nextRound()
 
         gamingViewModel.currentTurn.observe(this, {
             currTurn = it
-            titleViewUpdateRounds()
-            if(isFinalRound()){ displayFinalRoundStarted() }
-            when (currTurn == pCount.plus(1)) {
+
+            Log.d("!", "$currTurn $totalTurns")
+            val v = currTurn % pCount.plus(1)
+
+            when (it == totalTurns) {
                 true -> {
-                    nextRound()
+
+                    tvPlayerName.text = "GAME ENDED - TAKE ME TO SCORE"
+                    btnSuccess.visibility = View.INVISIBLE
+                    btnFail.visibility = View.INVISIBLE
+                    tvCard.visibility = View.INVISIBLE
+                    rgPlayers.visibility = View.INVISIBLE
+                    logScores()
                 }
-                false ->  {
-                    nextPlayerTurn()
+                false -> {
+                    when (v) {
+                        0 -> {
+                            //TODO SHOW CURRENT TOTALPOINTS?3
+                            btnSuccess.text = "NEXT ROUND"
+                            btnSuccess.setOnClickListener {
+                                nextRound()
+                            }
+                            tvPlayerName.text = ""
+                            btnFail.visibility = View.INVISIBLE
+                            tvCard.visibility = View.INVISIBLE
+                        }
+                        else -> {
+                            btnSuccess.setOnClickListener(this)
+                            nextPlayerTurn()
+                        }
+                    }
                 }
             }
 
@@ -103,27 +128,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         gamingViewModel.currentRound.observe(this, {
             currRound = it
-
-            Log.d("!", "oCurrRound: $currRound oCurrTurn: $currTurn")
-            Log.d("!", "CURRENT ROUND TIMES TURN: ${currRound*currTurn}")
-
-            when ((currRound * currTurn) == (totalRounds + maxRounds)) {
-                true -> {
-
-                    logScores()
-                    //TODO DISPLAY BUTTON GO TO SCORES
-                    sharedViewModel.currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
-                   // tvTitle.text = "GAME ENDED"
-                   // btnSuccess.visibility = View.GONE
-                   // btnFail.visibility = View.GONE
-
-                }
-                false -> {
-                    nextRoundStart()
-                }
-
-            }
-
+            tvCurrRound.apply { text = "ROUND $it" }
+            if(isFinalRound()){ displayFinalRoundStarted() }
         })
 
     }
@@ -132,8 +138,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
         binding.apply {
 
             /* TEXTVIEWS */
-            tvTitle = textViewTitle
+            tvPlayerName = textViewPlayerName
             tvCard = textViewGamingInfo
+            tvCurrRound = textViewCurrentRound
+            tvTotalRounds = textViewAmountOfRounds
 
             /* RADIOGROUPS */
             rgPlayers = radioGroupPlayers
@@ -145,51 +153,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun addPlayersToRadioGroup() {
-
-        sharedViewModel.listOfPlayers.forEach { p ->
-
-            val themeWrapper = ContextThemeWrapper(requireActivity(), R.style.RadioButtonStyle)
-            val rb = AppCompatRadioButton(themeWrapper)
-
-            rb.apply {
-                text = p.name
-                isClickable = false
-                tag = p.playerNum
-                buttonDrawable = StateListDrawable()
-                setOnCheckedChangeListener { compoundButton, b ->
-                    when(b){
-                        true -> {
-                            compoundButton.apply {
-                                setBackgroundColor(Color.DKGRAY)
-                                textSize = 16f
-                                setTextColor(Color.WHITE)
-                            }
-                        }
-                        false -> {
-                            compoundButton.apply {
-                                setBackgroundColor(Color.TRANSPARENT)
-                                textSize = 12f
-                                setTextColor(Color.BLACK)
-                            }
-                        }
-                    }
-                }
-            }
-            rgPlayers.addView(rb)
-        }
-    }
-
-    private fun activatePlayerRadioBtn(playerNum: Int){
-        val rdBtn = rgPlayers.findViewWithTag<AppCompatRadioButton>(playerNum)
-        rdBtn.isChecked = true
-    }
-
-    private fun nextRoundStart() {
-        gamingViewModel.currentTurn.postValue(1)
-    }
     private fun nextRound() {
         gamingViewModel.currentRound.postValue(gamingViewModel.currentRound.value?.plus(1))
+        gamingViewModel.currentTurn.postValue(gamingViewModel.currentTurn.value?.plus(1))
+        logScores()
     }
 
     private fun logScores() {
@@ -205,6 +172,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
     }
 
     private fun nextPlayerTurn(){
+3
         val newCard = randomizeCard() /* Generate new random card */
         Animationz.slideOutRightSlideInLeft(tvCard)
 
@@ -215,15 +183,23 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
 
         tvCard.text = strBuilder /* Update card-info */
-        currPlayer = sharedViewModel.listOfPlayers[currTurn - 1] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.   */
-        activatePlayerRadioBtn(playerNum = currPlayer.playerNum)  /* Activate tagged RadioButton by TAG from(currPlayer) */
-    }
+        tvPlayerName.text = (currTurn % pCount.plus(1)).toString()
+        tvCard.visibility = View.VISIBLE
+        btnFail.visibility = View.VISIBLE
+        btnSuccess.visibility = View.VISIBLE
+        btnSuccess.text = "SUCCESS"
+        Log.d("!", "CURR PLAYER = ${calcPlayerTurn()}")
+        setPlayerTurn()
 
 
-    private fun titleViewUpdateRounds(){
-        newTitle = getString(R.string.now_playing_round, (currRound +1), maxRounds)
-        tvTitle.text = newTitle
     }
+
+    private fun setPlayerTurn(){
+        currPlayer = sharedViewModel.listOfPlayers[calcPlayerTurn()] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.   */
+        tvPlayerName.text = currPlayer.name
+    }
+
+   private fun calcPlayerTurn(): Int =  (currTurn % (pCount.plus(1))) -1
 
     private fun randomizeCard() = when (val ran = arrayOfEnRandoms.random()) {
         EnRandom.CONSEQUENCES -> {
