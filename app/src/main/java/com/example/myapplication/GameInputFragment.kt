@@ -66,7 +66,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
         /* USE THE CUSTOM FUNCTION TO HIDE THE VIEW AT START */
         //setViewVisibility(btnContinue, visible = true)
-        Util.setViewVisibilityFadeInOut(btnContinue, visible = true)
+        Util.viewApplyVis(btnContinue, View.VISIBLE)
         clearEditTextForNewInput(inputObj = inputNumbers)
 
         sharedViewModel.playerCount.observe(this, {
@@ -184,8 +184,8 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
-                Util.setViewVisibilityFadeInOut(etInput, visible = false)
-                Util.setViewVisibilityFadeInOut(tvInputInfo, visible = false)
+                Util.viewApplyVis(etInput, View.INVISIBLE)
+                Util.viewApplyVis(tvInputInfo, View.INVISIBLE)
                 btnSetText(btnContinue, getString(R.string.start_game))
                 Animationz.animButton(btnContinue)
 
