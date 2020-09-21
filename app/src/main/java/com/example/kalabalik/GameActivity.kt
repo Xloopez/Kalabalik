@@ -18,8 +18,8 @@ class GameActivity : AppCompatActivity() {
 
     //
     lateinit var displayPlayerName: TextView
-    lateinit var btnNext: Button
     lateinit var backCardText: TextView
+    lateinit var frontCardText: TextView
 
     //val arrayConsequence = resources.getStringArray(R.array.Consequence)
     //val arrayMission = resources.getStringArray(R.array.Mission)
@@ -46,6 +46,7 @@ class GameActivity : AppCompatActivity() {
         backAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.back_animator) as AnimatorSet
 
         backCardText = findViewById(R.id.card_back)
+        frontCardText = findViewById(R.id.card_Front)
 
         displayPlayerName = findViewById(R.id.playerNameTurn)
         //displayPlayerName.setText("$name: s tur!")
@@ -118,22 +119,54 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun consequenceOrMission () {
-        val arrayConsequence = resources.getStringArray(R.array.Consequence).random()
-        //val consequencePoints = resources.getIntArray(arrayConsequence.toInt())
+        val arrayConsequence = resources.getStringArray(R.array.Consequence)
+        val arrayConsequencePoints = resources.getStringArray(R.array.ConsequencePoints)
+        //val concequenceIndex = arrayConsequence.
 
-        val arrayMission = resources.getStringArray(R.array.Mission).random()
+        //val arrayConcequensePoints = resources.getIntArray(R.array.ConsequencePoints)
 
-        val randomIndex = mutableListOf<String>(arrayConsequence, arrayMission).random()
+        val arrayMission = resources.getStringArray(R.array.Mission)
+        val arrayMissionPoints = resources.getStringArray(R.array.MissionPoints)
 
-        when(randomIndex) {
-            arrayConsequence -> {
-                //arrayConsequence.toInt()
-                //val consequencePoints = resources.getIntArray(arrayConsequence.toInt())
-                backCardText.setText(randomIndex)
+        //val randomIndex = mutableListOf<String>(arrayConsequence, arrayMission).random()
+
+        //
+
+        val listOfChoices = mutableListOf("Consequence, Mission")
+
+        when (listOfChoices.random()) {
+            "Consequence" -> {
+                val randomConsequenceIndex = (0 until arrayConsequence.count()).random()
+                val consequenceStr = arrayConsequence[randomConsequenceIndex]
+                val consequencePoints = arrayConsequencePoints[randomConsequenceIndex]
+
+                //Front card text
+                frontCardText.setText("Consequence")
+                //Back card text
+                backCardText.setText("$consequenceStr + $consequencePoints poäng")
             }
-            arrayMission -> {
-                backCardText.setText(randomIndex)
+            "Mission" -> {
+                val randomMissionIndex = (0 until arrayMission.count()).random()
+                val missionStr = arrayMission[randomMissionIndex]
+                val missionPoints = arrayMissionPoints[randomMissionIndex]
+
+                frontCardText.setText("Mission")
+                backCardText.setText("missionStr + $missionPoints poäng")
             }
         }
+
+
+        //
+
+        /*when(randomIndex) {
+            arrayConsequence -> {
+                frontCardText.setText("Consequence")
+                backCardText.setText(randomIndex + "\n \nEller\n \n" + arrayConsequence)
+            }
+            arrayMission -> {
+                frontCardText.setText("Mission")
+                backCardText.setText(randomIndex)
+            }
+        }*/
     }
 }
