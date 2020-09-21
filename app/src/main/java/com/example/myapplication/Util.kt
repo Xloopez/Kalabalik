@@ -1,7 +1,9 @@
 package com.example.myapplication
 
 import android.view.View
-import java.lang.Exception
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 object Util {
 
@@ -19,9 +21,25 @@ object Util {
     }
     fun viewApplyVis(view: View, visibility: Int? = null) {
         when (visibility) {
-            8, 4 -> { view.visibility = visibility; Animationz.fadeOutAnim(view)}
-            else -> { view.visibility = visibility ?: 0; Animationz.fadeInAnim(view)}
+            8, 4 -> {
+                view.visibility = visibility; Animationz.slideOutRight(view)
+            }
+            else -> { view.visibility = visibility ?: 0; Animationz.slideInLeft(view)}
         }
     }
+
+    fun disableViewClickTemp(view: View) {
+
+        view.isEnabled = false
+
+        val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+        val runnable = Runnable {
+            view.isEnabled = true
+        }
+        executor.schedule(runnable, 2, TimeUnit.SECONDS)
+
+
+    }
+
 
 }

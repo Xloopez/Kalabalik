@@ -5,10 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
     android:background="@android:color/transparent"
+    tools:background="@drawable/primary_background"
     tools:context=".MainActivity">
-
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/TitleViews"
@@ -37,6 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="EDITTEXT"
+        android:textColor="@android:color/white"
         android:textAlignment="center"
         android:inputType="number"
         android:autofillHints=""

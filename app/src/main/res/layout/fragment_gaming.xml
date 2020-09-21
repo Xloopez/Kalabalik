@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:background="@color/colorPrimaryDark"
+    android:clipChildren="false"
+    android:background="@drawable/primary_background"
+    tools:background="@drawable/primary_background"
     tools:context=".MainActivity">
 
     <Space
@@ -49,21 +50,23 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_amount_of_rounds"
         style="@style/RoundsStyle"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/aladin"
         android:shadowColor="@android:color/black"
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="1"
-        android:layout_marginTop="3dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/textView_current_round"
         app:layout_constraintStart_toEndOf="@+id/space"
         app:layout_constraintTop_toTopOf="@+id/space"
-        android:textSize="14sp"
         tools:text="out of 15" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_current_round"
         style="@style/RoundsStyle"
         android:elevation="2dp"
+        android:fontFamily="@font/aladin"
         android:shadowColor="@android:color/white"
         android:shadowDx="1"
         android:shadowDy="2"
@@ -85,23 +88,13 @@
         android:textColor="@android:color/white"
         tools:text="Playername" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup_players"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_current_round" />
-
     <LinearLayout
         android:id="@+id/linear_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:orientation="horizontal"
+        android:clipChildren="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
@@ -109,13 +102,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_gaming_info"
-            android:background="@drawable/card_background"
+            android:background="@drawable/card_background_front"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAlignment="center"
             android:gravity="center"
-            android:elevation="4dp"
-            android:padding="80dp"
+            android:padding="5dp"
             tools:text="INPUT INFORMATION TEXTVIEW" />
 
         <include
