@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
                 1 ->  newFragmentInstance(GamingFragment(), "Gaming", true)
                 2 ->  newFragmentInstance(GameScoreFragment(), "Score", true)
             }
-
         })
 
     }

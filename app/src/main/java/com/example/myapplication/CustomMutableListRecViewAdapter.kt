@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.extensions.LayoutContainer
 
-abstract class GameScoreRecyclerViewAdapter<T>(private val layoutId: Int, private val mutableList: MutableList<T>?) : RecyclerView.Adapter<GameScoreRecyclerViewAdapter<T>.ViewHolder>() {
+abstract class CustomMutableListRecViewAdapter<T>(private val layoutId: Int, private val mutableList: MutableList<T>?) : RecyclerView.Adapter<CustomMutableListRecViewAdapter<T>.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder((LayoutInflater.from(parent.context).inflate(layoutId, parent, false)))

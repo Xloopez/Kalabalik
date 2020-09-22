@@ -46,8 +46,8 @@
     </style>
 
     <style name="ButtonStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
         <item name="backgroundTint">@color/colorPrimary</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:elevation">2dp</item>

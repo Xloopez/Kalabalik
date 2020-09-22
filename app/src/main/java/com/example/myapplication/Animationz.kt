@@ -2,15 +2,21 @@ package com.example.myapplication
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
+import android.hardware.input.InputManager
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.view.inputmethod.InputMethod
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 
 
 object Animationz {
@@ -48,10 +54,16 @@ object Animationz {
         val translateYAmount = (+ view.height + 150f)
         view.animate()
             .translationYBy(translateYAmount)
+            .translationX(-(Resources.getSystem().displayMetrics.widthPixels/2).toFloat() + (view.width))
             .scaleXBy(1.5f)
             .scaleYBy(1.5f)
             .start()
 
+    }
+
+    fun hideSoftKeyBoard(activity: Activity, view: View){
+        val im = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        im.hideSoftInputFromWindow(view.windowToken,0)
     }
 
     fun slideOutRightSlideInLeft(view: View) {
@@ -67,7 +79,7 @@ object Animationz {
     fun flipCard(context: Context, view: AppCompatTextView, textToSet: String, listOfView: MutableList<View>): AnimatorSet {
 
         Util.viewApplyVis(view, View.VISIBLE)
-       // val listFilterButtons = listOfView.filterIsInstance<AppCompatButton>()
+        val listFilterButtons = listOfView.filterIsInstance<AppCompatButton>()
 
 
         val firstTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
@@ -75,12 +87,12 @@ object Animationz {
                 duration = 300
                 interpolator = DecelerateInterpolator()
                 doOnStart {
-//                    listFilterButtons.forEach {
-//                        it.apply {
-//                            it.isClickable = false
-//                            animate().rotationBy(100f)
-//                        }
-//                    }
+                    listFilterButtons.forEach {
+                        it.apply {
+                            it.isClickable = false
+                            animate().rotationBy(100f)
+                        }
+                    }
                 }
                 view.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
                 
@@ -105,7 +117,7 @@ object Animationz {
                 interpolator = DecelerateInterpolator()
                 doOnEnd {
                     view.background = ContextCompat.getDrawable(context, R.drawable.card_background_front)
-//                    listFilterButtons.forEach { it.apply { animate().rotationBy(-100f) } }
+                    listFilterButtons.forEach { it.apply { animate().rotationBy(-100f) } }
                     view.animate().scaleXBy(0.5f).scaleYBy(0.5f)
                 }
             }
@@ -116,7 +128,7 @@ object Animationz {
                 duration = 300
                 doOnEnd {
                     view.text = textToSet
-//                    listFilterButtons.forEach { it.apply { it.isClickable = true } }
+                    listFilterButtons.forEach { it.apply { it.isClickable = true } }
                 }
             }
 

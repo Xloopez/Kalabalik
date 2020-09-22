@@ -12,4 +12,8 @@ class GamingViewModel: ViewModel() {
         value = 0
     }
 
+    var currentPlayer = MutableLiveData<Player>().apply {
+        value = Player("InitialPlayer0", playerNum = 0)
+    }
+
 }

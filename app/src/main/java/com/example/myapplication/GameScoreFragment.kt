@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_item_game_score.view.*
 class GameScoreFragment : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
-    private var scoreAdapter: GameScoreRecyclerViewAdapter<Player>? = null
+    private var scoreAdapter: CustomMutableListRecViewAdapter<Player>? = null
     private var _binding: FragmentGameScoreListBinding? = null
     private val binding get() = _binding!!
 
@@ -31,7 +31,7 @@ class GameScoreFragment : Fragment() {
 
         recyclerView = binding.recyclerView
 
-        scoreAdapter = object: GameScoreRecyclerViewAdapter<Player>(R.layout.fragment_item_game_score,sharedViewModel.listOfPlayers){
+        scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score,sharedViewModel.getPlayerFinalResultSorted()){
 
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)

@@ -31,7 +31,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private lateinit var recView: RecyclerView
 
-    private var scoreAdapter: GameScoreRecyclerViewAdapter<Player>? = null
+    private var scoreAdapter: CustomMutableListRecViewAdapter<Player>? = null
 
     private lateinit var btnSuccess: AppCompatButton
     private lateinit var btnFail: AppCompatButton
@@ -95,6 +95,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
         gamingViewModel.currentTurn.value = 0
         nextRound()
 
+        gamingViewModel.currentPlayer.observe(this, {
+            currPlayer = it
+            tvPlayerName.text = it.name
+        })
+
         gamingViewModel.currentTurn.observe(this, {
             currTurn = it
 
@@ -104,7 +109,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
             when (it == totalTurns) {
                 true -> {
 
-                    //TODO POST FRAGMENTPOS VAL + FRAGMENT POS VAL!
+                    sharedViewModel.currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
                     tvPlayerName.apply { text = "GAME ENDED - TAKE ME TO SCORE" }
 
                     mutableListOf(
@@ -119,7 +124,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
                 false -> {
                     when (v) {
                         0 -> {
-
                             btnSuccess.apply {
                                 text  = "NEXT ROUND"
                                 setOnClickListener {
@@ -186,7 +190,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun setUpAdapter() {
 
-        scoreAdapter = object: GameScoreRecyclerViewAdapter<Player>(R.layout.fragment_item_game_score,
+        scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score,
             sharedViewModel.listOfPlayers){
 
             override fun binder(containerView: View, item: Player, position: Int) {
@@ -234,8 +238,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
         flipCard(requireContext(), tvCard, textToSet = strBuilder.toString(), listOfViews).start()
 
         btnSuccess.apply { text = "SUCCESS" }
-        currPlayer = sharedViewModel.listOfPlayers[calcPlayerTurn()] /* Return(Current Turn - 1) because of ListIndex starts from 0 = 1, 1 = 2 etc.   */
-        tvPlayerName.text = currPlayer.name
+        gamingViewModel.currentPlayer.postValue(sharedViewModel.listOfPlayers[calcPlayerTurn()] )
 
     }
 
