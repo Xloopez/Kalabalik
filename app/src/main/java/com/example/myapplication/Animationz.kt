@@ -69,6 +69,7 @@ object Animationz {
         Util.viewApplyVis(view, View.VISIBLE)
        // val listFilterButtons = listOfView.filterIsInstance<AppCompatButton>()
 
+
         val firstTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
             .apply {
                 duration = 300

@@ -1,9 +1,6 @@
 package com.example.myapplication
 
 import android.view.View
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 object Util {
 
@@ -28,18 +25,21 @@ object Util {
         }
     }
 
-    fun disableViewClickTemp(view: View) {
-
-        view.isEnabled = false
-
-        val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        val runnable = Runnable {
-            view.isEnabled = true
-        }
-        executor.schedule(runnable, 2, TimeUnit.SECONDS)
-
-
+    fun viewApplyVisFromList(mutableList: MutableList<Unit>) {
+        mutableList.forEach { it.apply {  } }
     }
+
+
+//    fun disableViewClickTemp(view: View) {
+//
+//        view.isEnabled = false
+//
+//        val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+//        val runnable = Runnable {
+//            view.isEnabled = true
+//        }
+//        executor.schedule(runnable, 2, TimeUnit.SECONDS)
+//    }
 
 
 }

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentGamingInputBinding
+import com.google.android.material.textfield.TextInputEditText
 
 class GameInputFragment: Fragment(), View.OnClickListener {
 
@@ -22,7 +23,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     private lateinit var tvTitle: AppCompatTextView
     private lateinit var tvInputInfo: AppCompatTextView
 
-    private lateinit var etInput: EditText
+    private lateinit var etInput: TextInputEditText
 
     private lateinit var btnContinue: AppCompatButton
 
