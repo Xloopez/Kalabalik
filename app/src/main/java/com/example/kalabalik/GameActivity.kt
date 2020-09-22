@@ -21,13 +21,22 @@ class GameActivity : AppCompatActivity() {
     lateinit var backCardText: TextView
     lateinit var frontCardText: TextView
 
-    //val arrayConsequence = resources.getStringArray(R.array.Consequence)
-    //val arrayMission = resources.getStringArray(R.array.Mission)
+    lateinit var arrayConsequence: Array<String>
+    lateinit var arrayConsequencePoints: IntArray
+    lateinit var arrayMission: Array<String>
+    lateinit var arrayMissionPoints: IntArray
+    //lateinit var consequenceOptionPoints: Int
+    //lateinit var randomConsequenceIndex: Int
+
+    //val randomConsequenceIndex = (0 until arrayConsequence.count()).random()
+    val listOfChoices = mutableListOf("Consequence", "Mission")
+
+    var consequenceOptionPoints = 0
 
     var counter = 0
     var amountOfRounds = GameSettings.amountOfRounds
     var currentRound = 1
-    val  name = GameSettings.listOfPlayers.get(counter)//.text.toString()
+    val name = GameSettings.listOfPlayers.get(counter)//.text.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +51,30 @@ class GameActivity : AppCompatActivity() {
         card_back.cameraDistance = 8000 * scale
 
         //front animation
-        frontAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.front_animator) as AnimatorSet
-        backAnimation = AnimatorInflater.loadAnimator(applicationContext,R.animator.back_animator) as AnimatorSet
+        frontAnimation = AnimatorInflater.loadAnimator(
+            applicationContext,
+            R.animator.front_animator
+        ) as AnimatorSet
+        backAnimation = AnimatorInflater.loadAnimator(
+            applicationContext,
+            R.animator.back_animator
+        ) as AnimatorSet
 
         backCardText = findViewById(R.id.card_back)
         frontCardText = findViewById(R.id.card_Front)
 
-        displayPlayerName = findViewById(R.id.playerNameTurn)
+        arrayConsequence = resources.getStringArray(R.array.Consequence)
+        arrayConsequencePoints = resources.getIntArray(R.array.ConsequencePoints)
+
+        arrayMission = resources.getStringArray(R.array.Mission)
+        arrayMissionPoints = resources.getIntArray(R.array.MissionPoints)
+
+        //randomConsequenceIndex = (0 until arrayConsequence.count()).random()
+
+
         //displayPlayerName.setText("$name: s tur!")
         //Setting the event listener
-        flip_btn.setOnClickListener{
+        flip_btn.setOnClickListener {
             flipCard()
         }
 
@@ -90,15 +113,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun flipCard(){
-        if(isFront) {
-            consequenceOrMission()
+    fun flipCard() {
+        if (isFront) {
             playerTurn()
             frontAnimation.setTarget(card_Front)
             backAnimation.setTarget(card_back)
             frontAnimation.start()
             backAnimation.start()
             isFront = false
+            consequenceOrMission()
         } else {
             frontAnimation.setTarget(card_back)
             backAnimation.setTarget(card_Front)
@@ -108,52 +131,72 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    fun increaseCounterByOne(){
+    fun increaseCounterByOne() {
         counter++
     }
-    fun increaseRounds(){
+
+    fun increaseRounds() {
         currentRound++
     }
-    fun restartcounter(){
+
+    fun restartcounter() {
         counter = 0
     }
 
-    fun consequenceOrMission () {
-        val arrayConsequence = resources.getStringArray(R.array.Consequence)
-        val arrayConsequencePoints = resources.getStringArray(R.array.ConsequencePoints)
-        //val concequenceIndex = arrayConsequence.
-
-        //val arrayConcequensePoints = resources.getIntArray(R.array.ConsequencePoints)
-
-        val arrayMission = resources.getStringArray(R.array.Mission)
-        val arrayMissionPoints = resources.getStringArray(R.array.MissionPoints)
-
+    fun consequenceOrMission() {
         //val randomIndex = mutableListOf<String>(arrayConsequence, arrayMission).random()
 
-        //
+        val randomC = listOfChoices.random()
+        //Log.d("!!!", "randomC: $randomC")
 
-        val listOfChoices = mutableListOf("Consequence, Mission")
-
-        when (listOfChoices.random()) {
+        when (randomC) {
             "Consequence" -> {
                 val randomConsequenceIndex = (0 until arrayConsequence.count()).random()
+                //Log.d("!!!", "ranCIdex: $randomConsequenceIndex")
+
                 val consequenceStr = arrayConsequence[randomConsequenceIndex]
                 val consequencePoints = arrayConsequencePoints[randomConsequenceIndex]
+                val consequenceOption = consequenceChoice(randomConsequenceIndex)
+                //Log.d("!!!", "$consequenceStr")
+                //Log.d("!!!", "$consequencePoints")
 
                 //Front card text
-                frontCardText.setText("Consequence")
+                frontCardText.text = "Konsekvens"
                 //Back card text
-                backCardText.setText("$consequenceStr + $consequencePoints poäng")
+                backCardText.setText("$consequenceStr \n+$consequencePoints poäng" +
+                        "\n \nEller\n \n $consequenceOption \n+$consequenceOptionPoints poäng" )
             }
             "Mission" -> {
                 val randomMissionIndex = (0 until arrayMission.count()).random()
+                //Log.d("!!!", "ranCIdex: $randomMissionIndex")
+
                 val missionStr = arrayMission[randomMissionIndex]
                 val missionPoints = arrayMissionPoints[randomMissionIndex]
+                //Log.d("!!!", "$missionStr")
+                //Log.d("!!!", "$missionPoints")
 
-                frontCardText.setText("Mission")
-                backCardText.setText("missionStr + $missionPoints poäng")
+                frontCardText.text = "Uppdrag"
+                backCardText.setText("$missionStr \n+$missionPoints poäng")
             }
         }
+    }
+
+    fun consequenceChoice(index: Int): String {
+
+        var consequenceCoiceStr = ""
+
+        if (index.plus(1) % 2 != 0) {
+            consequenceCoiceStr = arrayConsequence[index.plus(1)]
+            consequenceOptionPoints = arrayConsequencePoints[index.plus(1)]
+            return consequenceCoiceStr
+        } else {
+            consequenceCoiceStr = arrayConsequence[index - 1]
+            consequenceOptionPoints = arrayConsequencePoints[index - 1]
+        }
+
+        return consequenceCoiceStr
+    }
+}
 
 
         //
@@ -168,5 +211,4 @@ class GameActivity : AppCompatActivity() {
                 backCardText.setText(randomIndex)
             }
         }*/
-    }
-}
+

@@ -19,8 +19,8 @@
 
     <TextView
         android:id="@+id/card_Front"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="355dp"
+        android:layout_height="286dp"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="Front Card"
@@ -33,8 +33,8 @@
 
     <TextView
         android:id="@+id/card_back"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="355dp"
+        android:layout_height="286dp"
         android:alpha="0"
         android:background="@color/colorAccent"
         android:gravity="center"
@@ -59,4 +59,5 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_Front" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
