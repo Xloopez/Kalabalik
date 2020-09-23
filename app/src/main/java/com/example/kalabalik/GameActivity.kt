@@ -5,10 +5,11 @@ import android.animation.AnimatorSet
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import kotlinx.android.synthetic.main.activity_game.*
-import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
     //
@@ -25,24 +26,26 @@ class GameActivity : AppCompatActivity() {
     lateinit var arrayConsequencePoints: IntArray
     lateinit var arrayMission: Array<String>
     lateinit var arrayMissionPoints: IntArray
-    //lateinit var consequenceOptionPoints: Int
-    //lateinit var randomConsequenceIndex: Int
 
-    //val randomConsequenceIndex = (0 until arrayConsequence.count()).random()
-    val listOfChoices = mutableListOf("Consequence", "Mission")
+    lateinit var rightButton: Button
+    lateinit var leftButton: Button
 
     var consequenceOptionPoints = 0
-
     var counter = 0
     var amountOfRounds = GameSettings.amountOfRounds
     var currentRound = 1
-    val name = GameSettings.listOfPlayers.get(counter)//.text.toString()
+
+    val listOfChoices = mutableListOf("Consequence", "Mission")
+    //val name = GameSettings.listOfPlayers.get(counter)
+    val name = GameSettings.listOfPlayers.get(counter).name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        val name = GameSettings.listOfPlayers.get(counter).name
         displayPlayerName = findViewById(R.id.playerNameTurn)
+        displayPlayerName.text = "$name:s tur!"
 
         //Animator object
         //modified camera scale
@@ -69,35 +72,36 @@ class GameActivity : AppCompatActivity() {
         arrayMission = resources.getStringArray(R.array.Mission)
         arrayMissionPoints = resources.getIntArray(R.array.MissionPoints)
 
-        //randomConsequenceIndex = (0 until arrayConsequence.count()).random()
-
+        rightButton = findViewById(R.id.right_btn)
+        leftButton = findViewById(R.id.left_btn)
 
         //displayPlayerName.setText("$name: s tur!")
         //Setting the event listener
-        flip_btn.setOnClickListener {
+
+        rightButton.setOnClickListener {
             flipCard()
         }
-
-        /*btnNext.setOnClickListener{
-            playerTurn()
-        }*/
     }
 
     fun playerTurn() {
-        val name = GameSettings.listOfPlayers.get(counter)//.text.toString()
+        val name = GameSettings.listOfPlayers.get(counter).name
         when (currentRound) {
-            1 -> {
+            0 -> {
                 Log.d("!!!", "Round $currentRound")
+                //displayPlayerName.text = "$name:s tur!"
                 increaseRounds()
             }
-            in 2 until amountOfRounds -> {
-                //Log.d("!!!", "Round $currentRound")
+            in 1 until amountOfRounds -> {
+                displayPlayerName.text = "$name:s tur!"
                 increaseCounterByOne()
-                displayPlayerName.setText("$name:s tur!")
-
-                //increaseCounterByOne()
+                //displayPlayerName.text = "$name:s tur!"
                 if (counter == GameSettings.playerCount) {
                     Log.d("!!!", "Round $currentRound")
+                    for(i in 0 until GameSettings.listOfPlayers.size) {
+                        Log.d("!!!", "${GameSettings.listOfPlayers[i].name}")
+                        Log.d("!!!", "${GameSettings.listOfPlayers[i].points}")
+                    }
+
                     increaseRounds()
                     restartcounter()
                 }
@@ -105,7 +109,7 @@ class GameActivity : AppCompatActivity() {
                 when (currentRound) {
                     amountOfRounds -> {
                         Log.d("!!!", "Last Round!")
-                        displayPlayerName.setText("$name:s tur!")
+                        displayPlayerName.text = "$name:s tur!"
                         increaseCounterByOne()
                     }
                 }
@@ -165,6 +169,8 @@ class GameActivity : AppCompatActivity() {
                 //Back card text
                 backCardText.setText("$consequenceStr \n+$consequencePoints poäng" +
                         "\n \nEller\n \n $consequenceOption \n+$consequenceOptionPoints poäng" )
+                rightButtonPoints(consequencePoints)
+                leftButtonPoints(consequenceOptionPoints)
             }
             "Mission" -> {
                 val randomMissionIndex = (0 until arrayMission.count()).random()
@@ -177,6 +183,7 @@ class GameActivity : AppCompatActivity() {
 
                 frontCardText.text = "Uppdrag"
                 backCardText.setText("$missionStr \n+$missionPoints poäng")
+                rightMissionButton(missionPoints)
             }
         }
     }
@@ -189,26 +196,32 @@ class GameActivity : AppCompatActivity() {
             consequenceCoiceStr = arrayConsequence[index.plus(1)]
             consequenceOptionPoints = arrayConsequencePoints[index.plus(1)]
             return consequenceCoiceStr
-        } else {
+        } else if (index.plus(1) % 2 == 0){
             consequenceCoiceStr = arrayConsequence[index - 1]
             consequenceOptionPoints = arrayConsequencePoints[index - 1]
         }
 
         return consequenceCoiceStr
     }
+
+    fun rightButtonPoints(points: Int){
+        leftButton.visibility = View.VISIBLE
+        rightButton.setText("+$points")
+        GameSettings.addPointsToPlayer(counter, points)
+    }
+    fun leftButtonPoints(points: Int){
+        leftButton.visibility = View.VISIBLE
+        leftButton.setText("+$points")
+        GameSettings.addPointsToPlayer(counter, points)
+    }
+    fun rightMissionButton(missionPoints: Int){
+        leftButton.visibility = View.INVISIBLE
+        rightButton.setText("+$missionPoints")
+        GameSettings.addPointsToPlayer(counter, missionPoints)
+    }
+
+
+
+
+
 }
-
-
-        //
-
-        /*when(randomIndex) {
-            arrayConsequence -> {
-                frontCardText.setText("Consequence")
-                backCardText.setText(randomIndex + "\n \nEller\n \n" + arrayConsequence)
-            }
-            arrayMission -> {
-                frontCardText.setText("Mission")
-                backCardText.setText(randomIndex)
-            }
-        }*/
-
