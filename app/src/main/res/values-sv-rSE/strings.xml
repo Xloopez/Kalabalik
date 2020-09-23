@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KALABALIK</string>
+    <string name="add_player">LÄGG TILL</string>
+    <string name="start_game">STARTA SPEL</string>
+    <string name="now_playing_round">Spelar nu runda %d av %d</string>
+    <string name="amount_of_players">Antal spelare</string>
+    <string name="enter_amount_of_players_2_5">Ange antal spelare, 2–5!</string>
+</resources>
