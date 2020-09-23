@@ -175,7 +175,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 clearEditTextForNewInput(inputPlayers)
                 Animationz.slideOutRightSlideInLeft(tilInput)
                 btnSetText(btnContinue, getString(R.string.add_player))
-
+                etInput.setText("Player $counter") //TODO REMOVE LATER
             }
             in 1 until playerCount -> {
 
@@ -184,6 +184,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 inputPlayers.includeCounterValue(count = counter)
                 Animationz.slideOutRightSlideInLeft(tilInput)
                 clearEditTextForNewInput(inputPlayers)
+                etInput.setText("Player $counter") //TODO REMOVE LATER
 
             }
             playerCount -> {

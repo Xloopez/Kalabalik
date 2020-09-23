@@ -11,7 +11,7 @@ import com.example.myapplication.databinding.FragmentGameScoreListBinding
 import kotlinx.android.synthetic.main.fragment_item_game_score.view.*
 //TODO TA VÄCK SYNTETHICS ERS. MED viewBinding
 
-class GameScoreFragment : Fragment() {
+class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
     private var scoreAdapter: CustomMutableListRecViewAdapter<Player>? = null
@@ -19,6 +19,8 @@ class GameScoreFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
+
+    private lateinit var list: MutableList<Player>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
         _binding = FragmentGameScoreListBinding.inflate(layoutInflater, container, false)
@@ -31,7 +33,16 @@ class GameScoreFragment : Fragment() {
 
         recyclerView = binding.recyclerView
 
-        scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score,sharedViewModel.getPlayerFinalResultSorted()){
+        list = when (miniScore) {
+            true -> {
+                sharedViewModel.listOfPlayers;
+            }
+            false -> {
+                sharedViewModel.getPlayerFinalResultSorted()
+            }
+        }
+
+        scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list){
 
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 0 ->  newFragmentInstance(GameInputFragment(), "GameInput", false)
                 1 ->  newFragmentInstance(GamingFragment(), "Gaming", true)
-                2 ->  newFragmentInstance(GameScoreFragment(), "Score", true)
+                2 ->  newFragmentInstance(GameScoreFragment(miniScore = false), "Score", true)
             }
         })
 
@@ -42,12 +42,8 @@ class MainActivity : AppCompatActivity() {
                 R.anim.fragment_slide_right_exit)
 
             when (replace) {
-                true -> {
-                    replace(R.id.frame_layout, fragment, tag)
-                }
-                false -> {
-                    add(R.id.frame_layout, fragment, tag)
-                }
+                true -> { replace(R.id.frame_layout, fragment, tag) }
+                false -> { add(R.id.frame_layout, fragment, tag) }
             }
         }.commit()
 

@@ -5,18 +5,14 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
-import android.hardware.input.InputManager
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.view.inputmethod.InputMethod
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 
 
 object Animationz {
@@ -76,7 +72,7 @@ object Animationz {
 
     }
 
-    fun flipCard(context: Context, view: AppCompatTextView, textToSet: String, listOfView: MutableList<View>): AnimatorSet {
+    fun flipCard(context: Context, view: View, textToSet: String, listOfView: MutableList<View>): AnimatorSet {
 
         Util.viewApplyVis(view, View.VISIBLE)
         val listFilterButtons = listOfView.filterIsInstance<AppCompatButton>()
@@ -98,7 +94,7 @@ object Animationz {
                 
             doOnEnd {
                 view.apply {
-                    text = ""
+                   // text = ""
                     background = ContextCompat.getDrawable(context, R.drawable.card_background_with_strokes)
                     //background = ContextCompat.getDrawable(context, R.drawable.card_background)
                 }
@@ -127,7 +123,7 @@ object Animationz {
                 interpolator = DecelerateInterpolator()
                 duration = 300
                 doOnEnd {
-                    view.text = textToSet
+                   // view.text = textToSet
                     listFilterButtons.forEach { it.apply { it.isClickable = true } }
                 }
             }
@@ -141,6 +137,76 @@ object Animationz {
     }
 
 
+    fun flipCardFragment(context: Context, view: View, viewsList: MutableList<View>, gamingViewModel: GamingViewModel): AnimatorSet {
+
+        val listFilterButtons = viewsList.filterIsInstance<AppCompatButton>()
+
+        gamingViewModel.clearCardFragment.postValue(1)
+        Util.viewApplyVis(view, View.VISIBLE)
+        5
+        val firstTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
+            .apply {
+                duration = 300
+                interpolator = DecelerateInterpolator()
+                doOnStart {
+
+                    view.background = ContextCompat.getDrawable(context, R.drawable.card_background_with_strokes)
+                    listFilterButtons.forEach {
+                        it.apply {
+                            it.isClickable = false
+                            animate().rotationBy(100f)
+                        }
+                    }
+                }
+                view.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
+
+                doOnEnd {
+                    view.apply {
+                        // text = ""
+
+                        background = ContextCompat.getDrawable(context, R.drawable.card_background_with_strokes)
+                        //background = ContextCompat.getDrawable(context, R.drawable.card_background)
+                    }
+                }
+            }
+
+        val secondTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, -90f, 0f)
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = 300
+            }
+
+        val thirdTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
+            .apply {
+                duration = 300
+                interpolator = DecelerateInterpolator()
+
+                doOnEnd {
+                    gamingViewModel.updateCardFragment.postValue(1)
+                    view.background = ContextCompat.getDrawable(context, R.drawable.card_background_front)
+                    listFilterButtons.forEach { it.apply { animate().rotationBy(-100f) } }
+                    view.animate().scaleXBy(0.5f).scaleYBy(0.5f)
+                }
+            }
+
+        val fourthTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, -90f, 0f)
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = 300
+                doOnEnd {
+
+                    // view.text = textToSet
+                    listFilterButtons.forEach { it.apply { it.isClickable = true } }
+                }
+            }
+
+        val scale: Float = context.resources.displayMetrics.density * 8000
+        view.cameraDistance = scale
+
+        return AnimatorSet().apply {
+            playSequentially(firstTurn90, secondTurn90, thirdTurn90, fourthTurn90)
+        }
+    }
 
 
 

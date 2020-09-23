@@ -18,6 +18,7 @@ class SharedViewModel: ViewModel() {
         value = 3
     }
 
+
     fun addPlayerToList(player: Player){
         listOfPlayers.add(player)
     }

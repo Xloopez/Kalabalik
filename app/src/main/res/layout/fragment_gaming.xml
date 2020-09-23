@@ -88,33 +88,45 @@
         android:textColor="@android:color/white"
         tools:text="Playername" />
 
-    <LinearLayout
-        android:id="@+id/linear_card"
+
+    <FrameLayout
+        android:id="@+id/frame_layout_card_points"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        android:orientation="horizontal"
-        android:clipChildren="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
-        app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom">
+        app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom"
+        tools:background="@drawable/card_background_front"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textView_gaming_info"
-            android:background="@drawable/card_background_front"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:padding="5dp"
-            tools:text="INPUT INFORMATION TEXTVIEW" />
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linear_card"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:clipChildren="false"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/guideline_card_top"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom">-->
 
-        <include
-            android:id="@+id/recycler_view_inc"
-            layout="@layout/fragment_game_score_list"/>
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:id="@+id/textView_gaming_info"-->
+<!--            android:background="@drawable/card_background_front"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:textAlignment="center"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="5dp"-->
+<!--            tools:text="INPUT INFORMATION TEXTVIEW" />-->
 
-    </LinearLayout>
+<!--        <include-->
+<!--            android:id="@+id/recycler_view_inc"-->
+<!--            layout="@layout/fragment_game_score_list"/>-->
+
+<!--    </LinearLayout>-->
 
 
     <androidx.appcompat.widget.AppCompatButton

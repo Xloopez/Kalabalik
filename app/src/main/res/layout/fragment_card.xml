@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear_card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
+    app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom"
+    android:background="@android:color/transparent"
+    tools:background="@color/deep_purple_200">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_cardType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.1"
+        android:gravity="center"
+        android:rotation="340"
+        android:textSize="40sp"
+        android:maxLines="1"
+        android:fontFamily="@font/permanent_marker"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="CONSEQUENCE" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_conOne"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="C1"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:shadowColor="@android:color/black"
+        android:shadowRadius="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="9dp"
+        tools:text="Consequence 1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_plusSign"
+        style="@style/RoundsStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:fontFamily="@font/permanent_marker"
+        android:gravity="center"
+        android:text="+"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:elevation="2dp"
+        android:shadowColor="@android:color/black"
+        android:shadowRadius="5"
+        app:layout_constraintBottom_toBottomOf="@id/textView_conOne_points"
+        app:layout_constraintEnd_toStartOf="@id/textView_conOne_points"
+        app:layout_constraintTop_toTopOf="@id/textView_conOne_points"
+        tools:text="+" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_conOne_points"
+        style="@style/RoundsStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:elevation="2dp"
+        android:shadowColor="@android:color/black"
+        android:shadowRadius="5"
+        app:layout_constraintBottom_toBottomOf="@id/textView_conOne"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="0" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
