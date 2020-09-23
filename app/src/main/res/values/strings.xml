@@ -4,6 +4,5 @@
     <string name="start_game">START GAME</string>
     <string name="now_playing_round">Now playing round %d out of %d</string>
     <string name="amount_of_players">Amount of players</string>
-    <string name="enter_amount_of_players_2_5">Enter amount of players, 2-5!</string>
-
+    <string name="enter_amount_of_players_2_5">Enter amount of players, 2–5!</string>
 </resources>
