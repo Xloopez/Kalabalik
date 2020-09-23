@@ -4,7 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -88,7 +87,9 @@ object Animationz {
 
     }
 
-    private fun View.flipView(context: Context): AnimatorSet {
+    fun View.flipView180(context: Context): AnimatorSet {
+
+        val view = this
 
         val scale: Float = context.resources.displayMetrics.density * 8000
         checkCameraDistance(this, scale)
@@ -102,6 +103,53 @@ object Animationz {
 
         return AnimatorSet().apply {
             playSequentially(firstTurn90, secondTurn90)
+        }
+
+    }
+
+    fun AppCompatTextView.flipNewRound(context: Context, sText: String): AnimatorSet {
+
+        val view = this
+
+        val scale: Float = context.resources.displayMetrics.density * 8000
+        checkCameraDistance(this, scale)
+
+        val firstTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
+            duration = flipCardDurationOneHalf
+            doOnEnd {
+                view.text = sText
+            }
+        }
+        val secondTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+            duration = flipCardDurationOneHalf
+        }
+
+        return AnimatorSet().apply {
+            playSequentially(firstTurn90, secondTurn90)
+        }
+
+    }
+
+    fun View.flipView360(context: Context): AnimatorSet {
+
+        val scale: Float = context.resources.displayMetrics.density * 8000
+        checkCameraDistance(this, scale)
+
+        val firstTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
+            duration = flipCardDurationOneFourth
+        }
+        val secondTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+            duration = flipCardDurationOneFourth
+        }
+        val thirdTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+            duration = flipCardDurationOneFourth
+        }
+        val fourthTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+            duration = flipCardDurationOneFourth
+        }
+
+        return AnimatorSet().apply {
+            playSequentially(firstTurn90, secondTurn90, thirdTurn90, fourthTurn90)
         }
 
     }
@@ -126,7 +174,7 @@ object Animationz {
                     listFilterButtons.forEach {
                         it.apply {
                             isClickable = false
-                            flipView(context = context).start()
+                            flipView180(context = context).start()
                         }
                     }
                 }
