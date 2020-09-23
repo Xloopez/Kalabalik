@@ -46,21 +46,19 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.75" />
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_amount_of_rounds"
         style="@style/RoundsStyle"
-        android:layout_marginTop="3dp"
         android:fontFamily="@font/aladin"
         android:shadowColor="@android:color/black"
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="1"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView_current_round"
+        app:layout_constraintEnd_toStartOf="@+id/textView_current_round_num"
         app:layout_constraintStart_toEndOf="@+id/space"
         app:layout_constraintTop_toTopOf="@+id/space"
-        tools:text="out of 15" />
+        tools:text="out of 15 total rounds" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_current_round"
@@ -71,11 +69,25 @@
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="2"
+        android:text="Round"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/space"
-        app:layout_constraintEnd_toStartOf="@+id/space"
-        app:layout_constraintStart_toEndOf="@+id/space"
-        tools:text="Round 15" />
+        app:layout_constraintEnd_toEndOf="@+id/space" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_current_round_num"
+        style="@style/RoundsStyle"
+        android:elevation="2dp"
+        android:fontFamily="@font/aladin"
+        android:shadowColor="@android:color/white"
+        android:shadowDx="1"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginStart="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top"
+        app:layout_constraintStart_toEndOf="@+id/textView_current_round"
+        tools:text="15" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_playerName"

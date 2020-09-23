@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentCardBinding
+import org.w3c.dom.Text
 
 class CardFragment: Fragment() {
 
@@ -20,8 +22,9 @@ class CardFragment: Fragment() {
     private lateinit var tvCardType: AppCompatTextView
     private lateinit var tvCon1: AppCompatTextView
     private lateinit var tvCon1Points: AppCompatTextView
+    private lateinit var tvPlusSign: AppCompatTextView
 
-    private lateinit var viewList: MutableList<*>
+    private lateinit var viewList: MutableList<TextView>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -33,25 +36,21 @@ class CardFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyViewBinding()
+        viewList = mutableListOf(tvCardType, tvCon1, tvCon1Points, tvPlusSign)
 
-        tvCardType.text = ""
-        tvCon1.text = ""
-        tvCon1Points.text = ""
-
+        clearViews()
 
         gamingViewModel.clearCardFragment.observe(this, {
-            //viewList.run { Util.hideAllViews(this) }
-            tvCardType.text = ""
-            tvCon1.text = ""
-            tvCon1Points.text = ""
-
+            clearViews()
         })
 
         gamingViewModel.updateCardFragment.observe(this, {
 
             tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
+            tvPlusSign.text = "+"
 
             Log.d("!", "${gamingViewModel.currentCardType.value?.getEnumString()}")
+
 
             when (gamingViewModel.currentCardType.value) {
                 EnumUtil.EnRandom.CONSEQUENCES -> {
@@ -68,12 +67,19 @@ class CardFragment: Fragment() {
 
     }
 
+    private fun clearViews() {
+        viewList.forEach {
+            it.text = ""
+        }
+    }
+
     private fun applyViewBinding(){
 
         binding.apply {
             tvCardType = textViewCardType
             tvCon1 = textViewConOne
             tvCon1Points = textViewConOnePoints
+            tvPlusSign = textViewPlusSign
         }
     }
 

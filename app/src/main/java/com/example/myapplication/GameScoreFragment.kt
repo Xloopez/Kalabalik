@@ -34,12 +34,8 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         recyclerView = binding.recyclerView
 
         list = when (miniScore) {
-            true -> {
-                sharedViewModel.listOfPlayers;
-            }
-            false -> {
-                sharedViewModel.getPlayerFinalResultSorted()
-            }
+            true -> { sharedViewModel.listOfPlayers }
+            false -> { sharedViewModel.getPlayerFinalResultSorted() }
         }
 
         scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list){

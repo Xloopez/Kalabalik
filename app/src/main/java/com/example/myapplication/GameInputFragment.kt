@@ -8,11 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.Animationz.slideOutRightSlideInLeft
 import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -24,7 +24,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
 
     private lateinit var tvTitle: AppCompatTextView
-    private lateinit var tvInputInfo: AppCompatTextView
+//    private lateinit var tvInputInfo: AppCompatTextView
 
     private lateinit var tilInput: TextInputLayout
     private lateinit var etInput: TextInputEditText
@@ -146,7 +146,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
             /*TEXT-VIEWS*/
             tvTitle = textViewAppTitle
-            tvInputInfo = textViewInputInfo
+//            tvInputInfo = textViewInputInfo
 
             /*EDIT-TEXTS*/
             tilInput = textInputLayoutInput
@@ -168,23 +168,22 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
         when (counter) {
             0 -> {
-
                 sharedViewModel.playerCount.postValue(Integer.parseInt(etInput.text.toString()))
                 increaseCounterByOne()
                 inputPlayers.includeCounterValue(count = counter)
                 clearEditTextForNewInput(inputPlayers)
-                Animationz.slideOutRightSlideInLeft(tilInput)
+                tilInput.slideOutRightSlideInLeft().start()
                 btnSetText(btnContinue, getString(R.string.add_player))
-                etInput.setText("Player $counter") //TODO REMOVE LATER
+                etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
             }
             in 1 until playerCount -> {
 
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
                 inputPlayers.includeCounterValue(count = counter)
-                Animationz.slideOutRightSlideInLeft(tilInput)
+                tilInput.slideOutRightSlideInLeft().start()
                 clearEditTextForNewInput(inputPlayers)
-                etInput.setText("Player $counter") //TODO REMOVE LATER
+                etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
 
             }
             playerCount -> {
@@ -192,9 +191,8 @@ class GameInputFragment: Fragment(), View.OnClickListener {
                 addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
                 increaseCounterByOne()
                 Util.viewApplyVis(tilInput, View.INVISIBLE)
-                Util.viewApplyVis(tvInputInfo, View.INVISIBLE)
                 btnSetText(btnContinue, getString(R.string.start_game))
-                Animationz.animButton(btnContinue)
+               // Animationz.animButton(btnContinue)
                 Animationz.hideSoftKeyBoard(requireActivity(), btnContinue)
 
             }

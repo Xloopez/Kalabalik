@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager
 
 object Util {
 
-
     fun setViewVisibilityFadeInOut(view: View, visible: Boolean) {
         when (visible){
             true -> {
@@ -40,6 +39,8 @@ object Util {
     }
     fun newFragmentInstance(fragmentManager: FragmentManager, fragment: Fragment, layoutId: Int, tag: String, replace: Boolean) {
 
+
+        //TODO BOOLEAN ANIM??
         fragmentManager.beginTransaction().apply {
 
             when (replace) {

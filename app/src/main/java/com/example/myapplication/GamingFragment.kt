@@ -1,17 +1,24 @@
 package com.example.myapplication
 
+import android.animation.AnimatorSet
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.EnumUtil.*
-import com.example.myapplication.EnumUtil.EnOperation.*
+import com.example.myapplication.Animationz.slideOutRightInLeftSetText
+import com.example.myapplication.EnumUtil.EnOperation
+import com.example.myapplication.EnumUtil.EnOperation.FAIL
+import com.example.myapplication.EnumUtil.EnOperation.SUCCESS
+import com.example.myapplication.EnumUtil.EnRandom
 import com.example.myapplication.Util.newFragmentInstance
 import com.example.myapplication.Util.viewApplyVis
 import com.example.myapplication.Util.viewApplyVisFromList
@@ -73,13 +80,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
         pCount =  sharedViewModel.playerCount.value!!
         maxRounds = sharedViewModel.amountOfRounds.value!!
         totalTurns = maxRounds.times(pCount).plus(maxRounds)
-        tvTotalRounds.apply { text = "out of $maxRounds" }
+        tvTotalRounds.apply { text = "out of $maxRounds rounds" }
         gamingViewModel.currentTurn.postValue(1)
         updateRound()
 
         gamingViewModel.currentPlayer.observe(this, {
             currPlayer = it
-            tvPlayerName.text = it.name
+            tvPlayerName.slideOutRightInLeftSetText(it.name).start()
         })
 
         gamingViewModel.currentTurn.observe(this, {
@@ -111,9 +118,21 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         gamingViewModel.currentRound.observe(this, {
             currRound = it
-            //TODO SPLIT TEXTVIEWS IN XML CHANGE ROUND ON 1 -> ANIMATE NEW ROUND?? OR ANIMATE WHOLE TEXT
-            val rnd = "ROUND $it"
-            tvCurrRound.apply { text = rnd }
+
+
+            val a1 = Animationz.slideOutRight(tvCurrRound).apply {
+                interpolator = AccelerateInterpolator()
+            }
+            val a2 = Animationz.slideInLeft(tvCurrRound).apply {
+                interpolator = OvershootInterpolator()
+            }
+
+            a1.doOnEnd { _ ->
+                tvCurrRound.apply { text = it.toString() }
+            }
+            AnimatorSet().apply { playSequentially(a1, a2) }.start()
+
+
             if (isFinalRound()) { displayFinalRoundStarted() }
         })
     }
@@ -124,7 +143,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
             /* TEXT-VIEWS */
             tvPlayerName = textViewPlayerName
-            tvCurrRound = textViewCurrentRound
+            tvCurrRound = textViewCurrentRoundNum
             tvTotalRounds = textViewAmountOfRounds
 
             /* BUTTONS */
@@ -135,14 +154,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
             frameLayout = frameLayoutCardPoints
         }
 
-       listOfViews = mutableListOf(btnFail, btnSuccess, tvPlayerName)
+       listOfViews = mutableListOf(btnFail, btnSuccess)
     }
 
 
     private fun endGame() {
 
         sharedViewModel.currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
-        tvPlayerName.apply { text = "GAME ENDED - TAKE ME TO SCORE" }
+        //tvPlayerName.apply { text = "GAME ENDED - TAKE ME TO SCORE" }
 
         mutableListOf(
             viewApplyVis(btnSuccess, View.INVISIBLE),
@@ -163,10 +182,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        tvPlayerName.apply { text = context.getString(R.string.current_points) }
+        tvPlayerName.slideOutRightInLeftSetText(getString(R.string.current_points)).start()
 
         mutableListOf(
-            //viewApplyVis(frameLayout, View.INVISIBLE),
             viewApplyVis(btnFail, View.INVISIBLE))
             .run {
                 viewApplyVisFromList(this)
@@ -194,42 +212,36 @@ class GamingFragment : Fragment(), View.OnClickListener {
         when (val ran = arrayOfEnRandoms.random()) {
             EnRandom.CONSEQUENCES -> {
 
-                val randomEvenIndex = (0 until listOfConsequences.count()).filter { it % 2 == 0 }.random()
-                val randomEven = listOfConsequences[randomEvenIndex];
-                val pointsEven = listOfConsequencesPoints[randomEvenIndex].toDouble()
-//                val randomOdd = listOfConsequences[randomEvenIndex + 1]
-//                val pointsOdd = listOfConsequencesPoints[randomEvenIndex+ 1].toDouble()
+                val rIndex =  getRandomListIndex(listOfConsequences)
+                val rConsequence = listOfConsequences[rIndex]
+                val rPoints = listOfConsequencesPoints[rIndex].toDouble()
 
-//                 Log.d("!", "$randomOdd Con1: $pointsEven ---- $randomEven Con2: $pointsOdd")
                 gamingViewModel.apply {
-                    consequencePair.postValue(Pair(randomEven, pointsEven))
+                    consequencePair.postValue(Pair(rConsequence, rPoints))
                     currentCardType.postValue(ran)
                 }
 //               Log.d("!", "${ran.getEnumString()} // Con1: $randomEven $pointsEven ---- $randomOdd Con2: $pointsOdd")
             }
             EnRandom.MISSION -> {
 
-                val randomIndex = (0 until listOfMissions.count()).random()
-                val randomMission = listOfMissions[randomIndex]
-                val randomPoints = listOfMissionsPoints[randomIndex].toDouble()
+                val rIndex = getRandomListIndex(listOfMissions)
+                val rMission = listOfMissions[rIndex]
+                val rPoints = listOfMissionsPoints[rIndex].toDouble()
 
                 gamingViewModel.apply {
-                    consequencePair.postValue(Pair(randomMission, randomPoints))
-                    missionPair.postValue(Pair(randomMission, randomPoints))
+                    missionPair.postValue(Pair(rMission, rPoints))
                     currentCardType.postValue(ran)
                 }
-
-                Log.d("!", "${ran.getEnumString()} // $randomMission $randomPoints")
-
             }
         }
 
        //val listOfViews = mutableListOf<View>(btnFail, btnSuccess, tvPlayerName)
        Animationz.flipCardFragment(context = requireContext(), view = frameLayout, viewsList = listOfViews, gamingViewModel).start()
        updateCurrPlayer()
-       btnSuccess.apply { text = "SUCCESS" }
+       buttonChangeText(btnSuccess, "SUCCESS")
     }
 
+    private fun getRandomListIndex(list: Array<String>) = (0 until list.count()).random()
 
     private fun updateTurn() = gamingViewModel.currentTurn.postValue(gamingViewModel.currentTurn.value?.plus(1))
 
@@ -239,6 +251,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun updateRound()= gamingViewModel.currentRound.postValue(gamingViewModel.currentRound.value?.plus(1))
 
+    private fun buttonChangeText(view: AppCompatButton, text: String) = view.apply{ view.text = text}
+    //                val randomEvenIndex = (0 until listOfConsequences.count()).filter { it % 2 == 0 }.random()
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -251,8 +265,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    //TODO SEND SELECTED POINTS BACK TO ACTIVITY IF CONS SUCCESS..
-    //TODO MISSION JUST APPLY..
     private fun updatePlayerPoints(operation: EnOperation) {
 
         currPlayer.listAddRoundAndPoints(when(operation) {
