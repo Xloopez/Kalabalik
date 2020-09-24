@@ -1,16 +1,23 @@
 package com.example.myapplication
 
+import android.animation.AnimatorSet
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.Animationz.flipNewRound
+import com.example.myapplication.Animationz.flipToBackY
+import com.example.myapplication.Animationz.flipToFrontY
 import com.example.myapplication.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.EnumUtil.EnOperation
 import com.example.myapplication.EnumUtil.EnOperation.FAIL
@@ -45,7 +52,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private lateinit var listOfMissionsPoints: IntArray
 
     private lateinit var frameLayout: FrameLayout
-
 
     private var currRound = 0
     private var currTurn = 0
@@ -252,13 +258,78 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
 
 
-//     Log.d("!", "${ran.getEnumString()} // Con1: $randomEven $pointsEven ---- $randomOdd Con2: $pointsOdd")
-       //val listOfViews = mutableListOf<View>(btnFail, btnSuccess, tvPlayerName)
+       gamingViewModel.clearCardFragment.postValue(1)
+       flipCardFrag(viewToFlip = frameLayout, listOfViews = listOfViews).start()
        gamingViewModel.updateCardTypeAndPair(pair, cardType)
-       Animationz.flipCardFragment(context = requireContext(), view = frameLayout, viewsList = listOfViews, gamingViewModel).start()
        updateCurrPlayer()
        buttonChangeText(btnSuccess,"SUCCESS")
     }
+
+    fun flipCardFrag(viewToFlip: View, listOfViews: MutableList<View>): AnimatorSet {
+
+        val v = viewToFlip
+        val scale: Float = requireContext().resources.displayMetrics.density * 16000 //TODO MOVE TO TOP DEC ANIM
+        Animationz.checkCameraDistance(viewToFlip, scale) //TODO MOVE TO TOP DEC ANIM
+
+
+        val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
+        viewApplyVis(viewToFlip, View.VISIBLE)
+
+
+        val a1 = v.flipToBackY().apply {
+            duration = Animationz.flipCardDurationOneFourth
+            interpolator = DecelerateInterpolator()
+            doOnStart {
+                listOfButtons.clickable(false)
+            }
+            v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
+
+            doOnEnd {
+                v.background = getDrawable(requireContext(), R.drawable.card_background_with_strokes)
+            }
+        }
+
+        val a2 = v.flipToFrontY()
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = Animationz.flipCardDurationOneFourth
+
+            }
+
+        val a3 = v.flipToBackY()
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = Animationz.flipCardDurationOneFourth
+
+                doOnEnd {
+                    gamingViewModel.updateCardFragment.postValue(1)
+                    v.apply {
+                        animate().scaleXBy(0.5f).scaleYBy(0.5f)
+                        background = getDrawable(requireContext(), R.drawable.card_background_front)
+                    }
+                }
+            }
+
+        val a4 = v.flipToFrontY()
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = Animationz.flipCardDurationOneFourth
+
+                doOnEnd { listOfButtons.clickable(true) }
+            }
+
+         return AnimatorSet().apply {
+            playSequentially(a1, a2, a3, a4)
+        }
+
+    }
+
+    private fun List<AppCompatButton>.clickable(clickable: Boolean) {
+        this.forEach { it.apply { isClickable = clickable } }
+    }
+
+    private inline fun <reified T> MutableList<View>.listFilterInstance() =
+        this.filterIsInstance<T>()
 
     private fun returnListPair(index: Int, strArr: Array<String>, intArr: IntArray): Pair<String, Double> = Pair(strArr[index], intArr[index].toDouble())
 

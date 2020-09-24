@@ -8,11 +8,8 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
-import androidx.core.content.ContextCompat
 
 
 object Animationz {
@@ -20,24 +17,39 @@ object Animationz {
     private const val flipCardDuration = 1200L
     private const val flipCardDurationOneHalf = flipCardDuration/2
     private const val flipCardDurationOneThird = flipCardDuration/3
-    private const val flipCardDurationOneFourth = flipCardDuration/4
+    const val flipCardDurationOneFourth = flipCardDuration/4
 
+    fun View.flipToBackY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f)}
+    fun View.flipToFrontY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f)}
 
+    fun View.fadeInAnim1(): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.ALPHA, 0.1f, 1f)
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = 300 }
+    }
+    fun View.fadeOutAnim1(): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.ALPHA, 1f, 0.1f)
+            .apply {
+                interpolator = DecelerateInterpolator()
+                duration = 300 }
+    }
 
+    //REMOVE AND CHANGE TO VIEW. ABOVE
     fun fadeInAnim(view: View): ObjectAnimator {
         return ObjectAnimator.ofFloat(view, View.ALPHA, 0.1f, 1f).apply {
             interpolator = DecelerateInterpolator()
             duration = 300
         }
     }
-
+    //  REMOVE AND CHANGE TO VIEW. ABOVE
     fun fadeOutAnim(view: View): ObjectAnimator {
         return ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0.1f).apply {
             interpolator = DecelerateInterpolator()
             duration = 300
         }
     }
-
+    // CHANGE TO VIEW.
     fun slideOutRight(view: View): ObjectAnimator {
         return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f, view.width + 100f).apply {
             interpolator = AccelerateInterpolator()
@@ -45,6 +57,7 @@ object Animationz {
         }
     }
 
+    // CHANGE TO VIEW.
     fun slideInLeft(view: View): ObjectAnimator {
         return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -view.width - 100f, 0f).apply {
             interpolator = DecelerateInterpolator()
@@ -59,12 +72,9 @@ object Animationz {
 
     fun View.slideOutRightSlideInLeft(): AnimatorSet {
 
-        val list = mutableListOf(
-            slideOutRight(this),
-            slideInLeft(this))
-
+        val v = this
         return AnimatorSet().apply {
-            playSequentially(list[0], list[1])
+            playSequentially(slideOutRight(v), slideInLeft(v))
         }
 
     }
@@ -87,149 +97,32 @@ object Animationz {
 
     }
 
-    fun View.flipView180(context: Context): AnimatorSet {
-
-        val view = this
-
-        val scale: Float = context.resources.displayMetrics.density * 8000
-        checkCameraDistance(this, scale)
-
-        val firstTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
-            duration = flipCardDurationOneHalf
-        }
-        val secondTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
-            duration = flipCardDurationOneHalf
-        }
-
-        return AnimatorSet().apply {
-            playSequentially(firstTurn90, secondTurn90)
-        }
-
-    }
-
     fun AppCompatTextView.flipNewRound(context: Context, sText: String): AnimatorSet {
 
-        val view = this
+        val v = this
 
-        val scale: Float = context.resources.displayMetrics.density * 8000
-        checkCameraDistance(this, scale)
+        val scale: Float = context.resources.displayMetrics.density * 8000 // MOVE
+        checkCameraDistance(this, scale) // MOVE
 
-        val firstTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
+        val a1 = flipToBackY().apply {
             duration = flipCardDurationOneHalf
             doOnEnd {
-                view.text = sText
+                v.text = sText
             }
         }
-        val secondTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+        val a2 = flipToFrontY().apply {
             duration = flipCardDurationOneHalf
         }
 
         return AnimatorSet().apply {
-            playSequentially(firstTurn90, secondTurn90)
+            playSequentially(a1, a2)
         }
 
     }
 
-    fun View.flipView360(context: Context): AnimatorSet {
-
-        val scale: Float = context.resources.displayMetrics.density * 8000
-        checkCameraDistance(this, scale)
-
-        val firstTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
-            duration = flipCardDurationOneFourth
-        }
-        val secondTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
-            duration = flipCardDurationOneFourth
-        }
-        val thirdTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
-            duration = flipCardDurationOneFourth
-        }
-        val fourthTurn90 = ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
-            duration = flipCardDurationOneFourth
-        }
-
-        return AnimatorSet().apply {
-            playSequentially(firstTurn90, secondTurn90, thirdTurn90, fourthTurn90)
-        }
-
-    }
-
-    fun flipCardFragment(context: Context, view: View, viewsList: MutableList<View>, gamingViewModel: GamingViewModel): AnimatorSet {
-
-        val listFilterButtons = viewsList.filterIsInstance<AppCompatButton>()
-
-        gamingViewModel.clearCardFragment.postValue(1)
-        Util.viewApplyVis(view, View.VISIBLE)
-
-        val scale: Float = context.resources.displayMetrics.density * 16000
-        checkCameraDistance(view, scale)
-
-        val firstTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
-            .apply {
-                duration = flipCardDurationOneFourth
-                interpolator = DecelerateInterpolator()
-                doOnStart {
-
-                    view.background = ContextCompat.getDrawable(context, R.drawable.card_background_with_strokes)
-                    listFilterButtons.forEach {
-                        it.apply {
-                            isClickable = false
-                            flipView180(context = context).start()
-                        }
-                    }
-                }
-                //view.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
-
-                doOnEnd {
-                    view.apply {
-                        // text = ""
-
-                        background = ContextCompat.getDrawable(context, R.drawable.card_background_with_strokes)
-                        //background = ContextCompat.getDrawable(context, R.drawable.card_background)
-                    }
-                }
-            }
-
-        val secondTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, -90f, 0f)
-            .apply {
-                interpolator = DecelerateInterpolator()
-                duration = flipCardDurationOneFourth
-            }
-
-        val thirdTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, 0f, 90f)
-            .apply {
-                duration = flipCardDurationOneFourth
-                interpolator = DecelerateInterpolator()
-
-                doOnEnd {
-                    gamingViewModel.updateCardFragment.postValue(1)
-                    view.background = ContextCompat.getDrawable(context, R.drawable.card_background_front)
-                  //  listFilterButtons.forEach { it.apply { animate().rotationBy(-100f) } }
-                }
-            }
-
-        val fourthTurn90 = ObjectAnimator.ofFloat(view, View.ROTATION_Y, -90f, 0f)
-            .apply {
-                interpolator = DecelerateInterpolator()
-                duration = flipCardDurationOneFourth
-                doOnEnd {
-
-                    // view.text = textToSet
-                    listFilterButtons.forEach { it.apply { it.isClickable = true } }
-                }
-            }
-
-
-
-        return AnimatorSet().apply {
-            playSequentially(firstTurn90, secondTurn90, thirdTurn90, fourthTurn90)
-        }
-    }
-
-    private fun checkCameraDistance(view: View, scale: Float) {
+    fun checkCameraDistance(view: View, scale: Float) {
         when (view.cameraDistance) {
-            scale -> {
-            }
+            scale -> { }
             else -> {
                 view.cameraDistance = scale
             }

@@ -40,6 +40,7 @@ class CardFragment: Fragment() {
         clearViews()
 
         gamingViewModel.clearCardFragment.observe(this, {
+            Log.d("!", "ClearCardFragment $it")
             clearViews()
         })
 
