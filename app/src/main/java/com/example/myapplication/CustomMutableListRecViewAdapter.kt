@@ -1,9 +1,9 @@
 package com.example.myapplication
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 
 abstract class CustomMutableListRecViewAdapter<T>(private val layoutId: Int, private val mutableList: MutableList<T>?) : RecyclerView.Adapter<CustomMutableListRecViewAdapter<T>.ViewHolder>() {

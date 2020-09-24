@@ -8,6 +8,7 @@ class GamingViewModel: ViewModel() {
     var updateCardFragment = MutableLiveData<Int>().apply {
         value = 0
     }
+
     var clearCardFragment = MutableLiveData<Int>().apply {
         value = 0
     }
@@ -33,6 +34,14 @@ class GamingViewModel: ViewModel() {
 
     var currentPlayer = MutableLiveData<Player>().apply {
         value = Player("InitialPlayer0", playerNum = 0)
+    }
+
+    fun updateCardTypeAndPair(pair: Pair<String, Double>, cardType: EnumUtil.EnRandom){
+        when (cardType) {
+            EnumUtil.EnRandom.CONSEQUENCES -> consequencePair.postValue(pair)
+            EnumUtil.EnRandom.MISSION -> missionPair.postValue(pair)
+        }
+        currentCardType.postValue(cardType)
     }
 
 }

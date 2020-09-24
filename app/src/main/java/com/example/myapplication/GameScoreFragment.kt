@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.FragmentGameScoreListBinding
 import kotlinx.android.synthetic.main.fragment_item_game_score.view.*
-//TODO TA VÄCK SYNTETHICS ERS. MED viewBinding
+
+//TODO TA VÄCK SYNTETHICS ERS. MED viewBinding i adapter
 
 class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
@@ -18,7 +19,7 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
     private var _binding: FragmentGameScoreListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recView: RecyclerView
 
     private lateinit var list: MutableList<Player>
 
@@ -31,14 +32,14 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = binding.recyclerView
+        applyViewBinding()
+        determineList()
+        setUpAdapter()
+    }
 
-        list = when (miniScore) {
-            true -> { sharedViewModel.listOfPlayers }
-            false -> { sharedViewModel.getPlayerFinalResultSorted() }
-        }
-
-        scoreAdapter = object: CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list){
+    private fun setUpAdapter() {
+        scoreAdapter = object :
+            CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
 
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)
@@ -51,7 +52,20 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
             }
 
         }
-        recyclerView.adapter = scoreAdapter
+        recView.adapter = scoreAdapter
+    }
+
+    private fun applyViewBinding(){
+        binding.apply {
+            recView = recyclerView
+        }
+    }
+
+    private fun determineList() {
+        list = when (miniScore) {
+            true -> { sharedViewModel.listOfPlayers }
+            false -> { sharedViewModel.lopSortedByPoints }
+        }
     }
 
 }
