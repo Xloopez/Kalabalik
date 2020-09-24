@@ -37,14 +37,15 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private lateinit var btnFail: AppCompatButton
 
     private val arrayOfEnRandoms = EnRandom.values()
-    private val listOfConsequences by lazy { resources.getStringArray(R.array.Consequences) }
-    private val listOfMissions by lazy { resources.getStringArray(R.array.Mission) }
-    private val listOfConsequencesPoints by lazy { resources.getIntArray(R.array.ConsequencesPoints) }
-    private val listOfMissionsPoints by lazy { resources.getIntArray(R.array.MissionPoints) }
+    private lateinit var listOfViews: MutableList<View>
+
+    private lateinit var listOfConsequences: Array<String>
+    private lateinit var listOfMissions: Array<String>
+    private lateinit var listOfConsequencesPoints: IntArray
+    private lateinit var listOfMissionsPoints: IntArray
 
     private lateinit var frameLayout: FrameLayout
 
-    private lateinit var listOfViews: MutableList<View>
 
     private var currRound = 0
     private var currTurn = 0
@@ -74,9 +75,26 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
 
+        setInitialValues()
+        updateRound()
+
+        setUpCurrentPlayerObserver()
+        setUpCurrentTurnObserver()
+        setUpCurrentRoundObserver()
+    }
+
+    private fun setInitialValues() {
         sharedViewModel.apply {
             pCount = playerCount.value!!
             maxRounds = amountOfRounds.value!!
+
+            resources.apply {
+                listOfConsequences = getStringArray(R.array.Consequences)
+                listOfMissions = getStringArray(R.array.Mission)
+                listOfConsequencesPoints = getIntArray(R.array.ConsequencesPoints)
+                listOfMissionsPoints = getIntArray(R.array.MissionPoints)
+            }
+
         }
 
         totalTurns = calcTotalTurn()
@@ -84,11 +102,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
         gamingViewModel.apply {
             currentTurn.postValue(1)
         }
-        updateRound()
 
-        setUpCurrentPlayerObserver()
-        setUpCurrentTurnObserver()
-        setUpCurrentRoundObserver()
+
     }
 
     private fun setUpCurrentRoundObserver() {
