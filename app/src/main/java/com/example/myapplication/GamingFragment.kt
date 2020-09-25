@@ -24,6 +24,7 @@ import com.example.myapplication.EnumUtil.EnOperation.FAIL
 import com.example.myapplication.EnumUtil.EnOperation.SUCCESS
 import com.example.myapplication.EnumUtil.EnRandom
 import com.example.myapplication.Util.newFragmentInstance
+import com.example.myapplication.Util.newFragmentInstanceAnim
 import com.example.myapplication.Util.viewApplyVis
 import com.example.myapplication.Util.viewApplyVisFromList
 import com.example.myapplication.databinding.FragmentGamingBinding
@@ -61,6 +62,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private lateinit var currPlayer: Player
 
+    private lateinit var spUtil: SharedPrefUtil
+    private var scale: Float = 0.0f
+
     //TODO Button Cancel before done?
     //TODO Override backbutton?
 
@@ -75,8 +79,15 @@ class GamingFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
+        spUtil = SharedPrefUtil(requireActivity())
+        scale = spUtil.getFloat(R.string.displayMetrics)
+        Animationz.checkCameraDistance(frameLayout, scale = scale * 8000) //TODO MOVE TO TOP DEC ANIM
+
         viewApplyVis(frameLayout, View.INVISIBLE)
-        newFragmentInstance(fragmentManager = childFragmentManager, CardFragment(), R.id.frame_layout_card_points, "CARD", false)
+        newFragmentInstance(fragmentManager = childFragmentManager,
+            CardFragment(),
+            R.id.frame_layout_card_points,
+            "CARD", false)
 
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
@@ -149,13 +160,15 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun displayScoreFragment() {
         frameLayout.background = null
-        newFragmentInstance(
+        gamingViewModel.clearCardFragment.postValue(1)
+        newFragmentInstanceAnim(
             fragmentManager = childFragmentManager,
             fragment = GameScoreFragment(miniScore = true),
             layoutId = R.id.frame_layout_card_points,
             tag = "SCORE",
-            replace = true
-        )
+            replace = true,
+            anim = true
+        ).commit()
     }
 
     private fun setUpCurrentPlayerObserver() {
@@ -187,10 +200,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun endGame() {
 
-        sharedViewModel.sorted()
-        sharedViewModel.currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
         //tvPlayerName.apply { text = "GAME ENDED - TAKE ME TO SCORE" }
 
+        sharedViewModel.apply {
+            sorted()
+            currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
+
+        }
         mutableListOf(
             viewApplyVis(btnSuccess, View.INVISIBLE),
             viewApplyVis(btnFail, View.INVISIBLE))
@@ -204,7 +220,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnSuccess.apply {
             text = getString(R.string.next_round)
             setOnClickListener {
-                newFragmentInstance(fragmentManager = childFragmentManager, CardFragment(), R.id.frame_layout_card_points, "CARD", replace = true)
+                newFragmentInstance(
+                    fragmentManager = childFragmentManager,
+                    CardFragment(),
+                    R.id.frame_layout_card_points,
+                    "CARD", replace = true)
                 updateRound()
                 updateTurn()
             }
@@ -259,21 +279,18 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 
        gamingViewModel.clearCardFragment.postValue(1)
-       flipCardFrag(viewToFlip = frameLayout, listOfViews = listOfViews).start()
+       frameLayout.flip(listOfViews = listOfViews).start()
        gamingViewModel.updateCardTypeAndPair(pair, cardType)
        updateCurrPlayer()
        buttonChangeText(btnSuccess,"SUCCESS")
     }
 
-    fun flipCardFrag(viewToFlip: View, listOfViews: MutableList<View>): AnimatorSet {
+    private fun FrameLayout.flip(listOfViews: MutableList<View>): AnimatorSet {
 
-        val v = viewToFlip
-        val scale: Float = requireContext().resources.displayMetrics.density * 16000 //TODO MOVE TO TOP DEC ANIM
-        Animationz.checkCameraDistance(viewToFlip, scale) //TODO MOVE TO TOP DEC ANIM
-
+        val v = this
 
         val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
-        viewApplyVis(viewToFlip, View.VISIBLE)
+        viewApplyVis(v, View.VISIBLE)
 
 
         val a1 = v.flipToBackY().apply {

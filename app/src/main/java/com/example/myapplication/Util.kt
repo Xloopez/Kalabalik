@@ -3,18 +3,25 @@ package com.example.myapplication
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.myapplication.Animationz.fadeInAnim1
+import com.example.myapplication.Animationz.fadeOutAnim1
 
 object Util {
 
     fun setViewVisibilityFadeInOut(view: View, visible: Boolean) {
         when (visible){
             true -> {
-                view.visibility = View.VISIBLE
-                Animationz.fadeInAnim(view)
+                view.apply {
+                    visibility = View.VISIBLE
+                    fadeInAnim1().start()
+                }
             }
             false -> {
-                view.visibility = View.INVISIBLE
-                Animationz.fadeOutAnim(view)
+                view.apply {
+                    visibility = View.INVISIBLE
+                    fadeOutAnim1().start()
+                }
             }
         }
     }
@@ -39,7 +46,6 @@ object Util {
     }
     fun newFragmentInstance(fragmentManager: FragmentManager, fragment: Fragment, layoutId: Int, tag: String, replace: Boolean) {
 
-
         //TODO BOOLEAN ANIM??
         fragmentManager.beginTransaction().apply {
 
@@ -53,6 +59,35 @@ object Util {
 //            }
 
         }.commit()
+
+    }
+
+    fun newFragmentInstanceAnim(fragmentManager: FragmentManager,
+                            fragment: Fragment,
+                            layoutId: Int,
+                            tag: String,
+                            replace: Boolean,
+                            anim: Boolean): FragmentTransaction {
+
+        //TODO BOOLEAN ANIM??
+        return fragmentManager.beginTransaction().apply {
+
+            when (anim) {
+                true -> {
+                    setCustomAnimations(
+                        R.anim.fragment_slide_right_enter,
+                        R.anim.fragment_slide_left_exit
+                    )
+                }
+                false -> { }
+            }
+
+            when (replace) {
+                true -> { replace(layoutId, fragment, tag) }
+                false -> { add(layoutId, fragment, tag) }
+            }
+
+        }
 
     }
 

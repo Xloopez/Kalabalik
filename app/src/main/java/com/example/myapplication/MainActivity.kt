@@ -10,12 +10,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var spUtil: SharedPrefUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+        spUtil = SharedPrefUtil(this).apply {
+           putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density)
+        }
 
         sharedViewModel.apply {
             amountOfRounds.postValue(3)

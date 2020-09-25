@@ -14,6 +14,7 @@ import androidx.core.animation.doOnEnd
 
 object Animationz {
 
+
     private const val flipCardDuration = 1200L
     private const val flipCardDurationOneHalf = flipCardDuration/2
     private const val flipCardDurationOneThird = flipCardDuration/3
@@ -35,20 +36,6 @@ object Animationz {
                 duration = 300 }
     }
 
-    //REMOVE AND CHANGE TO VIEW. ABOVE
-    fun fadeInAnim(view: View): ObjectAnimator {
-        return ObjectAnimator.ofFloat(view, View.ALPHA, 0.1f, 1f).apply {
-            interpolator = DecelerateInterpolator()
-            duration = 300
-        }
-    }
-    //  REMOVE AND CHANGE TO VIEW. ABOVE
-    fun fadeOutAnim(view: View): ObjectAnimator {
-        return ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0.1f).apply {
-            interpolator = DecelerateInterpolator()
-            duration = 300
-        }
-    }
     // CHANGE TO VIEW.
     fun slideOutRight(view: View): ObjectAnimator {
         return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f, view.width + 100f).apply {
@@ -71,12 +58,10 @@ object Animationz {
     }
 
     fun View.slideOutRightSlideInLeft(): AnimatorSet {
-
         val v = this
         return AnimatorSet().apply {
             playSequentially(slideOutRight(v), slideInLeft(v))
         }
-
     }
 
     fun AppCompatTextView.slideOutRightInLeftSetText(sText: String): AnimatorSet {
