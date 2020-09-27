@@ -1,6 +1,7 @@
 package com.example.kalabalik
 
 import android.text.Editable
+import android.util.Log
 
 object GameSettings {
 
@@ -14,6 +15,7 @@ object GameSettings {
         listOfPlayers.add(Player(name))
     }
     fun addPointsToPlayer(counter: Int, points: Int){
+        Log.d("!!!", "Counter is: $counter")
         listOfPlayers[counter].points += points
     }
 }

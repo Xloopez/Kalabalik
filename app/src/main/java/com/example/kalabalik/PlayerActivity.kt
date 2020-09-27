@@ -4,6 +4,7 @@ import android.content.Intent
 import android.location.GnssMeasurement
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -35,15 +36,18 @@ class PlayerActivity : AppCompatActivity() {
         when (counter){
                 in 1 until GameSettings.playerCount -> {
                     GameSettings.addPlayerToList(name)
+                    //addPlayer(name)
                     increaseCounterByOne()
                     playerName.text.clear()
                     playerName.setHint("Spelare $counter")
+                    //Log.d("!!!", "$name")
                     when (counter){
                         GameSettings.playerCount -> buttonNextName.setText(R.string.button_start_game)  //buttonNextName.setText("Starta spelet")
                     }
                 }
                 GameSettings.playerCount -> {
                     GameSettings.addPlayerToList(name)
+                    //addPlayer(name)
                     increaseCounterByOne()
                     val intent = Intent(this, GameActivity::class.java)
                     startActivity(intent)
@@ -55,6 +59,9 @@ class PlayerActivity : AppCompatActivity() {
         counter++
     }
 
+    /*fun addPlayer(name: String){
+        GameSettings.addPlayerAndPoints(name)
+    }*/
 
 
 }
