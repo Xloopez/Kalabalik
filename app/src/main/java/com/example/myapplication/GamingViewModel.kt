@@ -44,4 +44,5 @@ class GamingViewModel: ViewModel() {
         currentCardType.postValue(cardType)
     }
 
+
 }

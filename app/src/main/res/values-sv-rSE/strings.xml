@@ -6,4 +6,5 @@
     <string name="now_playing_round">Spelar nu runda %d av %d</string>
     <string name="amount_of_players">Antal spelare</string>
     <string name="enter_amount_of_players_2_5">Ange antal spelare, 2–5!</string>
+    <string name="round">Runda</string>
 </resources>

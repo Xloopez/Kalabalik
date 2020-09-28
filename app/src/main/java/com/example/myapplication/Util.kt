@@ -1,13 +1,22 @@
 package com.example.myapplication
 
 import android.view.View
+import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.myapplication.Animationz.fadeInAnim1
 import com.example.myapplication.Animationz.fadeOutAnim1
+import com.example.myapplication.Animationz.slideOutRight
 
 object Util {
+
+    abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
+                                var fragment: Fragment,
+                                var layoutId: Int,
+                                @Nullable var tag: String? = "",
+                                var replace: Boolean? = false,
+                                var animate: Boolean? = false){}
 
     fun setViewVisibilityFadeInOut(view: View, visible: Boolean) {
         when (visible){
@@ -28,9 +37,9 @@ object Util {
     fun viewApplyVis(view: View, visibility: Int? = null) {
         when (visibility) {
             8, 4 -> {
-                view.visibility = visibility; Animationz.slideOutRight(view)
+                view.visibility = visibility; view.slideOutRight()
             }
-            else -> { view.visibility = visibility ?: 0; Animationz.slideInLeft(view)}
+            else -> { view.visibility = visibility ?: 0; view.slideOutRight()}
         }
     }
 
@@ -61,6 +70,7 @@ object Util {
         }.commit()
 
     }
+
 
     fun newFragmentInstanceAnim(fragmentManager: FragmentManager,
                             fragment: Fragment,

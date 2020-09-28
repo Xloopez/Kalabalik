@@ -12,6 +12,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var spUtil: SharedPrefUtil
 
+    //TODO LIST OF FRAGMENTS, INDEX?
+    // TRIPLE? PAIR OF PAIRS?
+    var listOfFragment: MutableList<Fragment> = mutableListOf(GameInputFragment(), GamingFragment(), GameScoreFragment(miniScore = false))
+    var listOfFragmentTags: MutableList<String> = mutableListOf("mainFrag0", "mainFrag1", "mainFrag2")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,11 +31,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         sharedViewModel.currentFragmentPos.observe(this, {
-            when (it) {
-                0 ->  newFragmentInstance(GameInputFragment(), "GameInput", false)
-                1 ->  newFragmentInstance(GamingFragment(), "Gaming", true)
-                2 ->  newFragmentInstance(GameScoreFragment(miniScore = false), "Score", true)
-            }
+
+            var rep = true
+            when (it) {0 -> rep = false }
+
+            newFragmentInstance(listOfFragment[it], listOfFragmentTags[it], rep)
+
         })
 
     }

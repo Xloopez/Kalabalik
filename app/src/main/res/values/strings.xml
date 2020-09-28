@@ -8,5 +8,6 @@
     <string name="current_points" translatable="false">CURRENT POINTS</string>
     <string name="next_round" translatable="false">NEXT ROUND</string>
     <string name="displayMetrics" translatable="false">0</string>
+    <string name="round">Round</string>
 
 </resources>

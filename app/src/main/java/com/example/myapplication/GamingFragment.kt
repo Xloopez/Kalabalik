@@ -1,21 +1,30 @@
 package com.example.myapplication
 
 import android.animation.AnimatorSet
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
+import android.widget.TextSwitcher
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.Animationz.flipNewRound
+import com.example.myapplication.Animationz.checkCameraDistance
 import com.example.myapplication.Animationz.flipToBackY
 import com.example.myapplication.Animationz.flipToFrontY
 import com.example.myapplication.Animationz.slideOutRightInLeftSetText
@@ -23,8 +32,7 @@ import com.example.myapplication.EnumUtil.EnOperation
 import com.example.myapplication.EnumUtil.EnOperation.FAIL
 import com.example.myapplication.EnumUtil.EnOperation.SUCCESS
 import com.example.myapplication.EnumUtil.EnRandom
-import com.example.myapplication.Util.newFragmentInstance
-import com.example.myapplication.Util.newFragmentInstanceAnim
+import com.example.myapplication.Util.FragmentInputSettings
 import com.example.myapplication.Util.viewApplyVis
 import com.example.myapplication.Util.viewApplyVisFromList
 import com.example.myapplication.databinding.FragmentGamingBinding
@@ -38,8 +46,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
 
     private lateinit var tvPlayerName: AppCompatTextView
-    private lateinit var tvCurrRound: AppCompatTextView
     private lateinit var tvTotalRounds: AppCompatTextView
+
+    private lateinit var tSwitcherRounds: TextSwitcher
 
     private lateinit var btnSuccess: AppCompatButton
     private lateinit var btnFail: AppCompatButton
@@ -67,6 +76,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     //TODO Button Cancel before done?
     //TODO Override backbutton?
+    lateinit var fisCard: FragmentInputSettings
+    lateinit var fisScore: FragmentInputSettings
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -81,13 +93,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
         applyViewBinding()
         spUtil = SharedPrefUtil(requireActivity())
         scale = spUtil.getFloat(R.string.displayMetrics)
-        Animationz.checkCameraDistance(frameLayout, scale = scale * 8000) //TODO MOVE TO TOP DEC ANIM
+        frameLayout.checkCameraDistance(targetScale = (scale * 8000)) //TODO MOVE TO TOP DEC ANIM
 
-        viewApplyVis(frameLayout, View.INVISIBLE)
-        newFragmentInstance(fragmentManager = childFragmentManager,
-            CardFragment(),
-            R.id.frame_layout_card_points,
-            "CARD", false)
+        setFragmentInputs()
+        newFragmentInstance(fisCard).commit()
+        setUpTextSwitcherRoundNum()
 
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
@@ -98,6 +108,36 @@ class GamingFragment : Fragment(), View.OnClickListener {
         setUpCurrentPlayerObserver()
         setUpCurrentTurnObserver()
         setUpCurrentRoundObserver()
+
+    }
+
+    private fun setUpTextSwitcherRoundNum() {
+        tSwitcherRounds.setFactory {
+            val textView = TextView(requireContext()).apply {
+                // setTextAppearance(R.style.TextSwitcherStyle)
+                typeface = ResourcesCompat.getFont(requireContext(), R.font.irish_grover)
+                textSize = 40f
+                setTextColor(Color.WHITE)
+                gravity = Gravity.START
+                text = "0"
+            }
+            textView
+        }
+        tSwitcherRounds.inAnimation =
+            AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_in_left)
+        tSwitcherRounds.outAnimation =
+            AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
+    }
+
+    private fun setFragmentInputs() {
+        fisCard = object : FragmentInputSettings(
+            fragmentManager = this.childFragmentManager, fragment = CardFragment(),
+            layoutId = frameLayout.id, tag = "CARD", replace = false, animate = false,
+        ) {}
+        fisScore = object : FragmentInputSettings(
+            fragmentManager = this.childFragmentManager, fragment = GameScoreFragment(miniScore = true),
+            layoutId = frameLayout.id, tag = "CARD", replace = true, animate = true,
+        ) {}
     }
 
     private fun setInitialValues() {
@@ -116,18 +156,16 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         totalTurns = calcTotalTurn()
         tvTotalRounds.apply { text = "out of $maxRounds rounds" }
-        gamingViewModel.apply {
-            currentTurn.postValue(1)
-        }
-
+        gamingViewModel.apply { currentTurn.postValue(1) }
 
     }
 
     private fun setUpCurrentRoundObserver() {
         gamingViewModel.currentRound.observe(this, { newRound ->
             currRound = newRound
-            //TODO ADD VALUEANIMATOR?? TRANSFORM TEXT (newRound) FROM TO
-            tvCurrRound.flipNewRound(requireContext(), newRound.toString()).start()
+
+            tSwitcherRounds.setText(newRound.toString())
+
             if (isFinalRound()) {
                 displayFinalRoundStarted() //TODO IMPLEMENT?
             }
@@ -160,15 +198,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun displayScoreFragment() {
         frameLayout.background = null
-        gamingViewModel.clearCardFragment.postValue(1)
-        newFragmentInstanceAnim(
-            fragmentManager = childFragmentManager,
-            fragment = GameScoreFragment(miniScore = true),
-            layoutId = R.id.frame_layout_card_points,
-            tag = "SCORE",
-            replace = true,
-            anim = true
-        ).commit()
+        newFragmentInstance(fis = fisScore).commit()
     }
 
     private fun setUpCurrentPlayerObserver() {
@@ -185,8 +215,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
         binding.apply {
 
             tvPlayerName = textViewPlayerName
-            tvCurrRound = textViewCurrentRoundNum
             tvTotalRounds = textViewAmountOfRounds
+
+            tSwitcherRounds = textSwitcherRoundNum
 
             btnSuccess = buttonSuccess
             btnFail = buttonFail
@@ -200,12 +231,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     private fun endGame() {
 
-        //tvPlayerName.apply { text = "GAME ENDED - TAKE ME TO SCORE" }
-
+        //TODO "TAKE ME TO SCORE-BUTTON" AND/OR ANIMATE "NICER" TO GameScoreFragment()
         sharedViewModel.apply {
             sorted()
             currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
-
         }
         mutableListOf(
             viewApplyVis(btnSuccess, View.INVISIBLE),
@@ -220,17 +249,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnSuccess.apply {
             text = getString(R.string.next_round)
             setOnClickListener {
-                newFragmentInstance(
-                    fragmentManager = childFragmentManager,
-                    CardFragment(),
-                    R.id.frame_layout_card_points,
-                    "CARD", replace = true)
+                newFragmentInstance(fisCard.apply { replace = true }).commit()
+                //gamingViewModel.clearCardFragment.postValue(44)
                 updateRound()
                 updateTurn()
             }
         }
 
-        tvPlayerName.slideOutRightInLeftSetText(getString(R.string.current_points)).start()
+        tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_points)).start()
         viewApplyVis(btnFail, View.INVISIBLE)
 
     }
@@ -238,7 +264,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
     private fun isFinalRound(): Boolean = (currRound == maxRounds) && (currPlayer.playerNum == 1)
 
     private fun displayFinalRoundStarted(){
-        //TODO DISPLAY FINAL ROUND ANIMATION !!
+        //TODO DISPLAY FINAL ROUND ANIMATION ?
         Log.d("!", "Final Round")
     }
 
@@ -246,56 +272,63 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         btnSuccess.setOnClickListener(this)
 
-        val pair: Pair<String, Double>
-        val cardType: EnRandom
-
         mutableListOf(viewApplyVis(btnFail)).run {
                 viewApplyVisFromList(this) }
 
+        gamingViewModel.clearCardFragment.postValue(3)
+        val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
+        gamingViewModel.updateCardTypeAndPair(pair, cardType)
+        frameLayout.flip (listOfViews = listOfViews).start()
+        updateCurrPlayer()
+        buttonChangeText(btnSuccess,"SUCCESS")
+    }
+
+    private fun generateNewPair(): Pair<Pair<String, Double>, EnRandom> {
+
         val rIndex: Int
+        val pair: Pair<String, Double>
+        val cardType: EnRandom
 
         when (val rCardType = arrayOfEnRandoms.random()) {
             EnRandom.CONSEQUENCES -> {
 
-                rIndex =  getRandomListIndex(listOfConsequences)
+                rIndex = getRandomListIndex(listOfConsequences)
 
-                    pair =
-                        returnListPair(index = rIndex,
-                        strArr =  listOfConsequences,
-                        intArr =  listOfConsequencesPoints)
-                    cardType = rCardType
+                pair =
+                    returnListPair(
+                        index = rIndex,
+                        strArr = listOfConsequences,
+                        intArr = listOfConsequencesPoints
+                    )
+                cardType = rCardType
 
             }
             EnRandom.MISSION -> {
 
                 rIndex = getRandomListIndex(listOfMissions)
 
-                    pair = returnListPair(index = rIndex,
-                        strArr = listOfMissions,
-                        intArr = listOfMissionsPoints)
-                    cardType = rCardType
+                pair = returnListPair(
+                    index = rIndex,
+                    strArr = listOfMissions,
+                    intArr = listOfMissionsPoints
+                )
+                cardType = rCardType
             }
         }
-
-
-       gamingViewModel.clearCardFragment.postValue(1)
-       frameLayout.flip(listOfViews = listOfViews).start()
-       gamingViewModel.updateCardTypeAndPair(pair, cardType)
-       updateCurrPlayer()
-       buttonChangeText(btnSuccess,"SUCCESS")
+        return Pair(pair, cardType)
     }
 
     private fun FrameLayout.flip(listOfViews: MutableList<View>): AnimatorSet {
 
         val v = this
 
+        if (calcCurrentTurn() == 1) {v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))}
         val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
-        viewApplyVis(v, View.VISIBLE)
-
 
         val a1 = v.flipToBackY().apply {
             duration = Animationz.flipCardDurationOneFourth
-            interpolator = DecelerateInterpolator()
+            interpolator = LinearInterpolator()
+
             doOnStart {
                 listOfButtons.clickable(false)
             }
@@ -308,21 +341,21 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         val a2 = v.flipToFrontY()
             .apply {
-                interpolator = DecelerateInterpolator()
+                interpolator = LinearInterpolator()
                 duration = Animationz.flipCardDurationOneFourth
-
             }
+       
 
         val a3 = v.flipToBackY()
             .apply {
                 interpolator = DecelerateInterpolator()
                 duration = Animationz.flipCardDurationOneFourth
-
                 doOnEnd {
                     gamingViewModel.updateCardFragment.postValue(1)
                     v.apply {
+                        //v.removeView(tv)
                         animate().scaleXBy(0.5f).scaleYBy(0.5f)
-                        background = getDrawable(requireContext(), R.drawable.card_background_front)
+                        setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400)) //getDrawable(requireContext(), R.drawable.card_background_front)
                     }
                 }
             }
@@ -331,7 +364,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
             .apply {
                 interpolator = DecelerateInterpolator()
                 duration = Animationz.flipCardDurationOneFourth
-
                 doOnEnd { listOfButtons.clickable(true) }
             }
 
@@ -368,9 +400,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
         when (v?.id) {
             R.id.button_Success -> {
                 updatePlayerPoints(SUCCESS)
+                updateTurn() //MOVE TO UPDATE PLAYERPOINTS AGAIN?
             }
             R.id.button_Fail -> {
                 updatePlayerPoints(FAIL)
+                updateTurn() //MOVE TO UPDATE PLAYERPOINTS AGAIN?
             }
         }
     }
@@ -381,7 +415,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
             SUCCESS -> {
                 when (gamingViewModel.currentCardType.value!!) {
                     EnRandom.CONSEQUENCES -> {
-                        pairRoundWithPoints(double =  gamingViewModel.consequencePair.value!!.second)
+                        pairRoundWithPoints(double = gamingViewModel.consequencePair.value!!.second)
                     }
                     EnRandom.MISSION -> {
                         pairRoundWithPoints(double = gamingViewModel.missionPair.value!!.second)
@@ -393,10 +427,33 @@ class GamingFragment : Fragment(), View.OnClickListener {
             }
         }
         currPlayer.listAddRoundAndPoints(pair = pair)
-        updateTurn()
     }
 
     private fun pairRoundWithPoints(double: Double): Pair<Int, Double>{
         return Pair(currRound, double)
     }
+
+    private fun newFragmentInstance(fis: FragmentInputSettings): FragmentTransaction {
+
+        return fis.fragmentManager.beginTransaction().apply {
+
+            when (fis.animate) {
+                true -> {
+                    setCustomAnimations(
+                        R.anim.fragment_slide_right_enter,
+                        R.anim.fragment_slide_left_exit
+                    )
+                }
+                false -> { }
+            }
+
+            when (fis.replace) {
+                true -> { replace(fis.layoutId, fis.fragment, tag) }
+                false -> { add(fis.layoutId, fis.fragment, tag) }
+            }
+
+        }
+
+    }
+
 }

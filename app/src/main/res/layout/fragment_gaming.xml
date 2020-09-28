@@ -49,55 +49,51 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_amount_of_rounds"
         style="@style/RoundsStyle"
-        android:fontFamily="@font/aladin"
+        android:fontFamily="@font/irish_grover"
         android:shadowColor="@android:color/black"
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="1"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView_current_round_num"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/textSwitcher_round_num"
         app:layout_constraintStart_toEndOf="@+id/space"
         app:layout_constraintTop_toTopOf="@+id/space"
-        tools:text="out of 15 total rounds" />
+        tools:text="out of 15 rounds" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_current_round"
         style="@style/RoundsStyle"
         android:elevation="2dp"
-        android:fontFamily="@font/aladin"
+        android:fontFamily="@font/irish_grover"
         android:shadowColor="@android:color/white"
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="2"
-        android:text="Round"
-        android:textColor="@color/colorPrimary"
+        android:text="@string/round"
+        android:textColor="@android:color/holo_green_light"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/space"
         app:layout_constraintEnd_toEndOf="@+id/space" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_current_round_num"
-        style="@style/RoundsStyle"
-        android:elevation="2dp"
-        android:fontFamily="@font/aladin"
-        android:shadowColor="@android:color/white"
-        android:shadowDx="1"
-        android:shadowDy="2"
-        android:shadowRadius="2"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginStart="15dp"
+    <TextSwitcher
+        android:id="@+id/textSwitcher_round_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top"
         app:layout_constraintStart_toEndOf="@+id/textView_current_round"
-        tools:text="15" />
+        android:layout_marginStart="15dp">
+    </TextSwitcher>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_playerName"
         style="@style/TitleViews"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/white"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/guideline_card_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline_card_top"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        android:textColor="@android:color/white"
         tools:text="Playername" />
 
 
@@ -106,6 +102,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
+        android:background="@color/deep_purple_400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
@@ -144,9 +141,10 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_Fail"
         style="@style/ButtonStyle"
+        android:backgroundTint="@android:color/holo_red_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="FAIL"
+        android:text="PASS"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         app:layout_constraintWidth_percent="0.45"
@@ -156,6 +154,8 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_Success"
         style="@style/ButtonStyle"
+        android:backgroundTintMode="src_over"
+        android:backgroundTint="@android:color/holo_green_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="SUCCESS"

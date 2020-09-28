@@ -37,7 +37,11 @@ class CardFragment: Fragment() {
         applyViewBinding()
         viewList = mutableListOf(tvCardType, tvCon1, tvCon1Points, tvPlusSign)
 
-        clearViews()
+//        clearViews()
+//        tvCon1.text = ""
+//        tvCon1Points.text = ""
+//        tvCardType.text = ""
+//        tvPlusSign.text = ""
 
         gamingViewModel.clearCardFragment.observe(this, {
             Log.d("!", "ClearCardFragment $it")
@@ -46,20 +50,23 @@ class CardFragment: Fragment() {
 
         gamingViewModel.updateCardFragment.observe(this, {
 
-            tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
-            tvPlusSign.text = "+"
+            Log.d("!", "UpdateCardFragment $it")
+            //clearViews()
 
             Log.d("!", "${gamingViewModel.currentCardType.value?.getEnumString()}")
-
 
             when (gamingViewModel.currentCardType.value) {
                 EnumUtil.EnRandom.CONSEQUENCES -> {
                     tvCon1.text = gamingViewModel.consequencePair.value?.first
                     tvCon1Points.text = "${gamingViewModel.consequencePair.value?.second}"
+                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
+                    tvPlusSign.text = "+"
                 }
                 EnumUtil.EnRandom.MISSION -> {
                     tvCon1.text = gamingViewModel.missionPair.value?.first
                     tvCon1Points.text = "${gamingViewModel.missionPair.value?.second}"
+                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
+                    tvPlusSign.text = "+"
                 }
             }
 
@@ -70,6 +77,7 @@ class CardFragment: Fragment() {
     private fun clearViews() {
         viewList.forEach {
             it.text = ""
+            //Log.d("!", "$it")
         }
     }
 
@@ -81,6 +89,11 @@ class CardFragment: Fragment() {
             tvCon1Points = textViewConOnePoints
             tvPlusSign = textViewPlusSign
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clearViews()
     }
 
 }

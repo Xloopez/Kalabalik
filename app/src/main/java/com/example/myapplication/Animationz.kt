@@ -3,7 +3,6 @@ package com.example.myapplication
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.content.Context
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -13,7 +12,6 @@ import androidx.core.animation.doOnEnd
 
 
 object Animationz {
-
 
     private const val flipCardDuration = 1200L
     private const val flipCardDurationOneHalf = flipCardDuration/2
@@ -36,18 +34,15 @@ object Animationz {
                 duration = 300 }
     }
 
-    // CHANGE TO VIEW.
-    fun slideOutRight(view: View): ObjectAnimator {
-        return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f, view.width + 100f).apply {
+    fun View.slideOutRight(): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.TRANSLATION_X, 0f, this.width + 300f).apply {
             interpolator = AccelerateInterpolator()
             duration = 300
         }
     }
-
-    // CHANGE TO VIEW.
-    fun slideInLeft(view: View): ObjectAnimator {
-        return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -view.width - 100f, 0f).apply {
-            interpolator = DecelerateInterpolator()
+    fun View.slideInLeft(): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.TRANSLATION_X, -this.width -300f, 0f).apply {
+            interpolator = AccelerateInterpolator()
             duration = 300
         }
     }
@@ -60,19 +55,20 @@ object Animationz {
     fun View.slideOutRightSlideInLeft(): AnimatorSet {
         val v = this
         return AnimatorSet().apply {
-            playSequentially(slideOutRight(v), slideInLeft(v))
+            playSequentially(v.slideOutRight(), v.slideInLeft())
         }
     }
 
     fun AppCompatTextView.slideOutRightInLeftSetText(sText: String): AnimatorSet {
 
-        val anim1 = slideOutRight(this)
-        val anim2 = slideInLeft(this)
+        val v = this
+        val anim1 = v.slideOutRight()
+        val anim2 = v.slideInLeft()
 
         anim1.apply {
             duration = flipCardDurationOneThird
         }.doOnEnd { _ ->
-            this.text = sText
+            v.text = sText
         }
         anim2.apply { duration = flipCardDurationOneThird }
 
@@ -82,34 +78,12 @@ object Animationz {
 
     }
 
-    fun AppCompatTextView.flipNewRound(context: Context, sText: String): AnimatorSet {
-
-        val v = this
-
-        val scale: Float = context.resources.displayMetrics.density * 8000 // MOVE
-        checkCameraDistance(this, scale) // MOVE
-
-        val a1 = flipToBackY().apply {
-            duration = flipCardDurationOneHalf
-            doOnEnd {
-                v.text = sText
-            }
-        }
-        val a2 = flipToFrontY().apply {
-            duration = flipCardDurationOneHalf
-        }
-
-        return AnimatorSet().apply {
-            playSequentially(a1, a2)
-        }
-
-    }
-
-    fun checkCameraDistance(view: View, scale: Float) {
-        when (view.cameraDistance) {
-            scale -> { }
+    //TODO to View.
+    fun View.checkCameraDistance(targetScale: Float) {
+        when (this.cameraDistance) {
+            targetScale -> { }
             else -> {
-                view.cameraDistance = scale
+                this.cameraDistance = targetScale
             }
 
         }

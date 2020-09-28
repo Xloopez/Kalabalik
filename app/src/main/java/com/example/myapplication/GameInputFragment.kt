@@ -169,7 +169,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
         when (counter) {
             0 -> { dnPrepareForPlayerInput() }
-            in 1 until playerCount -> { dnPerpareForNextPlayer() }
+            in 1 until playerCount -> { dnPrepareForNextPlayer() }
             playerCount -> { dnPrepareGameStart() }
             playerCount.plus(1) -> { moveToNextFragment() }
         }
@@ -194,7 +194,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
         Animationz.hideSoftKeyBoard(requireActivity(), btnContinue)
     }
 
-    private fun dnPerpareForNextPlayer() {
+    private fun dnPrepareForNextPlayer() {
         addAdditionalPlayer(Player(name = etInput.text.toString(), playerNum = counter))
         increaseCount()
         inputObjectUpdate()

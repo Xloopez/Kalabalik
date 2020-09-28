@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.databinding.FragmentGameScoreListBinding
-import kotlinx.android.synthetic.main.fragment_item_game_score.view.*
+import com.example.myapplication.databinding.FragmentFinalScoreBinding
+import com.example.myapplication.databinding.FragmentItemGameScoreBinding
+import com.example.myapplication.databinding.RecyclerViewScoreBinding
 
 //TODO TA VÄCK SYNTETHICS ERS. MED viewBinding i adapter
 
@@ -16,17 +17,31 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
     private var scoreAdapter: CustomMutableListRecViewAdapter<Player>? = null
-    private var _binding: FragmentGameScoreListBinding? = null
+
+    private var _binding: RecyclerViewScoreBinding? = null
+    private var _binding2: FragmentFinalScoreBinding? = null
+
     private val binding get() = _binding!!
+    private val binding2 get() = _binding2!!
 
     private lateinit var recView: RecyclerView
 
     private lateinit var list: MutableList<Player>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
-        _binding = FragmentGameScoreListBinding.inflate(layoutInflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        return binding.root
+
+        return when (miniScore) {
+            true -> {
+                _binding = RecyclerViewScoreBinding.inflate(layoutInflater, container, false)
+                binding.root
+            }
+            false -> {
+                _binding2 = FragmentFinalScoreBinding.inflate(layoutInflater, container, false)
+                binding2.root
+            }
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +50,7 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         applyViewBinding()
         determineList()
         setUpAdapter()
+
     }
 
     private fun setUpAdapter() {
@@ -44,10 +60,13 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)
 
-                containerView.apply {
-                    item_player_name.text = item.name
-                    item_score.text = item.sumPointsFromListPair().toString()
+                val binding = FragmentItemGameScoreBinding.bind(containerView)
+
+                binding.apply {
+                    itemPlayerName.text = item.name
+                    itemScore.text = item.sumPointsFromListPair().toString()
                 }
+
 
             }
 
@@ -56,8 +75,15 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
     }
 
     private fun applyViewBinding(){
-        binding.apply {
-            recView = recyclerView
+
+        recView = when (miniScore) {
+            true -> {
+                binding.recyclerViewScore
+            }
+            false -> {
+                binding2.recyclerViewFinalScore
+            }
+
         }
     }
 

@@ -22,5 +22,4 @@ class SharedPrefUtil(activity: Activity?) {
 
 	fun getFloat(resName: Int): Float = sharedPref?.getFloat(res?.getString(resName), 0f) ?: 0f
 
-
 }
