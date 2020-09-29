@@ -2,14 +2,11 @@ package com.example.myapplication
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.app.Activity
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
-
 
 object Animationz {
 
@@ -47,11 +44,6 @@ object Animationz {
         }
     }
 
-    fun hideSoftKeyBoard(activity: Activity, view: View){
-        val im = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        im.hideSoftInputFromWindow(view.windowToken,0)
-    }
-
     fun View.slideOutRightSlideInLeft(): AnimatorSet {
         val v = this
         return AnimatorSet().apply {
@@ -78,7 +70,6 @@ object Animationz {
 
     }
 
-    //TODO to View.
     fun View.checkCameraDistance(targetScale: Float) {
         when (this.cameraDistance) {
             targetScale -> { }

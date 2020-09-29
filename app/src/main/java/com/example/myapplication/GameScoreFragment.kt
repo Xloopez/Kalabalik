@@ -11,8 +11,6 @@ import com.example.myapplication.databinding.FragmentFinalScoreBinding
 import com.example.myapplication.databinding.FragmentItemGameScoreBinding
 import com.example.myapplication.databinding.RecyclerViewScoreBinding
 
-//TODO TA VÄCK SYNTETHICS ERS. MED viewBinding i adapter
-
 class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
@@ -67,9 +65,7 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
                     itemScore.text = item.sumPointsFromListPair().toString()
                 }
 
-
             }
-
         }
         recView.adapter = scoreAdapter
     }

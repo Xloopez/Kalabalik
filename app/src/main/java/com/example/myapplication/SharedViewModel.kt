@@ -21,6 +21,14 @@ class SharedViewModel: ViewModel() {
         value = 3
     }
 
+    fun updateFragmentPos(){
+        currentFragmentPos.increaseBy(1)
+    }
+
+    fun updatePlayerCount(i: Int) = viewModelScope.launch {
+        playerCount.putValue(i)
+    }
+
     fun addPlayerToList(player: Player){
         listOfPlayers.add(player)
     }
@@ -30,9 +38,12 @@ class SharedViewModel: ViewModel() {
     }
 
 
-    fun getPlayerFinalResultSorted(): MutableList<Player>
-            = listOfPlayers.sortedByDescending { player -> player.sumPointsFromListPair()}.toMutableList()
-
-
-
 }
+
+private fun MutableLiveData<Int>.increaseBy(i: Int) {
+    this.postValue(this.value?.plus(i))
+}
+private fun MutableLiveData<Int>.putValue(i: Int) {
+    this.value = i
+}
+

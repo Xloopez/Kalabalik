@@ -3,7 +3,7 @@ package com.example.myapplication
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GamingViewModel: ViewModel() {
+class GamingViewModel : ViewModel() {
 
     var updateCardFragment = MutableLiveData<Int>().apply {
         value = 0
@@ -36,6 +36,10 @@ class GamingViewModel: ViewModel() {
         value = Player("InitialPlayer0", playerNum = 0)
     }
 
+    fun updateRound() = currentRound.postValue(currentRound.value?.plus(1))
+    fun updateTurn()  = currentTurn.postValue(currentTurn.value?.plus(1))
+    fun updatePlayer(player: Player) = currentPlayer.postValue(player)
+
     fun updateCardTypeAndPair(pair: Pair<String, Double>, cardType: EnumUtil.EnRandom){
         when (cardType) {
             EnumUtil.EnRandom.CONSEQUENCES -> consequencePair.postValue(pair)
@@ -43,6 +47,5 @@ class GamingViewModel: ViewModel() {
         }
         currentCardType.postValue(cardType)
     }
-
 
 }

@@ -39,8 +39,8 @@ import com.example.myapplication.databinding.FragmentGamingBinding
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
-    lateinit var sharedViewModel: SharedViewModel
-    lateinit var gamingViewModel: GamingViewModel
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var gamingViewModel: GamingViewModel
 
     private var _binding: FragmentGamingBinding? = null
     private val binding get() = _binding!!
@@ -93,14 +93,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
         frameLayout.checkCameraDistance(targetScale = (scale * 8000)) //TODO MOVE TO TOP DEC ANIM
 
         setFragmentInputs()
-        newFragmentInstance(fisCard).commit()
+        fisCard.newFragmentInstance().commit()
         setUpTextSwitcherRoundNum()
 
         btnSuccess.setOnClickListener(this)
         btnFail.setOnClickListener(this)
 
         setInitialValues()
-        updateRound()
+        gamingViewModel.updateRound()
 
         setUpCurrentPlayerObserver()
         setUpCurrentTurnObserver()
@@ -184,7 +184,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
             currRound = newRound
 
             tSwitcherRounds.setText(newRound.toString())
-
             if (isFinalRound()) {
                 displayFinalRoundStarted() //TODO IMPLEMENT?
             }
@@ -196,25 +195,35 @@ class GamingFragment : Fragment(), View.OnClickListener {
         gamingViewModel.currentTurn.observe(this, {
             currTurn = it
 
-            if(it == totalTurns){
-                endGame()
-            }else {
-                when (calcCurrentTurn()) {
-                    0 -> {
-                        nextRound()
-                        when {
-                            it != 0 -> displayScoreFragment()
-                        }
-                    }
-                    else -> nextPlayerTurn()
-                }
-            }
+            val isFinalTurn = (it == totalTurns)
+            val isNextRound = (calcCurrentTurn() == 0)
+            val isNotTurnZero = (it != 0)
+
+            if (isFinalTurn) { endGame() }
+            if (isNextRound) { nextRound() } else { nextPlayerTurn() }
+            if (isNextRound and isNotTurnZero) {  displayScoreFragment() }
+            
+
+//            when (isFinalTurn) {
+//                true -> endGame()
+//                false -> {
+//                    when (isNextRound) {
+//                        true -> {
+//                            nextRound()
+//                            when (isNotZeroTurns) {
+//                                true -> displayScoreFragment()
+//                            }
+//                        }
+//                        else -> nextPlayerTurn()
+//                    }
+//                }
+//            }
         })
     }
 
     private fun displayScoreFragment() {
         frameLayout.background = null
-        newFragmentInstance(fis = fisScore).commit()
+        fisScore.newFragmentInstance().commit()
     }
 
     private fun setUpCurrentPlayerObserver() {
@@ -224,14 +233,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun calcTotalTurn() = maxRounds.times(pCount).plus(maxRounds)
-
     private fun endGame() {
 
         //TODO "TAKE ME TO SCORE-BUTTON" AND/OR ANIMATE "NICER" TO GameScoreFragment()
         sharedViewModel.apply {
             sorted()
-            currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
+            updateFragmentPos()
+            //currentFragmentPos.postValue(sharedViewModel.currentFragmentPos.value?.plus(1))
         }
         mutableListOf(
             viewApplyVis(btnSuccess, View.INVISIBLE),
@@ -247,19 +255,19 @@ class GamingFragment : Fragment(), View.OnClickListener {
         btnSuccess.apply {
             text = getString(R.string.next_round)
             setOnClickListener {
-                newFragmentInstance(fisCard.apply { replace = true }).commit()
+               fisCard.apply { replace = true }.newFragmentInstance().commit()
                 //gamingViewModel.clearCardFragment.postValue(44)
-                updateRound()
-                updateTurn()
+                gamingViewModel.apply {
+                    updateRound()
+                    updateTurn()
+                }
             }
         }
-
         tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_points)).start()
         viewApplyVis(btnFail, View.INVISIBLE)
 
     }
 
-    private fun isFinalRound(): Boolean = (currRound == maxRounds) && (currPlayer.playerNum == 1)
 
     private fun displayFinalRoundStarted(){
         //TODO DISPLAY FINAL ROUND ANIMATION ?
@@ -281,11 +289,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
         }
 
         frameLayout.flip (listOfViews = listOfViews).start()
-
-        updateCurrPlayer()
-
-        buttonChangeText(btnSuccess,"SUCCESS")
+        gamingViewModel.updatePlayer(getCurrPlayer())
+        btnSuccess.buttonChangeText("SUCCESS")
     }
+
 
     private fun generateNewPair(): Pair<Pair<String, Double>, EnRandom> {
 
@@ -296,14 +303,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
         when (val rCardType = arrayOfEnRandoms.random()) {
             EnRandom.CONSEQUENCES -> {
 
-                rIndex = getRandomListIndex(listOfConsequences)
+                rIndex = listOfConsequences.getRandomListIndex()
                 pair = returnListPair(index = rIndex, strArr = listOfConsequences, intArr = listOfConsequencesPoints)
                 cardType = rCardType
 
             }
             EnRandom.MISSION -> {
 
-                rIndex = getRandomListIndex(listOfMissions)
+                rIndex = listOfMissions.getRandomListIndex()
                 pair = returnListPair(index = rIndex, strArr = listOfMissions,intArr = listOfMissionsPoints)
                 cardType = rCardType
             }
@@ -315,7 +322,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
         val v = this
 
-        if (calcCurrentTurn() == 1) {v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))}
+        if (isFirstRoundAndFirstTurn()) {v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))}
         val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
 
         val a1 = v.flipToBackY().apply {
@@ -365,28 +372,18 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun List<AppCompatButton>.clickable(clickable: Boolean) {
-        this.forEach { it.apply { isClickable = clickable } }
-    }
-
-    private inline fun <reified T> MutableList<View>.listFilterInstance() =
-        this.filterIsInstance<T>()
-
+    private fun getCurrPlayer() = sharedViewModel.listOfPlayers[calcPlayerTurn()]
+    private fun isFirstRoundAndFirstTurn() = calcCurrentTurn() == 1
+    private fun List<AppCompatButton>.clickable(clickable: Boolean) {this.forEach { it.apply { isClickable = clickable }}}
+    private fun isFinalRound(): Boolean = (currRound == maxRounds) && (currPlayer.playerNum == 1)
+    private fun calcTotalTurn() = maxRounds.times(pCount).plus(maxRounds)
+    private inline fun <reified T> MutableList<View>.listFilterInstance() = this.filterIsInstance<T>()
     private fun returnListPair(index: Int, strArr: Array<String>, intArr: IntArray): Pair<String, Double> = Pair(strArr[index], intArr[index].toDouble())
-
-    private fun getRandomListIndex(list: Array<String>) = (0 until list.count()).random()
-
-    private fun updateTurn() = gamingViewModel.currentTurn.postValue(gamingViewModel.currentTurn.value?.plus(1))
-
-    private fun updateCurrPlayer() = gamingViewModel.currentPlayer.postValue(sharedViewModel.listOfPlayers[calcPlayerTurn()])
-
+    private fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
     private fun calcPlayerTurn(): Int =  calcCurrentTurn().minus(1)
-
-    private fun calcCurrentTurn() = currTurn % pCount.plus(1)
-
-    private fun updateRound()= gamingViewModel.currentRound.postValue(gamingViewModel.currentRound.value?.plus(1))
-
-    private fun buttonChangeText(view: AppCompatButton, text: String) = view.apply{ view.text = text}
+    private fun calcCurrentTurn(): Int = currTurn % pCount.plus(1)
+    private fun pairRoundWithPoints(double: Double): Pair<Int, Double> = Pair(currRound, double)
+    private fun AppCompatButton.buttonChangeText(text: String) = apply { this@buttonChangeText.text = text}
 
     private fun updatePlayerPoints(operation: EnOperation) {
 
@@ -406,30 +403,34 @@ class GamingFragment : Fragment(), View.OnClickListener {
             }
         }
         currPlayer.listAddRoundAndPoints(pair = pair)
-        updateTurn()
+        gamingViewModel.updateTurn()
+
     }
 
-    private fun pairRoundWithPoints(double: Double): Pair<Int, Double>{
-        return Pair(currRound, double)
-    }
+    private fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
 
-    private fun newFragmentInstance(fis: FragmentInputSettings): FragmentTransaction {
+        val f = this
 
-        return fis.fragmentManager.beginTransaction().apply {
+        return f.fragmentManager.beginTransaction().apply {
 
-            when (fis.animate) {
+            when (f.animate) {
                 true -> {
                     setCustomAnimations(
                         R.anim.fragment_slide_right_enter,
                         R.anim.fragment_slide_left_exit
                     )
                 }
-                false -> { }
             }
 
-            when (fis.replace) {
-                true -> { replace(fis.layoutId, fis.fragment, fis.tag) }
-                false -> { add(fis.layoutId, fis.fragment, fis.tag) }
+            f.apply {
+                when (f.replace) {
+                    true -> {
+                        replace(layoutId, fragment, tag)
+                    }
+                    false -> {
+                        add(layoutId, fragment, tag)
+                    }
+                }
             }
 
         }
