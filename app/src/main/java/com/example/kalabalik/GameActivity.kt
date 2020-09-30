@@ -2,6 +2,7 @@ package com.example.kalabalik
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,7 +35,7 @@ class GameActivity : AppCompatActivity() {
     var counter = 0
     //var counterPlayer = 0
     //var amountOfRounds = GameSettings.amountOfRounds
-    var currentRound = 0
+    var currentRound = 1
 
     val listOfChoices = mutableListOf("Consequence", "Mission")
     //val name = GameSettings.listOfPlayers.get(counter)
@@ -83,14 +84,18 @@ class GameActivity : AppCompatActivity() {
             flipCard()
         }
     }
+    fun scoreBoardActivity (){
+        val intent = Intent(this, HighScoreActivity::class.java)
+        startActivity(intent)
+    }
 
     fun addRoundScoreFragment(){
-        val roundScoreFragment = RoundFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.container, roundScoreFragment, "roundScoreFragment")
-        transaction.commit()
-        //RoundFragment().setContinueButton()
-        addRightButtonRoundFragment()
+            val roundScoreFragment = RoundFragment()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container, roundScoreFragment, "roundScoreFragment")
+            transaction.commit()
+            //RoundFragment().setContinueButton()
+            //addRightButtonRoundFragment()
     }
     fun addRightButtonRoundFragment(){
         val RoundFragment = supportFragmentManager.findFragmentByTag("roundScoreFragment")
@@ -106,33 +111,38 @@ class GameActivity : AppCompatActivity() {
         val name = GameSettings.listOfPlayers.get(counter).name
 
         when (currentRound) {
-            0 -> {
+            /*0 -> {
                 increaseRounds()
-                Log.d("!!!", "Round $currentRound")
-                displayPlayerName.text = "$name:s tur!"
+                /*Log.d("!!!", "Round $currentRound")
+                displayPlayerName.text = "$name:s tur!"*/
 
-            }
-            in 1..GameSettings.amountOfRounds -> {
+            }*/
+            in 1 until GameSettings.amountOfRounds -> {
+                Log.d("!!!", "Counter is: $counter")
                /* if (currentRound == GameSettings.amountOfRounds) {
                         Log.d("!!!", "LAST ROUND")
                         increaseCounterByOne()
                         displayPlayerName.text = "$name:s tur!"
                 }*/
-                increaseCounterByOne()
                 displayPlayerName.text = "$name:s tur!"
+                increaseCounterByOne()
 
                 //displayPlayerName.text = "$name:s tur!"
                 if (counter == GameSettings.playerCount) {
                     displayPlayerName.text = "$name:s tur!"
 
                     Log.d("!!!", "Round $currentRound")
-                    addRoundScoreFragment()
+
                     for (i in 0 until GameSettings.listOfPlayers.size) {
                         Log.d("!!!", "${GameSettings.listOfPlayers[i].name}")
                         Log.d("!!!", "${GameSettings.listOfPlayers[i].points}")
                     }
+
+
                     restartcounter()
                     increaseRounds()
+                } else if (currentRound == GameSettings.amountOfRounds) {
+                    scoreBoardActivity()
                 }
             }
         }
@@ -211,7 +221,7 @@ class GameActivity : AppCompatActivity() {
                 frontCardText.text = "Konsekvens"
                 //Back card text
                 backCardText.setText("$consequenceStr \n+$consequencePoints poäng" +
-                        "\n \nEller\n \n $consequenceOption \n+$consequenceOptionPoints poäng" )
+                        "\n \nEller\n \n $consequenceOption \n+$consequenceOptionPoints poäng")
 
                 rightButtonPoints(consequencePoints)
 
@@ -268,9 +278,5 @@ class GameActivity : AppCompatActivity() {
         rightButton.setText("+$missionPoints")
         GameSettings.addPointsToPlayer(counter, missionPoints)
     }
-
-
-
-
 
 }
