@@ -30,6 +30,7 @@ class GameActivity : AppCompatActivity() {
 
     lateinit var rightButton: Button
     lateinit var leftButton: Button
+    lateinit var playerName: String
 
     var consequenceOptionPoints = 0
     var counter = 0
@@ -38,16 +39,14 @@ class GameActivity : AppCompatActivity() {
     var currentRound = 1
 
     val listOfChoices = mutableListOf("Consequence", "Mission")
-    //val name = GameSettings.listOfPlayers.get(counter)
-    val name = GameSettings.listOfPlayers.get(counter).name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val name = GameSettings.listOfPlayers.get(counter).name
+       /* playerName = GameSettings.listOfPlayers.get(counter).name
         displayPlayerName = findViewById(R.id.playerNameTurn)
-        displayPlayerName.text = "$name:s tur!"
+        displayPlayerName.text = "${playerName}:s tur!"*/
 
         //Animator object
         //modified camera scale
@@ -77,11 +76,14 @@ class GameActivity : AppCompatActivity() {
         rightButton = findViewById(R.id.right_btn)
         leftButton = findViewById(R.id.left_btn)
 
+        displayPlayerName = findViewById(R.id.playerNameTurn)
+
         //displayPlayerName.setText("$name: s tur!")
         //Setting the event listener
 
         rightButton.setOnClickListener {
             flipCard()
+            playerTurn()
         }
     }
     fun scoreBoardActivity (){
@@ -108,15 +110,49 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun playerTurn() {
-        val name = GameSettings.listOfPlayers.get(counter).name
 
+
+        if (counter != GameSettings.playerCount-1) {
+            Log.d("!!!", "Counter is: $counter")
+
+            playerName = GameSettings.listOfPlayers.get(counter).name
+            displayPlayerName.text = "${playerName}:s tur!"
+
+
+            Log.d("!!!", "Round $currentRound")
+
+            consequenceOrMission()
+
+            increaseCounterByOne()
+            //increaseRounds()
+        } else if (counter == GameSettings.playerCount-1) {
+            Log.d("!!!", "Counter is: $counter")
+            playerName = GameSettings.listOfPlayers.get(counter).name
+            displayPlayerName.text = "${playerName}:s tur!"
+
+            consequenceOrMission()
+
+            for (i in 0 until GameSettings.listOfPlayers.size) {
+                Log.d("!!!", "${GameSettings.listOfPlayers[i].name}")
+                Log.d("!!!", "${GameSettings.listOfPlayers[i].points}")
+            }
+
+            restartcounter()
+            increaseRounds()
+        }
+
+
+
+
+        //val name = GameSettings.listOfPlayers.get(counter).name
+        /*
         when (currentRound) {
-            /*0 -> {
+            0 -> {
                 increaseRounds()
                 /*Log.d("!!!", "Round $currentRound")
                 displayPlayerName.text = "$name:s tur!"*/
 
-            }*/
+            }
             in 1 until GameSettings.amountOfRounds -> {
                 Log.d("!!!", "Counter is: $counter")
                /* if (currentRound == GameSettings.amountOfRounds) {
@@ -145,7 +181,7 @@ class GameActivity : AppCompatActivity() {
                     scoreBoardActivity()
                 }
             }
-        }
+        }*/
     }
 
     /*fun leftButtonFlipPard() {
@@ -173,8 +209,8 @@ class GameActivity : AppCompatActivity() {
                 frontAnimation.start()
                 backAnimation.start()
                 isFront = false
-                playerTurn()
-                consequenceOrMission()
+                //playerTurn()
+                //consequenceOrMission()
             }
             true -> {
                 frontAnimation.setTarget(card_back)
