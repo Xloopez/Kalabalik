@@ -112,7 +112,6 @@ class GameActivity : AppCompatActivity() {
     fun playerTurn() {
 
 
-        if (counter != GameSettings.playerCount-1) {
             Log.d("!!!", "Counter is: $counter")
 
             playerName = GameSettings.listOfPlayers.get(counter).name
@@ -125,7 +124,8 @@ class GameActivity : AppCompatActivity() {
 
             increaseCounterByOne()
             //increaseRounds()
-        } else if (counter == GameSettings.playerCount-1) {
+
+        if (counter == GameSettings.playerCount-1) {
             Log.d("!!!", "Counter is: $counter")
             playerName = GameSettings.listOfPlayers.get(counter).name
             displayPlayerName.text = "${playerName}:s tur!"
