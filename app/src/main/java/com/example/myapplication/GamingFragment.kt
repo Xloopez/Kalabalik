@@ -76,11 +76,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	lateinit var fisCard: FragmentInputSettings
 	lateinit var fisScore: FragmentInputSettings
 
-	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View? {
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 		gamingViewModel =
 			ViewModelProvider(requireActivity()).get(GamingViewModel::class.java) // SCOPE TO ACTIVITY? MAYBE..
@@ -151,25 +147,18 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 			textView
 		}
-		tSwitcherRounds.inAnimation =
-			AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_in_left)
-		tSwitcherRounds.outAnimation =
-			AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
+		tSwitcherRounds.inAnimation = AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_in_left)
+		tSwitcherRounds.outAnimation = AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
 	}
 
 	private fun setFragmentInputs() {
 		fisCard = object : FragmentInputSettings(
 			fragmentManager = this.childFragmentManager, fragment = CardFragment(),
 			layoutId = frameLayout.id, tag = "CARD", replace = false, animate = false,
-		) {}
+		){}
 		fisScore = object : FragmentInputSettings(
-			fragmentManager = this.childFragmentManager,
-			fragment = GameScoreFragment(miniScore = true),
-			layoutId = frameLayout.id,
-			tag = "CARD",
-			replace = true,
-			animate = true,
-		) {}
+			fragmentManager = this.childFragmentManager, fragment = GameScoreFragment(miniScore = true),
+			layoutId = frameLayout.id, tag = "CARD", replace = true, animate = true,){}
 	}
 
 	private fun setInitialValues() {
@@ -200,36 +189,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun setUpCurrentTurnObserver() {
 		gamingViewModel.currentTurn.observe(this, {
 			currTurn = it
-
 			runUnitIfTrue(::endGame, b1 = isFinalTurn())
 			runUnitIfTrueElse(::nextRound, ::nextPlayerTurn, b1 = isCurrentScoreTurn())
 			runUnitIfTrue(::displayScoreFragment, b1 = isCurrentScoreTurn(), b2 = isNotTurnZero())
-
 		})
-	}
-
-	private fun runUnitIfTrue(
-		unit: () -> Unit,
-		b1: Boolean,
-		b2: Boolean = true
-	) {
-		if (b1 and b2) {
-			unit()
-		}
-	}
-
-	private fun runUnitIfTrueElse(unit: () -> Unit, unitElse: () -> Unit, b1: Boolean) {
-		if (b1) {
-			unit()
-		} else {
-			unitElse()
-		}
-	}
-
-
-	private fun displayScoreFragment() {
-		frameLayout.background = null
-		fisScore.newFragmentInstance().commit()
 	}
 
 	private fun setUpCurrentPlayerObserver() {
@@ -237,6 +200,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			currPlayer = it
 			tvPlayerName.slideOutRightInLeftSetText(it.name).start()
 		})
+	}
+
+	private fun displayScoreFragment() {
+		frameLayout.background = null
+		fisScore.newFragmentInstance().commit()
 	}
 
 	private fun endGame() {
@@ -261,7 +229,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			text = getString(R.string.next_round)
 			setOnClickListener {
 				fisCard.apply { replace = true }.newFragmentInstance().commit()
-				//gamingViewModel.clearCardFragment.postValue(44)
 				gamingViewModel.apply {
 					updateRound()
 					updateTurn()
@@ -285,7 +252,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		gamingViewModel.apply {
 			clearCard()
-			//clearCardFragment.postValue(3)
 			updateCardTypeAndPair(pair, cardType)
 		}
 
@@ -385,16 +351,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	}
 
+	private fun runUnitIfTrue(unit: () -> Unit, b1: Boolean, b2: Boolean = true) { if (b1 and b2) { unit() } }
+	private fun runUnitIfTrueElse(unit: () -> Unit, unitElse: () -> Unit, b1: Boolean)= if (b1) { unit() } else { unitElse() }
 	private fun getCurrPlayer() = sharedViewModel.listOfPlayers[calcPlayerTurn()]
 	private fun isFirstRoundAndFirstTurn() = calcCurrentTurn() == 1
-	private fun List<AppCompatButton>.clickable(clickable: Boolean) {
-		this.forEach { it.apply { isClickable = clickable } }
-	}
 	private fun calcTotalTurn() = maxRounds.times(pCount).plus(maxRounds)
-	private inline fun <reified T> MutableList<View>.listFilterInstance() =
-		this.filterIsInstance<T>() //TODO move to Util?
-	private fun returnListPair(index: Int, strArr: Array<String>, intArr: IntArray): Pair<String, Double>
-			= Pair(strArr[index], intArr[index].toDouble())
 	private fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
 	private fun calcPlayerTurn(): Int = calcCurrentTurn().minus(1)
 	private fun calcCurrentTurn(): Int = currTurn % pCount.plus(1)
@@ -402,8 +363,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun isNotTurnZero() = (currTurn != 0)
 	private fun isFinalTurn() = (currTurn == totalTurns)
 	private fun pairRoundWithPoints(double: Double): Pair<Int, Double> = Pair(currRound, double)
-	private fun AppCompatButton.buttonChangeText(text: String) =
-		apply { this@buttonChangeText.text = text }
+	private fun AppCompatButton.buttonChangeText(text: String) = apply { this@buttonChangeText.text = text }
+	private inline fun <reified T> MutableList<View>.listFilterInstance() = this.filterIsInstance<T>() //TODO move to Util?
+	private fun returnListPair(index: Int, strArr: Array<String>, intArr: IntArray): Pair<String, Double> = Pair(strArr[index], intArr[index].toDouble())
+	private fun List<AppCompatButton>.clickable(clickable: Boolean) { this.forEach { it.apply { isClickable = clickable } } }
 
 	private fun updatePlayerPoints(operation: EnOperation) {
 
@@ -433,7 +396,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		return f.fragmentManager.beginTransaction().apply {
 
 			f.let {
-
 				when (animate) {
 					true -> {
 						setCustomAnimations(

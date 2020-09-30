@@ -2,9 +2,9 @@ package com.example.myapplication
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +18,9 @@ import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class GameInputFragment: Fragment(), View.OnClickListener {
+class GameInputFragment : Fragment(), View.OnClickListener {
 
-    lateinit var sharedViewModel: SharedViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private var _binding: FragmentGamingInputBinding? = null
     private val binding get() = _binding!!
 
@@ -44,12 +44,14 @@ class GameInputFragment: Fragment(), View.OnClickListener {
         inputType = InputType.TYPE_CLASS_NUMBER,
         inputHint = "Amount of players",
         infoStr = "Enter amount of players, 2-5!",
+        inputMaxLength = 1,
     )
 
     private val inputPlayers = InputObject(
         inputType = InputType.TYPE_CLASS_TEXT,
         inputHint = "",
         infoStr = "",
+        inputMaxLength = 10,
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -113,35 +115,35 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
     private fun CharSequence?.checkValidNumber(): Boolean =
         try {
-            when(val parseNum = Integer.parseInt(this.toString())){
+            when (val parseNum = Integer.parseInt(this.toString())) {
                 in playerAmountNumRange -> {
-                    Log.d("!", "CORRECT NUMBER $parseNum")
+//                    Log.d("!", "CORRECT NUMBER $parseNum")
                     true
                 }
                 else -> {
-                    Log.d("!", "INCORRECT - NUMBER NOT IN RANGE $parseNum")
+//                    Log.d("!", "INCORRECT - NUMBER NOT IN RANGE $parseNum")
                     false
                 }
             }
-        }catch (e: Exception){
-            Log.d("!", "checkValidNumber: $e")
+        } catch (e: Exception) {
+//            Log.d("!", "checkValidNumber: $e")
             false
         }
 
     private fun CharSequence?.checkValidTextLength(): Boolean =
         try {
-            when(val length = this.toString().length){
+            when (val length = this.toString().length) {
                 in playerNameMinMaxLength -> {
-                    Log.d("!", "VALID $length TEXT LENGTH")
+//                    Log.d("!", "VALID $length TEXT LENGTH")
                     true
                 }
                 else -> {
-                    Log.d("!", "INVALID $length TEXT LENGTH")
+//                    Log.d("!", "INVALID $length TEXT LENGTH")
                     false
                 }
             }
-        }catch (e: Exception){
-            Log.d("!", "checkValidTextLength: $e")
+        } catch (e: Exception) {
+//            Log.d("!", "checkValidTextLength: $e")
             false
         }
 
@@ -162,18 +164,20 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.button_continue -> { doNext() }
+        when (v?.id) {
+            R.id.button_continue -> {
+                doNext()
+            }
         }
     }
 
-    private fun doNext(){
+    private fun doNext() {
 
         when (counter) {
-            0 -> { dnPrepareForPlayerInput() }
-            in 1 until playerCount -> { dnPrepareForNextPlayer() }
-            playerCount -> { dnPrepareGameStart() }
-            playerCount.plus(1) -> { moveToNextFragment() }
+            0 -> dnPrepareForPlayerInput()
+            in 1 until playerCount -> dnPrepareForNextPlayer()
+            playerCount -> dnPrepareGameStart()
+            playerCount.plus(1) -> moveToNextFragment()
         }
     }
 
@@ -208,8 +212,8 @@ class GameInputFragment: Fragment(), View.OnClickListener {
     private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
     private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
     private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
-    private fun AppCompatButton.btnSetText(text: String){ this.text = text }
-    private fun increaseCount() = counter ++
+    private fun AppCompatButton.btnSetText(text: String) { this.text = text }
+    private fun increaseCount() = counter++
 
     private fun InputObject.clearEditTextForNewInput() {
 
@@ -219,22 +223,28 @@ class GameInputFragment: Fragment(), View.OnClickListener {
             tilInput.apply {
                 hint = ipo.inputHint
                 helperText = ipo.infoStr
+                counterMaxLength = inputMaxLength
             }
 
             etInput.apply {
                 inputType = ipo.inputType
+                filters = arrayOf(InputFilter.LengthFilter(inputMaxLength))
                 setText("")
             }
             etInput.requestFocus()
         }
     }
 
-    class InputObject(var inputType: Int, var inputHint: String, var infoStr: String){
+    class InputObject(
+        var inputType: Int,
+        var inputHint: String,
+        var infoStr: String,
+        val inputMaxLength: Int) {
 
         private val strEnterName = "Enter the name of Player"
         private val hintPlayer = "Player"
 
-        fun includeCounterValue(count: Int){
+        fun includeCounterValue(count: Int) {
             inputHint = "$hintPlayer $count"
             infoStr = "$strEnterName $count"
         }

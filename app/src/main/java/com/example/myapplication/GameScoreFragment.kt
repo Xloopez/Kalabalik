@@ -55,13 +55,16 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         scoreAdapter = object :
             CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
 
+            val max = list.maxOf { p: Player -> p.sumPointsFromListPair() }
+
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)
 
                 val binding = FragmentItemGameScoreBinding.bind(containerView)
-
+//                Log.d("!", "MAX $max")
                 binding.apply {
                     itemPlayerName.text = item.name
+                    itemPlacement.text = if(!miniScore and (item.sumPointsFromListPair() == max)){ "WINNER" } else { "" }
                     itemScore.text = item.sumPointsFromListPair().toString()
                 }
 

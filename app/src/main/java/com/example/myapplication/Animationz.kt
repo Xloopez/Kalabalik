@@ -3,7 +3,9 @@ package com.example.myapplication
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
@@ -34,13 +36,13 @@ object Animationz {
     fun View.slideOutRight(): ObjectAnimator {
         return ObjectAnimator.ofFloat(this, View.TRANSLATION_X, 0f, this.width + 300f).apply {
             interpolator = AccelerateInterpolator()
-            duration = 300
+            duration = flipCardDurationOneFourth
         }
     }
     fun View.slideInLeft(): ObjectAnimator {
         return ObjectAnimator.ofFloat(this, View.TRANSLATION_X, -this.width -300f, 0f).apply {
             interpolator = AccelerateInterpolator()
-            duration = 300
+            duration = flipCardDurationOneFourth
         }
     }
 
@@ -58,11 +60,14 @@ object Animationz {
         val anim2 = v.slideInLeft()
 
         anim1.apply {
-            duration = flipCardDurationOneThird
+            duration = flipCardDurationOneFourth
         }.doOnEnd { _ ->
             v.text = sText
         }
-        anim2.apply { duration = flipCardDurationOneThird }
+        anim2.apply {
+            interpolator = AccelerateDecelerateInterpolator()
+            duration = flipCardDurationOneFourth
+        }
 
         return AnimatorSet().apply {
             playSequentially(anim1, anim2)

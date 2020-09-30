@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,23 +36,16 @@ class CardFragment: Fragment() {
         applyViewBinding()
         viewList = mutableListOf(tvCardType, tvCon1, tvCon1Points, tvPlusSign)
 
-//        clearViews()
-//        tvCon1.text = ""
-//        tvCon1Points.text = ""
-//        tvCardType.text = ""
-//        tvPlusSign.text = ""
-
         gamingViewModel.clearCardFragment.observe(this, {
-            Log.d("!", "ClearCardFragment $it")
+//            Log.d("!", "ClearCardFragment $it")
             clearViews()
         })
 
         gamingViewModel.updateCardFragment.observe(this, {
 
-            Log.d("!", "UpdateCardFragment $it")
-            //clearViews()
-
-            Log.d("!", "${gamingViewModel.currentCardType.value?.getEnumString()}")
+//            Log.d("!", "UpdateCardFragment $it")
+//            clearViews()
+//            Log.d("!", "${gamingViewModel.currentCardType.value?.getEnumString()}")
 
             when (gamingViewModel.currentCardType.value) {
                 EnumUtil.EnRandom.CONSEQUENCES -> {
@@ -74,12 +66,7 @@ class CardFragment: Fragment() {
 
     }
 
-    private fun clearViews() {
-        viewList.forEach {
-            it.text = ""
-            //Log.d("!", "$it")
-        }
-    }
+    private fun clearViews() { viewList.forEach { it.text = "" } }
 
     private fun applyViewBinding(){
 
