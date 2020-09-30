@@ -25,7 +25,7 @@ class SharedViewModel: ViewModel() {
         currentFragmentPos.increaseBy(1)
     }
 
-    fun updatePlayerCount(i: Int) = viewModelScope.launch {
+    fun setPlayerCount(i: Int) = viewModelScope.launch {
         playerCount.putValue(i)
     }
 

@@ -206,7 +206,7 @@ class GameInputFragment: Fragment(), View.OnClickListener {
 
     private fun inputObjectUpdate() = inputPlayers.includeCounterValue(count = counter)
     private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
-    private fun setPlayerCount() = sharedViewModel.updatePlayerCount(Integer.parseInt(etInput.text.toString()))
+    private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
     private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
     private fun AppCompatButton.btnSetText(text: String){ this.text = text }
     private fun increaseCount() = counter ++

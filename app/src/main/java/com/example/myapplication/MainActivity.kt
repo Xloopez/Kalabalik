@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         spUtil = SharedPrefUtil(this).apply { putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density) }
 
-        sharedViewModel.apply {
-            amountOfRounds.postValue(3)
-        }
+//        sharedViewModel.apply {
+//            amountOfRounds.postValue(3)
+//        }
 
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace)}

@@ -39,6 +39,7 @@ class GamingViewModel : ViewModel() {
     fun updateRound() = currentRound.postValue(currentRound.value?.plus(1))
     fun updateTurn()  = currentTurn.postValue(currentTurn.value?.plus(1))
     fun updatePlayer(player: Player) = currentPlayer.postValue(player)
+    fun clearCard() = clearCardFragment.postEmpty()
 
     fun updateCardTypeAndPair(pair: Pair<String, Double>, cardType: EnumUtil.EnRandom){
         when (cardType) {
@@ -48,4 +49,8 @@ class GamingViewModel : ViewModel() {
         currentCardType.postValue(cardType)
     }
 
+}
+
+private fun MutableLiveData<Int>.postEmpty() {
+    this.postValue(0)
 }
