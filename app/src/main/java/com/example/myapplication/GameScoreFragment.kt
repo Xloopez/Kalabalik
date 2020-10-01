@@ -52,8 +52,7 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
     }
 
     private fun setUpAdapter() {
-        scoreAdapter = object :
-            CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
+        scoreAdapter = object : CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
 
             val max = list.maxOf { p: Player -> p.sumPointsFromListPair() }
 
@@ -61,7 +60,7 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
                 super.binder(containerView, item, position)
 
                 val binding = FragmentItemGameScoreBinding.bind(containerView)
-//                Log.d("!", "MAX $max")
+                
                 binding.apply {
                     itemPlayerName.text = item.name
                     itemPlacement.text = if(!miniScore and (item.sumPointsFromListPair() == max)){ "WINNER" } else { "" }
@@ -76,20 +75,15 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
     private fun applyViewBinding(){
 
         recView = when (miniScore) {
-            true -> {
-                binding.recyclerViewScore
-            }
-            false -> {
-                binding2.recyclerViewFinalScore
-            }
-
+            true ->  binding.recyclerViewScore
+            false ->  binding2.recyclerViewFinalScore
         }
     }
 
     private fun determineList() {
         list = when (miniScore) {
-            true -> { sharedViewModel.listOfPlayers }
-            false -> { sharedViewModel.lopSortedByPoints }
+            true ->  sharedViewModel.listOfPlayers
+            false ->  sharedViewModel.lopSortedByPoints
         }
     }
 

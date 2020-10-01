@@ -15,7 +15,7 @@ class CardFragment: Fragment() {
     private var _binding: FragmentCardBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var gamingViewModel: GamingViewModel
+    private lateinit var gamingViewModel: GamingViewModel
 
     private lateinit var tvCardType: AppCompatTextView
     private lateinit var tvCon1: AppCompatTextView
@@ -34,22 +34,24 @@ class CardFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyViewBinding()
-        viewList = mutableListOf(tvCardType, tvCon1, tvCon1Points, tvPlusSign)
+        viewList = mutableListOf(tvCon1, tvCon1Points, tvCardType, tvPlusSign)
 
         gamingViewModel.clearCardFragment.observe(this, {
-//            Log.d("!", "ClearCardFragment $it")
             clearViews()
         })
 
         gamingViewModel.updateCardFragment.observe(this, {
-
+            
             when (gamingViewModel.currentCardType.value) {
                 EnumUtil.EnRandom.CONSEQUENCES -> {
-                    //TODO USE setTextFromList() here
-                    tvCon1.text = gamingViewModel.consequencePair.value?.first
-                    tvCon1Points.text = "${gamingViewModel.consequencePair.value?.second}"
-                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
-                    tvPlusSign.text = "+"
+                    
+                    mutableListOf(
+                        Pair(tvCon1, gamingViewModel.consequencePair.value?.first),
+                        Pair(tvCon1Points, "${gamingViewModel.consequencePair.value?.second}"),
+                        Pair(tvCardType, gamingViewModel.currentCardType.value?.getEnumString()),
+                        Pair(tvPlusSign, "+")
+                    ).setTextFromList()
+                    
                 }
                 EnumUtil.EnRandom.MISSION -> {
 
@@ -59,11 +61,7 @@ class CardFragment: Fragment() {
                         Pair(tvCardType, gamingViewModel.currentCardType.value?.getEnumString()),
                         Pair(tvPlusSign, "+")
                     ).setTextFromList()
-
-//                    tvCon1.text = gamingViewModel.missionPair.value?.first
-//                    tvCon1Points.text = "${gamingViewModel.missionPair.value?.second}"
-//                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
-//                    tvPlusSign.text = "+"
+                    
                 }
             }
 
@@ -86,9 +84,7 @@ class CardFragment: Fragment() {
     private fun MutableList<Pair<AppCompatTextView, String?>>.setTextFromList(){
         this.forEach { pair -> pair.first.text = pair.second  }
     }
-
-    private fun TextView.sTxt(sText: CharSequence?) { this.text = sText }
-
+    
     override fun onResume() {
         super.onResume()
         clearViews()

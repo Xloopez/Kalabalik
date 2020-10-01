@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         spUtil = SharedPrefUtil(this).apply { putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density) }
 
         sharedViewModel.currentFragmentPos.observe(this, {
-            listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace)}
+            listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace) }
         })
 
     }

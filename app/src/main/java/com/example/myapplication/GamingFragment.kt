@@ -188,9 +188,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun setUpCurrentTurnObserver() {
 		gamingViewModel.currentTurn.observe(this, {
 			currTurn = it
-			runUnitIfTrue(::endGame, b1 = isFinalTurn())
-			runUnitIfTrueElse(::nextRound, ::nextPlayerTurn, b1 = isCurrentScoreTurn())
-			runUnitIfTrue(::displayScoreFragment, b1 = isCurrentScoreTurn(), b2 = isNotTurnZero())
+			
+			val showScore = calcCurrentTurn().isZero()
+			val showScoreNot = currTurn.isZero().not()
+			val showNextFragment = currTurn.isEqualTo(totalTurns)
+			
+			runUnitIfTrue(::endGame, b1 = showNextFragment)
+			runUnitIfTrueElse(::nextRound, ::nextPlayerTurn, b1 = showScore)
+			runUnitIfTrue(::displayScoreFragment, b1 = showScore, b2 = showScoreNot)
 		})
 	}
 
@@ -255,7 +260,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		frameLayout.flip(listOfViews = listOfViews).start()
-		gamingViewModel.updatePlayer(getCurrPlayer())
+		gamingViewModel.updatePlayer(getCurrPlayerObj())
 		btnSuccess.buttonChangeText("SUCCESS")
 	}
 
@@ -295,7 +300,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val v = this
 
-		if (isFirstRoundAndFirstTurn()) {
+		if (calcCurrentTurn().isEqualTo(1)) {
 			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
 		}
 		val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
@@ -352,15 +357,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun runUnitIfTrue(unit: () -> Unit, b1: Boolean, b2: Boolean = true) { if (b1 and b2) { unit() } }
 	private fun runUnitIfTrueElse(unit: () -> Unit, unitElse: () -> Unit, b1: Boolean)= if (b1) { unit() } else { unitElse() }
-	private fun getCurrPlayer() = sharedViewModel.listOfPlayers[calcPlayerTurn()]
-	private fun isFirstRoundAndFirstTurn() = calcCurrentTurn() == 1
+	private fun getCurrPlayerObj() = sharedViewModel.listOfPlayers[calcPlayerTurn()]
 	private fun calcTotalTurn() = maxRounds.times(pCount).plus(maxRounds)
-	private fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
 	private fun calcPlayerTurn(): Int = calcCurrentTurn().minus(1)
 	private fun calcCurrentTurn(): Int = currTurn % pCount.plus(1)
-	private fun isCurrentScoreTurn() = (calcCurrentTurn() == 0)
-	private fun isNotTurnZero() = (currTurn != 0)
-	private fun isFinalTurn() = (currTurn == totalTurns)
+	private fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
+	private fun Int.isZero() = (this == 0)
+	private fun Int.isEqualTo(value: Int) = (this == value)
 	private fun pairRoundWithPoints(double: Double): Pair<Int, Double> = Pair(currRound, double)
 	private fun AppCompatButton.buttonChangeText(text: String) = apply { this@buttonChangeText.text = text }
 	private inline fun <reified T> MutableList<View>.listFilterInstance() = this.filterIsInstance<T>() //TODO move to Util?
