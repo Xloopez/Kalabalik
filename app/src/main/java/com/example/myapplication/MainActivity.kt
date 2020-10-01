@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -29,10 +30,6 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         spUtil = SharedPrefUtil(this).apply { putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density) }
 
-//        sharedViewModel.apply {
-//            amountOfRounds.postValue(3)
-//        }
-
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace)}
         })
@@ -50,11 +47,37 @@ class MainActivity : AppCompatActivity() {
                 R.anim.fragment_slide_right_exit)
 
             when (replace) {
-                true -> { replace(R.id.frame_layout, fragment, tag) }
-                false -> { add(R.id.frame_layout, fragment, tag) }
+                true -> {
+                    replace(R.id.frame_layout, fragment, tag)
+                    addToBackStack(tag)
+                }
+                false -> {
+                    add(R.id.frame_layout, fragment, tag)
+                }
             }
+
         }.commit()
 
     }
+
+    override fun onBackPressed() {
+        Log.d("!", "BACK PRESS IN..")
+
+//        val fragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
+//
+//
+//        when ((fragment as? MainActivityOnBackPress)?.onBackPressed()) {
+//            0 -> {
+//                supportFragmentManager.popBackStack()
+//            }
+//            1 -> {
+//                super.onBackPressed()
+//            }
+//        }
+    }
+
+//    interface MainActivityOnBackPress {
+//        fun onBackPressed(): Int
+//    }
 
 }

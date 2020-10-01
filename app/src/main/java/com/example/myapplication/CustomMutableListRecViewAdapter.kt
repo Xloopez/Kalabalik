@@ -14,7 +14,6 @@ abstract class CustomMutableListRecViewAdapter<T>(private val layoutId: Int, pri
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         ViewHolder(holder.containerView).bind(mutableList!![position], position)
-
     }
 
     override fun getItemCount(): Int = mutableList?.size ?: 0

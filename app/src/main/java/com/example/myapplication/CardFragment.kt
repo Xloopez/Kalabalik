@@ -43,22 +43,27 @@ class CardFragment: Fragment() {
 
         gamingViewModel.updateCardFragment.observe(this, {
 
-//            Log.d("!", "UpdateCardFragment $it")
-//            clearViews()
-//            Log.d("!", "${gamingViewModel.currentCardType.value?.getEnumString()}")
-
             when (gamingViewModel.currentCardType.value) {
                 EnumUtil.EnRandom.CONSEQUENCES -> {
+                    //TODO USE setTextFromList() here
                     tvCon1.text = gamingViewModel.consequencePair.value?.first
                     tvCon1Points.text = "${gamingViewModel.consequencePair.value?.second}"
                     tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
                     tvPlusSign.text = "+"
                 }
                 EnumUtil.EnRandom.MISSION -> {
-                    tvCon1.text = gamingViewModel.missionPair.value?.first
-                    tvCon1Points.text = "${gamingViewModel.missionPair.value?.second}"
-                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
-                    tvPlusSign.text = "+"
+
+                    mutableListOf(
+                        Pair(tvCon1, gamingViewModel.missionPair.value?.first),
+                        Pair(tvCon1Points, "${gamingViewModel.missionPair.value?.second}"),
+                        Pair(tvCardType, gamingViewModel.currentCardType.value?.getEnumString()),
+                        Pair(tvPlusSign, "+")
+                    ).setTextFromList()
+
+//                    tvCon1.text = gamingViewModel.missionPair.value?.first
+//                    tvCon1Points.text = "${gamingViewModel.missionPair.value?.second}"
+//                    tvCardType.text = gamingViewModel.currentCardType.value?.getEnumString()
+//                    tvPlusSign.text = "+"
                 }
             }
 
@@ -77,6 +82,12 @@ class CardFragment: Fragment() {
             tvPlusSign = textViewPlusSign
         }
     }
+
+    private fun MutableList<Pair<AppCompatTextView, String?>>.setTextFromList(){
+        this.forEach { pair -> pair.first.text = pair.second  }
+    }
+
+    private fun TextView.sTxt(sText: CharSequence?) { this.text = sText }
 
     override fun onResume() {
         super.onResume()

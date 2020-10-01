@@ -28,14 +28,18 @@ object Util {
         when (visible){
             true -> {
                 view.apply {
-                    visibility = View.VISIBLE
-                    fadeInAnim1().start()
+                    if(view.visibility != View.VISIBLE) {
+                        visibility = View.VISIBLE
+                        fadeInAnim1().start()
+                    }
                 }
             }
             false -> {
                 view.apply {
-                    visibility = View.INVISIBLE
-                    fadeOutAnim1().start()
+                    if(view.visibility != View.INVISIBLE) {
+                        visibility = View.INVISIBLE
+                        fadeOutAnim1().start()
+                    }
                 }
             }
         }

@@ -78,8 +78,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-		gamingViewModel =
-			ViewModelProvider(requireActivity()).get(GamingViewModel::class.java) // SCOPE TO ACTIVITY? MAYBE..
+		gamingViewModel = ViewModelProvider(requireActivity()).get(GamingViewModel::class.java)
 		_binding = FragmentGamingBinding.inflate(layoutInflater, container, false)
 		return binding.root
 	}
@@ -158,7 +157,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		){}
 		fisScore = object : FragmentInputSettings(
 			fragmentManager = this.childFragmentManager, fragment = GameScoreFragment(miniScore = true),
-			layoutId = frameLayout.id, tag = "CARD", replace = true, animate = true,){}
+			layoutId = frameLayout.id, tag = "CURRENT_SCORE", replace = true, animate = true,){}
 	}
 
 	private fun setInitialValues() {
@@ -414,5 +413,4 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		}
 	}
-
 }

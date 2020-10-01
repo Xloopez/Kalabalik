@@ -81,7 +81,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun addInputTextWatcher() {
         etInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
+               // Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
             }
 
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
