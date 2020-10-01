@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.view.isInvisible
 import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity() {
@@ -33,20 +32,15 @@ class GameActivity : AppCompatActivity() {
     lateinit var playerName: String
 
     var consequenceOptionPoints = 0
-    var counter = 0
-    //var counterPlayer = 0
-    //var amountOfRounds = GameSettings.amountOfRounds
+    var turn = 0
     var currentRound = 1
 
     val listOfChoices = mutableListOf("Consequence", "Mission")
+    val finalRoundReached = GameSettings.amountOfRounds.plus(1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
-       /* playerName = GameSettings.listOfPlayers.get(counter).name
-        displayPlayerName = findViewById(R.id.playerNameTurn)
-        displayPlayerName.text = "${playerName}:s tur!"*/
 
         //Animator object
         //modified camera scale
@@ -78,8 +72,7 @@ class GameActivity : AppCompatActivity() {
 
         displayPlayerName = findViewById(R.id.playerNameTurn)
 
-        //displayPlayerName.setText("$name: s tur!")
-        //Setting the event listener
+        displayPlayerName.text = "${GameSettings.listOfPlayers[0].name}:s tur!"
 
         rightButton.setOnClickListener {
             flipCard()
@@ -91,116 +84,45 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun addRoundScoreFragment(){
-            val roundScoreFragment = RoundFragment()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(R.id.container, roundScoreFragment, "roundScoreFragment")
-            transaction.commit()
-            //RoundFragment().setContinueButton()
-            //addRightButtonRoundFragment()
-    }
-    fun addRightButtonRoundFragment(){
-        val RoundFragment = supportFragmentManager.findFragmentByTag("roundScoreFragment")
-        val transaction = supportFragmentManager.beginTransaction()
-
-        rightButton.setOnClickListener {
-            transaction.remove(RoundFragment!!)
-            transaction.commit()
-        }
-    }
-
     fun playerTurn() {
 
+        val roundInterval = (1..GameSettings.amountOfRounds)
+        //val finalRoundReached = GameSettings.amountOfRounds.plus(1)
 
-            Log.d("!!!", "Counter is: $counter")
-
-            playerName = GameSettings.listOfPlayers.get(counter).name
-            displayPlayerName.text = "${playerName}:s tur!"
-
-
-            Log.d("!!!", "Round $currentRound")
-
-            consequenceOrMission()
-
-            increaseCounterByOne()
-            //increaseRounds()
-
-        if (counter == GameSettings.playerCount-1) {
-            Log.d("!!!", "Counter is: $counter")
-            playerName = GameSettings.listOfPlayers.get(counter).name
-            displayPlayerName.text = "${playerName}:s tur!"
-
-            consequenceOrMission()
-
-            for (i in 0 until GameSettings.listOfPlayers.size) {
-                Log.d("!!!", "${GameSettings.listOfPlayers[i].name}")
-                Log.d("!!!", "${GameSettings.listOfPlayers[i].points}")
-            }
-
-            restartcounter()
-            increaseRounds()
-        }
-
-
-
-
-        //val name = GameSettings.listOfPlayers.get(counter).name
-        /*
         when (currentRound) {
             0 -> {
                 increaseRounds()
-                /*Log.d("!!!", "Round $currentRound")
-                displayPlayerName.text = "$name:s tur!"*/
-
+                Log.d("!!!", "Round $currentRound")
             }
-            in 1 until GameSettings.amountOfRounds -> {
-                Log.d("!!!", "Counter is: $counter")
-               /* if (currentRound == GameSettings.amountOfRounds) {
-                        Log.d("!!!", "LAST ROUND")
-                        increaseCounterByOne()
-                        displayPlayerName.text = "$name:s tur!"
-                }*/
-                displayPlayerName.text = "$name:s tur!"
-                increaseCounterByOne()
-
-                //displayPlayerName.text = "$name:s tur!"
-                if (counter == GameSettings.playerCount) {
-                    displayPlayerName.text = "$name:s tur!"
-
-                    Log.d("!!!", "Round $currentRound")
-
-                    for (i in 0 until GameSettings.listOfPlayers.size) {
-                        Log.d("!!!", "${GameSettings.listOfPlayers[i].name}")
-                        Log.d("!!!", "${GameSettings.listOfPlayers[i].points}")
-                    }
-
-
-                    restartcounter()
+            in roundInterval -> {
+                turn++
+                if (turn == GameSettings.listOfPlayers.count().plus(1)) {
                     increaseRounds()
-                } else if (currentRound == GameSettings.amountOfRounds) {
+                    restartcounter()
+
+                    playerName = GameSettings.listOfPlayers[turn-1].name
+                    displayPlayerName.text = "${playerName}:s tur!"
+
+                    consequenceOrMission()
+
+                    Log.d("!!!", "Turn non-existing: increasingRounds() & restartcounter(): ${GameSettings.listOfPlayers.count().plus(1)}")
+                } else {
+                    playerName = GameSettings.listOfPlayers[turn-1].name
+                    displayPlayerName.text = "${playerName}:s tur!"
+
+                    consequenceOrMission()
+                }
+
+                Log.d("!!!", "Player: ${playerName}! Round: $currentRound Turn: $turn")
+
+                if (currentRound == finalRoundReached){
+                    Log.d("!!!", "Next Activity")
                     scoreBoardActivity()
                 }
             }
-        }*/
+        }
     }
 
-    /*fun leftButtonFlipPard() {
-        if (isFront) {
-            playerTurn()
-            frontAnimation.setTarget(card_Front)
-            backAnimation.setTarget(card_back)
-            frontAnimation.start()
-            backAnimation.start()
-            isFront = false
-            consequenceOrMission()
-        } else {
-            frontAnimation.setTarget(card_back)
-            backAnimation.setTarget(card_Front)
-            backAnimation.start()
-            frontAnimation.start()
-            isFront = true
-        }
-    }*/
     fun flipCard() {
         when (isFront) {
             false -> {
@@ -221,19 +143,12 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun increaseCounterByOne() {
-        counter++
-        //counterPlayer++
-    }
-
     fun increaseRounds() {
         currentRound++
     }
 
     fun restartcounter() {
-        counter = 0
-        //counterPlayer= 0
+        turn = 1
     }
 
     fun consequenceOrMission() {
@@ -262,11 +177,12 @@ class GameActivity : AppCompatActivity() {
                 rightButtonPoints(consequencePoints)
 
                 leftButton.visibility = View.VISIBLE
-                leftButton.setText("+$consequencePoints")
+                leftButton.setText("+${consequenceOptionPoints}")
 
                 leftButton.setOnClickListener {
                     leftButtonPoints((consequenceOptionPoints/2)-1)
                     flipCard()
+                    playerTurn()
                 }
             }
             "Mission" -> {
@@ -304,15 +220,15 @@ class GameActivity : AppCompatActivity() {
     fun rightButtonPoints(points: Int){
         leftButton.visibility = View.VISIBLE
         rightButton.setText("+$points")
-        GameSettings.addPointsToPlayer(counter, points)
+        GameSettings.addPointsToPlayer(turn-1, points)
     }
     fun leftButtonPoints(points: Int){
-        GameSettings.addPointsToPlayer(counter, points)
+        GameSettings.addPointsToPlayer(turn-1, points)
     }
     fun rightMissionButton(missionPoints: Int){
         leftButton.visibility = View.INVISIBLE
         rightButton.setText("+$missionPoints")
-        GameSettings.addPointsToPlayer(counter, missionPoints)
+        GameSettings.addPointsToPlayer(turn-1, missionPoints)
     }
 
 }

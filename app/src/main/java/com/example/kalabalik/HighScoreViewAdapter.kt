@@ -1,6 +1,7 @@
 package com.example.kalabalik
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class HighScoreViewAdapter (
     val context: Context,
-    var listOfPlayer: MutableList<Player> = mutableListOf()
+    val listOfPlayer: MutableList<Player> = mutableListOf()
 ) : RecyclerView.Adapter<HighScoreViewAdapter.ViewHolder>()
 {
     val layoutInflater = LayoutInflater.from(context)
@@ -42,6 +43,7 @@ class HighScoreViewAdapter (
         val scoreOfPlayer = itemView.findViewById<TextView>(R.id.scoreOfPlayer)
         val nameOfPlayer = itemView.findViewById<TextView>(R.id.nameOfPlayer)
 
+
     }
     fun highestScoreSorted(){
         var swap = true
@@ -49,8 +51,8 @@ class HighScoreViewAdapter (
         while(swap){
             swap = false
 
-            for( i in 1 until listOfPlayer.size-2) {
-                if (listOfPlayer[i].points > listOfPlayer[i+1].points){
+            for( i in 0 until listOfPlayer.size-2) {
+                if (listOfPlayer[i].points < listOfPlayer[i+1].points){
                     var temp = listOfPlayer[i].points
                     listOfPlayer[i].points = listOfPlayer[i+1].points
                     listOfPlayer[i+1].points = temp
