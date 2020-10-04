@@ -51,7 +51,7 @@ class HighScoreViewAdapter (
         while(swap){
             swap = false
 
-            for( i in 0 until listOfPlayer.size-2) {
+            for( i in 1 until listOfPlayer.size-1) {
                 if (listOfPlayer[i].points < listOfPlayer[i+1].points){
                     var temp = listOfPlayer[i].points
                     listOfPlayer[i].points = listOfPlayer[i+1].points
