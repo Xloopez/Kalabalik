@@ -41,6 +41,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var gamingViewModel: GamingViewModel
 
+
 	private var _binding: FragmentGamingBinding? = null
 	private val binding get() = _binding!!
 
@@ -109,8 +110,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	override fun onClick(v: View?) {
 		when (v?.id) {
-			R.id.button_Success -> {
-				updatePlayerPoints(SUCCESS)
+			R.id.button_Success -> { updatePlayerPoints(SUCCESS)
 			}
 			R.id.button_Fail -> {
 				updatePlayerPoints(FAIL)
@@ -215,16 +215,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		//TODO "TAKE ME TO SCORE-BUTTON" AND/OR ANIMATE "NICER" TO GameScoreFragment()
 		sharedViewModel.apply {
-			sorted()
+			listSumPairSorted()
 			updateFragmentPos()
 		}
-		mutableListOf(
-			viewApplyVis(btnSuccess, View.INVISIBLE),
-			viewApplyVis(btnFail, View.INVISIBLE)
-		)
-			.run {
-				viewApplyVisFromList(this)
-			}
 	}
 
 	private fun nextRound() {
@@ -240,7 +233,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		}
 		tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_points)).start()
-		viewApplyVis(btnFail, View.INVISIBLE)
+		mutableListOf(
+			viewApplyVis(btnFail, View.INVISIBLE)
+		).viewApplyVisFromList()
 
 	}
 
@@ -248,9 +243,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		btnSuccess.setOnClickListener(this)
 
-		mutableListOf(viewApplyVis(btnFail)).run {
-			viewApplyVisFromList(this)
-		}
+		mutableListOf(viewApplyVis(btnFail)).viewApplyVisFromList()
 
 		val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
 
@@ -293,6 +286,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				cardType = rCardType
 			}
 		}
+
 		return Pair(pair, cardType)
 	}
 
@@ -398,13 +392,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		return f.fragmentManager.beginTransaction().apply {
 
 			f.let {
-				when (animate) {
-					true -> {
-						setCustomAnimations(
-							R.anim.fragment_slide_right_enter,
-							R.anim.fragment_slide_left_exit
-						)
-					}
+				when {(animate == true) -> {
+						setCustomAnimations(R.anim.fragment_slide_right_enter,
+							R.anim.fragment_slide_left_exit) }
 				}
 
 				when (f.replace) {

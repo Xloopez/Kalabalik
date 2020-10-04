@@ -47,33 +47,18 @@ object Util {
 
     fun viewApplyVis(view: View, visibility: Int? = null) {
         when (visibility) {
-            8, 4 -> {
-                view.visibility = visibility; view.slideOutRight()
-            }
+            8, 4 -> { view.visibility = visibility; view.slideOutRight() }
             else -> { view.visibility = visibility ?: 0; view.slideOutRight()}
         }
     }
 
-    fun viewApplyVisFromList(mutableList: MutableList<Unit>) {
-        mutableList.forEach { it.apply {  } }
-    }
+    fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
 
     fun hideAllViews(mutableList: MutableList<*>){
         mutableList.filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE }
     }
     fun showAllViews(mutableList: MutableList<*>){
         mutableList.filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE }
-    }
-    fun newFragmentInstance(fragmentManager: FragmentManager, fragment: Fragment, layoutId: Int, tag: String, replace: Boolean) {
-
-        fragmentManager.beginTransaction().apply {
-
-            when (replace) {
-                true -> { replace(layoutId, fragment, tag) }
-                false -> { add(layoutId, fragment, tag) }
-            }
-
-        }.commit()
     }
 
 //    fun disableViewClickTemp(view: View) {

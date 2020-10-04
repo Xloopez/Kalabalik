@@ -33,7 +33,7 @@ class SharedViewModel: ViewModel() {
         listOfPlayers.add(player)
     }
 
-    fun sorted() = viewModelScope.launch {
+    fun listSumPairSorted() = viewModelScope.launch {
          lopSortedByPoints = listOfPlayers.sortedByDescending { player -> player.sumPointsFromListPair()}.toMutableList()
     }
 

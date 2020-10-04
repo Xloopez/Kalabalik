@@ -64,12 +64,14 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
                 binding.apply {
                     itemPlayerName.text = item.name
                     itemPlacement.text = if(!miniScore and (item.sumPointsFromListPair() == max)){ "WINNER" } else { "" }
-                    itemScore.text = item.sumPointsFromListPair().toString()
+                    itemScore.text = "${item.sumPointsFromListPair()}"
                 }
 
             }
+
         }
         recView.adapter = scoreAdapter
+
     }
 
     private fun applyViewBinding(){
