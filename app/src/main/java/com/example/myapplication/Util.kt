@@ -10,56 +10,57 @@ import com.example.myapplication.Animationz.fadeInAnim1
 import com.example.myapplication.Animationz.fadeOutAnim1
 import com.example.myapplication.Animationz.slideOutRight
 
-object Util {
+//object Util {
 
-    abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
-                                var fragment: Fragment,
-                                var layoutId: Int,
-                                @Nullable var tag: String? = "",
-                                var replace: Boolean? = false,
-                                var animate: Boolean? = false){}
+abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
+                            var fragment: Fragment,
+                            var layoutId: Int,
+                            @Nullable var tag: String? = "",
+                            var replace: Boolean? = false,
+                            var animate: Boolean? = false){}
 
-    fun Activity.hideSoftKeyBoard(view: View){
-        val im = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        im.hideSoftInputFromWindow(view.windowToken,0)
-    }
 
-    fun setViewVisibilityFadeInOut(view: View, visible: Boolean) {
-        when (visible){
-            true -> {
-                view.apply {
-                    if(view.visibility != View.VISIBLE) {
-                        visibility = View.VISIBLE
-                        fadeInAnim1().start()
-                    }
+inline fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
+inline fun Int.isZero() = (this == 0)
+inline fun Int.isEqualTo(value: Int) = (this == value)
+fun MutableList<*>.hideAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE } }
+fun MutableList<*>.showAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE } }
+
+fun Activity.hideSoftKeyBoard(view: View){
+    val im = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    im.hideSoftInputFromWindow(view.windowToken,0)
+}
+
+fun View.setViewVisibilityFadeInOut(visible: Boolean) {
+    when (visible){
+        true -> {
+            apply {
+                if(this@setViewVisibilityFadeInOut.visibility != View.VISIBLE) {
+                    visibility = View.VISIBLE
+                    fadeInAnim1().start()
                 }
             }
-            false -> {
-                view.apply {
-                    if(view.visibility != View.INVISIBLE) {
-                        visibility = View.INVISIBLE
-                        fadeOutAnim1().start()
-                    }
+        }
+        false -> {
+            apply {
+                if(this@setViewVisibilityFadeInOut.visibility != View.INVISIBLE) {
+                    visibility = View.INVISIBLE
+                    fadeOutAnim1().start()
                 }
             }
         }
     }
+}
 
-    fun viewApplyVis(view: View, visibility: Int? = null) {
-        when (visibility) {
-            8, 4 -> { view.visibility = visibility; view.slideOutRight() }
-            else -> { view.visibility = visibility ?: 0; view.slideOutRight()}
-        }
+fun View.viewApplyVis(visibility: Int? = null) {
+     when (visibility) {
+        8, 4 -> { this.visibility = visibility; slideOutRight() }
+        else -> { this.visibility = visibility ?: 0; slideOutRight() }
     }
+}
 
-    fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
 
-    fun hideAllViews(mutableList: MutableList<*>){
-        mutableList.filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE }
-    }
-    fun showAllViews(mutableList: MutableList<*>){
-        mutableList.filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE }
-    }
+
 
 //    fun disableViewClickTemp(view: View) {
 //
@@ -73,4 +74,4 @@ object Util {
 //    }
 
 
-}
+//}

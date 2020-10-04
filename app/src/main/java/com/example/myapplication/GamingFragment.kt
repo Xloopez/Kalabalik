@@ -31,9 +31,6 @@ import com.example.myapplication.EnumUtil.EnOperation
 import com.example.myapplication.EnumUtil.EnOperation.FAIL
 import com.example.myapplication.EnumUtil.EnOperation.SUCCESS
 import com.example.myapplication.EnumUtil.EnRandom
-import com.example.myapplication.Util.FragmentInputSettings
-import com.example.myapplication.Util.viewApplyVis
-import com.example.myapplication.Util.viewApplyVisFromList
 import com.example.myapplication.databinding.FragmentGamingBinding
 
 class GamingFragment : Fragment(), View.OnClickListener {
@@ -232,9 +229,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				}
 			}
 		}
-		tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_points)).start()
-		mutableListOf(
-			viewApplyVis(btnFail, View.INVISIBLE)
+		tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
+		mutableListOf(btnFail.viewApplyVis(View.INVISIBLE)
 		).viewApplyVisFromList()
 
 	}
@@ -243,7 +239,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		btnSuccess.setOnClickListener(this)
 
-		mutableListOf(viewApplyVis(btnFail)).viewApplyVisFromList()
+		mutableListOf(btnFail.viewApplyVis()).viewApplyVisFromList()
 
 		val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
 
@@ -356,8 +352,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun calcPlayerTurn(): Int = calcCurrentTurn().minus(1)
 	private fun calcCurrentTurn(): Int = currTurn % pCount.plus(1)
 	private fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
-	private fun Int.isZero() = (this == 0)
-	private fun Int.isEqualTo(value: Int) = (this == value)
 	private fun pairRoundWithPoints(double: Double): Pair<Int, Double> = Pair(currRound, double)
 	private fun AppCompatButton.buttonChangeText(text: String) = apply { this@buttonChangeText.text = text }
 	private inline fun <reified T> MutableList<View>.listFilterInstance() = this.filterIsInstance<T>() //TODO move to Util?

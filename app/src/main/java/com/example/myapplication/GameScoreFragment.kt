@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -46,12 +47,15 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
+        recView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
         determineList()
         setUpAdapter()
+        recView.scheduleLayoutAnimation()
 
     }
-
+    
     private fun setUpAdapter() {
+        
         scoreAdapter = object : CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
 
             val max = list.maxOf { p: Player -> p.sumPointsFromListPair() }
@@ -66,11 +70,10 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
                     itemPlacement.text = if(!miniScore and (item.sumPointsFromListPair() == max)){ "WINNER" } else { "" }
                     itemScore.text = "${item.sumPointsFromListPair()}"
                 }
-
             }
-
         }
         recView.adapter = scoreAdapter
+        
 
     }
 

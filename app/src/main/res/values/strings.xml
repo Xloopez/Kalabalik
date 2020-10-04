@@ -1,12 +1,12 @@
 <resources>
-     <string name="app_name" translatable="false">KALABALIK</string>
-    <string name="add_player" translatable="false">ADD PLAYER</string>
-    <string name="start_game" translatable="false">START GAME</string>
-    <string name="now_playing_round" translatable="false">Now playing round %d out of %d</string>
-    <string name="amount_of_players" translatable="false">Amount of players</string>
-    <string name="enter_amount_of_players_2_5" translatable="false">Enter amount of players, 2-5!</string>
-    <string name="current_points" translatable="false">CURRENT POINTS</string>
-    <string name="next_round" translatable="false">NEXT ROUND</string>
+     <string name="app_name">KALABALIK</string>
+    <string name="add_player">ADD PLAYER</string>
+    <string name="start_game">START GAME</string>
+    <string name="now_playing_round">Now playing round %d out of %d</string>
+    <string name="amount_of_players">Amount of players</string>
+    <string name="enter_amount_of_players_2_5">Enter amount of players, 2–5!</string>
+    <string name="current_score">CURRENT SCORE</string>
+    <string name="next_round">NEXT ROUND</string>
     <string name="displayMetrics" translatable="false">0</string>
     <string name="round">Round</string>
 

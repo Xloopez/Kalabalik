@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var spUtil: SharedPrefUtil
+    
 
     private val listOfFragment: MutableList<TransactionFragment> =
         mutableListOf(
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace) }
         })
-
     }
 
     private fun newFragmentInstance(fragment: Fragment, tag: String, replace: Boolean) {

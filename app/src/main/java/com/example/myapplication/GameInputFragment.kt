@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.Animationz.slideOutRightSlideInLeft
-import com.example.myapplication.Util.hideSoftKeyBoard
 import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -67,8 +66,8 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         tvTitle.text = getString(R.string.app_name)
 
         btnContinue.setOnClickListener(this)
-
-        Util.viewApplyVis(btnContinue, View.INVISIBLE)
+    
+        btnContinue.viewApplyVis(View.INVISIBLE)
         inputNumbers.clearEditTextForNewInput()
 
         sharedViewModel.playerCount.observe(this, {
@@ -89,7 +88,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                Util.setViewVisibilityFadeInOut(view = btnContinue, visible = bVisible)
+                btnContinue.setViewVisibilityFadeInOut(visible = bVisible)
             }
         })
     }
@@ -193,7 +192,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun dnPrepareGameStart() {
         Player(name = etInput.text.toString(), playerNum = counter).addAdditionalPlayer()
         increaseCount()
-        Util.viewApplyVis(tilInput, View.INVISIBLE)
+        tilInput.viewApplyVis(View.INVISIBLE)
         btnContinue.btnSetText(getString(R.string.start_game))
         requireActivity().hideSoftKeyBoard(btnContinue)
     }

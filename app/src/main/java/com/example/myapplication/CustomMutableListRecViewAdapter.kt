@@ -30,47 +30,11 @@ abstract class CustomMutableListRecViewAdapter<T>(
     }
 
     open fun binder(containerView: View, item: T, position: Int){}
-
-//    inner class Observer: RecyclerView.AdapterDataObserver(){
-//        override fun onChanged() {
-//            Log.d("!", "ITEMCHANGED")
-//            super.onChanged()
-//        }
-//
-//        override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-//            super.onItemRangeChanged(positionStart, itemCount)
-//            Log.d("!", "ITEMCHANGED at $positionStart count $itemCount")
-//
-//        }
-//
-//        override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-//            super.onItemRangeChanged(positionStart, itemCount, payload)
-//        }
-//
-//        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-//            super.onItemRangeInserted(positionStart, itemCount)
-//        }
-//
-//        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-//            super.onItemRangeRemoved(positionStart, itemCount)
-//        }
-//
-//        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-//            super.onItemRangeMoved(fromPosition, toPosition, itemCount)
-//        }
-//    }
-//
-//    override fun registerAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
-//        rObserver = Observer()
-//        this.registerAdapterDataObserver(rObserver!!)
-//        //super.registerAdapterDataObserver(observer)
-//    }
-//
-//    fun getObserver(): RecyclerView.AdapterDataObserver?{
-//        return rObserver
-//    }
-
-
-
-
+    
+    open fun registerObserver(observer: RecyclerView.AdapterDataObserver){ registerAdapterDataObserver(observer) }
+    
+    override fun registerAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
+        super.registerAdapterDataObserver(observer)
+    }
+    
 }
