@@ -185,7 +185,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         inputObjectUpdate()
         inputPlayers.clearEditTextForNewInput()
         tilInput.slideOutRightSlideInLeft().start()
-        btnContinue.btnSetText(getString(R.string.add_player))
+        btnContinue.btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
     }
 
@@ -193,7 +193,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         Player(name = etInput.text.toString(), playerNum = counter).addAdditionalPlayer()
         increaseCount()
         tilInput.viewApplyVis(View.INVISIBLE)
-        btnContinue.btnSetText(getString(R.string.start_game))
+        btnContinue.btnChangeText(getString(R.string.start_game))
         requireActivity().hideSoftKeyBoard(btnContinue)
     }
 
@@ -210,7 +210,6 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
     private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
     private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
-    private fun AppCompatButton.btnSetText(text: String) { this.text = text }
     private fun increaseCount() = counter++
 
     private fun InputObject.clearEditTextForNewInput() {

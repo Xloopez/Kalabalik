@@ -7,7 +7,7 @@ class EnumUtil {
         CONSEQUENCES,
         MISSION;
 
-        inline fun getEnumString(): String = when(this) {
+        fun getEnumString(): String = when(this) {
             CONSEQUENCES -> "CONSEQUENCE"
             MISSION -> "MISSION"
         }

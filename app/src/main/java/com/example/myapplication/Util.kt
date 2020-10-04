@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.Nullable
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.myapplication.Animationz.fadeInAnim1
@@ -17,14 +18,22 @@ abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
                             var layoutId: Int,
                             @Nullable var tag: String? = "",
                             var replace: Boolean? = false,
-                            var animate: Boolean? = false){}
+                            var animate: Boolean? = false)
 
+inline fun Boolean.runUnitTrue(uTrue: () -> Unit) = if (this) { uTrue() } else {  }
 
-inline fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
-inline fun Int.isZero() = (this == 0)
-inline fun Int.isEqualTo(value: Int) = (this == value)
-fun MutableList<*>.hideAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE } }
+fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.text = text }
+
+fun Int.isZero() = (this == 0)
+fun Int.isEqualTo(value: Int) = (this == value)
+
+fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
+fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
+fun List<AppCompatButton>.clickable(clickable: Boolean) { this.forEach { it.apply { isClickable = clickable } } }
 fun MutableList<*>.showAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE } }
+fun MutableList<*>.hideAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE } }
+inline fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
+
 
 fun Activity.hideSoftKeyBoard(view: View){
     val im = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
