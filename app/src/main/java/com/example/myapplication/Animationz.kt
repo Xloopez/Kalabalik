@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
@@ -18,6 +19,29 @@ object Animationz {
 
     fun View.flipToBackY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f)}
     fun View.flipToFrontY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f)}
+
+    fun View.aSizeDown(from: Float, to: Float): ObjectAnimator {
+        return ObjectAnimator.ofPropertyValuesHolder(
+            this,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, from, to),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, from, to)
+        )
+    }
+    fun View.aAlpha(from: Float, to: Float): ObjectAnimator {
+        return ObjectAnimator.ofPropertyValuesHolder(
+            this,
+            PropertyValuesHolder.ofFloat(View.ALPHA, from, to)
+        )
+    }
+
+    fun View.alphaOutThenReverse(): ObjectAnimator {
+        val v = this
+        return v.aAlpha(from = 1.0f, to = 0.2f).apply {
+            duration = flipCardDurationOneHalf
+            repeatMode = ObjectAnimator.REVERSE
+            repeatCount = 1
+        }
+    }
 
     fun View.fadeInAnim1(): ObjectAnimator {
         return ObjectAnimator.ofFloat(this, View.ALPHA, 0.1f, 1f)

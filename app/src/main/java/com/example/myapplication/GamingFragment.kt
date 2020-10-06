@@ -23,6 +23,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.Animationz.alphaOutThenReverse
 import com.example.myapplication.Animationz.checkCameraDistance
 import com.example.myapplication.Animationz.flipToBackY
 import com.example.myapplication.Animationz.flipToFrontY
@@ -308,6 +309,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 			doOnStart {
 				listOfButtons.clickable(false)
+				listOfButtons.forEach { it.alphaOutThenReverse().start() }
 			}
 			v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
 

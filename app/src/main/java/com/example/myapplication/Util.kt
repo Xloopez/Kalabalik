@@ -36,15 +36,14 @@ inline fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (t
 
 
 fun Activity.hideSoftKeyBoard(view: View){
-    val im = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    im.hideSoftInputFromWindow(view.windowToken,0)
+    (this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken,0)
 }
 
 fun View.setViewVisibilityFadeInOut(visible: Boolean) {
     when (visible){
         true -> {
             apply {
-                if(this@setViewVisibilityFadeInOut.visibility != View.VISIBLE) {
+                if(this.visibility != View.VISIBLE) {
                     visibility = View.VISIBLE
                     fadeInAnim1().start()
                 }
@@ -52,7 +51,7 @@ fun View.setViewVisibilityFadeInOut(visible: Boolean) {
         }
         false -> {
             apply {
-                if(this@setViewVisibilityFadeInOut.visibility != View.INVISIBLE) {
+                if(this.visibility != View.INVISIBLE) {
                     visibility = View.INVISIBLE
                     fadeOutAnim1().start()
                 }

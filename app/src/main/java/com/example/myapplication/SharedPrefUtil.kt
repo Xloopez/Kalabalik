@@ -16,6 +16,7 @@ class SharedPrefUtil(activity: Activity?) {
 	fun getInt(resName: Int): Int = sharedPref?.getInt(res?.getString(resName), 0) ?: 0
 
 	fun putFloat(resName: String, float: Float) = with (sharedPref!!.edit()) {
+		//CHECK BEFORE IF SAME
 		putFloat(resName, float)
 		commit()
 	}

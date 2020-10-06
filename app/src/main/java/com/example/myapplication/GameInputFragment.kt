@@ -53,6 +53,11 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         inputMaxLength = 10,
     )
 
+    private val isStart get() = (counter == 0)
+    private val isPlayerInput get() = counter in (1 until playerCount)
+    private val isPrepareGame get() = counter == playerCount
+    private val isGameStart get() = counter == (playerCount.plus(1))
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         _binding = FragmentGamingInputBinding.inflate(layoutInflater, container, false)
@@ -63,55 +68,56 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
-        tvTitle.text = getString(R.string.app_name)
+        //tvTitle.text = getString(R.string.app_name)
 
         btnContinue.setOnClickListener(this)
     
-        btnContinue.viewApplyVis(View.INVISIBLE)
-        inputNumbers.clearEditTextForNewInput()
+        (btnContinue).viewApplyVis(View.INVISIBLE)
+        (inputNumbers).clearEditTextForNewInput()
 
         sharedViewModel.playerCount.observe(this, {
             playerCount = it
         })
 
-        addInputTextWatcher()
+        (etInput).addInputTextWatcher()
     }
 
-    private fun addInputTextWatcher() {
-        etInput.addTextChangedListener(object : TextWatcher {
+    private fun TextInputEditText.addInputTextWatcher() {
+        val v = this
+
+        v.addTextChangedListener(object : TextWatcher {
             
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
                 bVisible = false
-                charSequence.checkInputValidity()
+                (charSequence).checkInputValidity(v)
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                btnContinue.setViewVisibilityFadeInOut(visible = bVisible)
+                (btnContinue).setViewVisibilityFadeInOut(visible = bVisible)
             }
         })
     }
 
-    private fun CharSequence?.checkInputValidity() {
+    private fun CharSequence?.checkInputValidity(view: TextInputEditText) {
 
         val str = this
-        val b = this.toString().isNotEmpty()
 
-        if (b) {
-            when (etInput.inputType) {
+        if (this.toString().isNotEmpty()) {
+            when (view.inputType) {
                 InputType.TYPE_CLASS_TEXT -> {
-                    bVisible = str.checkValidTextLength()
+                    bVisible = str.checkValidTextLength
                 }
                 InputType.TYPE_CLASS_NUMBER -> {
-                    bVisible = str.checkValidNumber()
+                    bVisible = str.checkValidNumber
                 }
             }
 
         }
     }
 
-    private fun CharSequence?.checkValidNumber(): Boolean =
+    private val CharSequence?.checkValidNumber: Boolean get() =
         try {
             when (val parseNum = Integer.parseInt(this.toString())) {
                 in playerAmountNumRange -> {
@@ -128,9 +134,9 @@ class GameInputFragment : Fragment(), View.OnClickListener {
             false
         }
 
-    private fun CharSequence?.checkValidTextLength(): Boolean =
+    private val CharSequence?.checkValidTextLength: Boolean get() =
         try {
-            when (val length = this.toString().length) {
+            when (this.toString().length) {
                 in playerNameMinMaxLength -> {
 //                    Log.d("!", "VALID $length TEXT LENGTH")
                     true
@@ -170,39 +176,38 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     }
 
     private fun doNext() {
-
-        when (counter) {
-            0 -> dnPrepareForPlayerInput()
-            in 1 until playerCount -> dnPrepareForNextPlayer()
-            playerCount -> dnPrepareGameStart()
-            playerCount.plus(1) -> moveToNextFragment()
+        when {
+            isStart -> dnPrepareForPlayerInput()
+            isPlayerInput -> dnPrepareForNextPlayer()
+            isPrepareGame -> dnPrepareGameStart()
+            isGameStart -> moveToNextFragment()
         }
     }
 
     private fun dnPrepareForPlayerInput() {
         setPlayerCount()
-        increaseCount()
+        increaseCounterByOne()
         inputObjectUpdate()
-        inputPlayers.clearEditTextForNewInput()
-        tilInput.slideOutRightSlideInLeft().start()
-        btnContinue.btnChangeText(getString(R.string.add_player))
+        (inputPlayers).clearEditTextForNewInput()
+        (tilInput).slideOutRightSlideInLeft().start()
+        (btnContinue).btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
     }
 
     private fun dnPrepareGameStart() {
-        Player(name = etInput.text.toString(), playerNum = counter).addAdditionalPlayer()
-        increaseCount()
-        tilInput.viewApplyVis(View.INVISIBLE)
-        btnContinue.btnChangeText(getString(R.string.start_game))
+        (Player(name = etInput.text.toString(), playerNum = counter)).addAdditionalPlayer()
+        increaseCounterByOne()
+        (tilInput).viewApplyVis(View.INVISIBLE)
+        (btnContinue).btnChangeText(getString(R.string.start_game))
         requireActivity().hideSoftKeyBoard(btnContinue)
     }
 
     private fun dnPrepareForNextPlayer() {
         Player(name = etInput.text.toString(), playerNum = counter).addAdditionalPlayer()
-        increaseCount()
+        increaseCounterByOne()
         inputObjectUpdate()
         tilInput.slideOutRightSlideInLeft().start()
-        inputPlayers.clearEditTextForNewInput()
+        (inputPlayers).clearEditTextForNewInput()
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
     }
 
@@ -210,7 +215,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
     private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
     private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
-    private fun increaseCount() = counter++
+    private fun increaseCounterByOne() = counter++
 
     private fun InputObject.clearEditTextForNewInput() {
 
