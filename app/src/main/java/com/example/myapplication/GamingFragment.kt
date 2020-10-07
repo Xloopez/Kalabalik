@@ -75,10 +75,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	lateinit var fisCard: FragmentInputSettings
 	lateinit var fisScore: FragmentInputSettings
 
-	private val showScore get() = calcCurrentTurn.isZero()
+	private val isShowScore get() = calcCurrentTurn.isZero()
 	private val hideScore get() = currTurn.isZero().not()
-	private val showNextFragment get() = currTurn.isEqualTo(totalTurns)
-	private val booleanArrCheckAllTrue get() = booleanArrayOf(showScore, hideScore).all { b -> b }
+	private val isNextFragment get() = currTurn.isEqualTo(totalTurns)
+	private val isBoolArrAllTrue get() = booleanArrayOf(isShowScore, hideScore).all { b -> b }
 	private val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
 	private val calcTotalTurn get() = maxRounds.times(pCount).plus(maxRounds)
 	private val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
@@ -192,15 +192,16 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		})
 	}
 
-
 	private fun setUpCurrentTurnObserver() {
 		gamingViewModel.currentTurn.observe(this, {
 			currTurn = it
-			//Log.d("!", "ShowScore: $showScore ShowScoreNot: $hideScore is bArr: $booleanArrCheckAllTrue")
-			(showNextFragment).runUnitTrue { endGame() }
-			(showScore).runUnitTrue { nextRound() }
-			(!showScore).runUnitTrue { nextPlayerTurn() }
-			(booleanArrCheckAllTrue).runUnitTrue { displayScoreFragment() }
+
+			when {
+				isNextFragment -> { endGame() }
+				isShowScore -> { nextRound() }
+				!isShowScore -> { nextPlayerTurn() }
+				isBoolArrAllTrue -> { displayScoreFragment() }
+			}
 		})
 	}
 
@@ -238,8 +239,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		}
 		(tvPlayerName).slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
-		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }
-		).runIterateUnit()
+		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
 
 	}
 
@@ -247,7 +247,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		btnSuccess.setOnClickListener(this)
 
-		mutableListOf(btnFail.viewApplyVis()).runListUnits()
+		//mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
 
 		val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
 
@@ -310,6 +310,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			doOnStart {
 				listOfButtons.forEach {
 					it.apply {
+						visibility = View.VISIBLE
 						isClickable = false
 						alphaOutThenReverse().start()
 					}

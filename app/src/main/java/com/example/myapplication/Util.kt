@@ -29,7 +29,7 @@ fun Int.isEqualTo(value: Int) = (this == value)
 
 fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
 fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
-fun Iterable<() -> Unit>.runIterateUnit() {for (un in this ) un()}
+fun Iterable<() -> Unit>.runIterateUnit() {for (unit in this ) unit()}
 fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {for (element in this) element.isClickable = clickable}
 
 fun MutableList<*>.showAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE } }
