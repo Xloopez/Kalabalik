@@ -238,8 +238,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		}
 		(tvPlayerName).slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
-		mutableListOf(btnFail.viewApplyVis(View.INVISIBLE)
-		).viewApplyVisFromList()
+		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }
+		).runIterateUnit()
 
 	}
 
@@ -247,7 +247,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		btnSuccess.setOnClickListener(this)
 
-		mutableListOf(btnFail.viewApplyVis()).viewApplyVisFromList()
+		mutableListOf(btnFail.viewApplyVis()).runListUnits()
 
 		val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
 
@@ -301,15 +301,20 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		if (calcCurrentTurn.isEqualTo(1)) {
 			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
 		}
-		val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>()
+		val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>().toMutableList()
 
 		val a1 = v.flipToBackY().apply {
 			duration = Animationz.flipCardDurationOneFourth
 			interpolator = LinearInterpolator()
 
 			doOnStart {
-				listOfButtons.clickable(false)
-				listOfButtons.forEach { it.alphaOutThenReverse().start() }
+				listOfButtons.forEach {
+					it.apply {
+						isClickable = false
+						alphaOutThenReverse().start()
+					}
+				}
+
 			}
 			v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
 

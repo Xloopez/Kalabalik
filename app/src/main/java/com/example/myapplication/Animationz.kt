@@ -34,6 +34,7 @@ object Animationz {
         )
     }
 
+
     fun View.alphaOutThenReverse(): ObjectAnimator {
         val v = this
         return v.aAlpha(from = 1.0f, to = 0.2f).apply {
@@ -42,6 +43,7 @@ object Animationz {
             repeatCount = 1
         }
     }
+
 
     fun View.fadeInAnim1(): ObjectAnimator {
         return ObjectAnimator.ofFloat(this, View.ALPHA, 0.1f, 1f)

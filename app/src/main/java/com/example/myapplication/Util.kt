@@ -20,7 +20,7 @@ abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
                             var replace: Boolean? = false,
                             var animate: Boolean? = false)
 
-inline fun Boolean.runUnitTrue(uTrue: () -> Unit) = if (this) { uTrue() } else {  }
+fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
 
 fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.text = text }
 
@@ -28,11 +28,13 @@ fun Int.isZero() = (this == 0)
 fun Int.isEqualTo(value: Int) = (this == value)
 
 fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
-fun MutableList<Unit>.viewApplyVisFromList() = this.forEach { return@forEach it }
-fun List<AppCompatButton>.clickable(clickable: Boolean) { this.forEach { it.apply { isClickable = clickable } } }
+fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
+fun Iterable<() -> Unit>.runIterateUnit() {for (un in this ) un()}
+fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {for (element in this) element.isClickable = clickable}
+
 fun MutableList<*>.showAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.VISIBLE } }
 fun MutableList<*>.hideAllViews() { filterIsInstance<View>().forEach { v -> v.visibility = View.INVISIBLE } }
-inline fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
+fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
 
 
 fun Activity.hideSoftKeyBoard(view: View){

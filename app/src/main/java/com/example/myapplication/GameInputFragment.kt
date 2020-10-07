@@ -68,7 +68,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
-        //tvTitle.text = getString(R.string.app_name)
+        tvTitle.text = getString(R.string.app_name)
 
         btnContinue.setOnClickListener(this)
     
