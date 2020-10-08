@@ -13,7 +13,7 @@ import com.example.myapplication.Animationz.slideOutRight
 
 //object Util {
 
-abstract class FragmentInputªSettings(var fragmentManager: FragmentManager,
+abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
                             var fragment: Fragment,
                             var layoutId: Int,
                             @Nullable var tag: String? = "",
@@ -29,9 +29,11 @@ fun Int.isZero() = (this == 0)
 fun Int.isEqualTo(value: Int) = (this == value)
 
 fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
-fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
+
 fun Iterable<() -> Unit>.runIterateUnit() {for (unit in this ) unit()}
 fun Iterable<AppCompatButton>.clickable(clickable: Boolean) { for (element in this) element.isClickable = clickable }
+
+fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
 fun MutableList<*>.fromListSetViewsVis(vis: Int) {for (element in this.filterIsInstance<View>() ) element.visibility = vis }
 
 fun Activity.hideSoftKeyBoard(view: View){

@@ -1,15 +1,14 @@
 package com.example.myapplication
 
-import android.animation.AnimatorSet
+import android.animation.*
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
+import android.view.animation.*
 import android.widget.FrameLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -20,10 +19,10 @@ import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.Animationz.alphaOutThenReverse
 import com.example.myapplication.Animationz.checkCameraDistance
 import com.example.myapplication.Animationz.flipToBackY
 import com.example.myapplication.Animationz.flipToFrontY
@@ -38,7 +37,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var sharedViewModel: SharedViewModel
 	private lateinit var gamingViewModel: GamingViewModel
-
 
 	private var _binding: FragmentGamingBinding? = null
 	private val binding get() = _binding!!
@@ -75,10 +73,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	lateinit var fisCard: FragmentInputSettings
 	lateinit var fisScore: FragmentInputSettings
 
-	private inline val isShowScore get() = calcCurrentTurn.isZero()
-	private inline val hideScore get() = currTurn.isZero().not()
+	private inline val isPrepareNextRound get() = calcCurrentTurn.isZero()
+	private inline val isStart get() = 	(currTurn == 0) and (calcCurrentTurn == 0)
 	private inline val isNextFragment get() = currTurn.isEqualTo(totalTurns)
-	private inline val isBoolArrAllTrue get() = booleanArrayOf(isShowScore, hideScore).all { b -> b }
 	private inline val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
 	private inline val calcTotalTurn get() = maxRounds.times(pCount).plus(maxRounds)
 	private inline val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
@@ -107,23 +104,25 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		btnFail.setOnClickListener(this)
 
 		setInitialValues()
-		gamingViewModel.updateRound()
+
 
 		setUpCurrentPlayerObserver()
 		setUpCurrentTurnObserver()
 		setUpCurrentRoundObserver()
-
+		gamingViewModel.currentTurn.postValue(0)
 	}
 
 	override fun onClick(v: View?) {
 		when (v?.id) {
-			R.id.button_Success -> { updatePlayerPoints(SUCCESS)
+			R.id.button_Success -> {
+				updatePlayerPoints(SUCCESS)
 			}
 			R.id.button_Fail -> {
 				updatePlayerPoints(FAIL)
 			}
 		}
 	}
+
 
 	private fun applyViewBinding() {
 
@@ -197,10 +196,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			currTurn = it
 
 			when {
+				isStart -> { gamingViewModel.updateTurn(); gamingViewModel.updateRound() }
 				isNextFragment -> { endGame() }
-				isShowScore -> { nextRound() }
-				!isShowScore -> { nextPlayerTurn() }
-				isBoolArrAllTrue -> { displayScoreFragment() }
+				isPrepareNextRound -> { nextRound() }
+				!isPrepareNextRound -> { nextPlayerTurn() }
 			}
 		})
 	}
@@ -214,7 +213,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun displayScoreFragment() {
 		frameLayout.background = null
-		(fisScore).newFragmentInstance().commit()
+		(fisScore).newFragmentInstance().commitAllowingStateLoss()
 	}
 
 	private fun endGame() {
@@ -228,9 +227,19 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun nextRound() {
 
+		btnSuccess.isClickable = false
+		btnSuccess.visibility = View.VISIBLE
+		var v: ValueAnimator? = null
+
+		(tvPlayerName).slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
+		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
+		displayScoreFragment()
+
 		btnSuccess.apply {
 			text = getString(R.string.next_round)
+
 			setOnClickListener {
+				v?.reverse()
 				(fisCard).apply { replace = true }.newFragmentInstance().commit()
 				gamingViewModel.apply {
 					updateRound()
@@ -238,16 +247,36 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				}
 			}
 		}
-		(tvPlayerName).slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
-		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
+
+		if(btnSuccess.isLaidOut) {
+			v = ValueAnimator.ofFloat(btnSuccess.width.toFloat(), (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight*4).toFloat())
+				.apply {
+					duration = 1000
+					interpolator = AccelerateDecelerateInterpolator()
+					addUpdateListener {
+						val inter = it.animatedValue.toString().toFloat()
+						btnSuccess.apply {
+							layoutParams.width = inter.toInt()
+							requestLayout()
+						}
+
+					}
+					doOnEnd {
+						btnSuccess.isClickable = true
+					}
+				}
+			v.start()
+
+		}
+
+
+
 
 	}
 
 	private fun nextPlayerTurn() {
 
 		btnSuccess.setOnClickListener(this)
-
-		//mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
 
 		val (pair: Pair<String, Double>, cardType: EnRandom) = generateNewPair()
 
@@ -277,7 +306,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 					intArr = listOfConsequencesPoints
 				)
 				cardType = rCardType
-
 			}
 			EnRandom.MISSION -> {
 
@@ -290,7 +318,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				cardType = rCardType
 			}
 		}
-
 		return Pair(pair, cardType)
 	}
 
@@ -307,16 +334,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			duration = Animationz.flipCardDurationOneFourth
 			interpolator = LinearInterpolator()
 
-			doOnStart {
-				listOfButtons.forEach {
-					it.apply {
-						visibility = View.VISIBLE
-						isClickable = false
-						alphaOutThenReverse().start()
-					}
-				}
-
-			}
+			doOnStart { listOfButtons.clickable(false) }
 			v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
 
 			doOnEnd {
@@ -351,12 +369,17 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			.apply {
 				interpolator = DecelerateInterpolator()
 				duration = Animationz.flipCardDurationOneFourth
-				doOnEnd { listOfButtons.clickable(true) }
+				doOnEnd {
+					listOfButtons.clickable(true)
+					listOfButtons.forEach {
+						it.visibility = View.VISIBLE
+					}
+
+				}
 			}
 
 		return AnimatorSet().apply {
 			playSequentially(a1, a2, a3, a4)
-
 		}
 	}
 
@@ -392,7 +415,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		return f.fragmentManager.beginTransaction().apply {
 
 			f.apply {
-				when {(animate == true) -> {
+				when (animate) {
+					true -> {
 						setCustomAnimations(
 							R.anim.fragment_slide_right_enter,
 							R.anim.fragment_slide_left_exit)
