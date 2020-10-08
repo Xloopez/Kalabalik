@@ -75,14 +75,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	lateinit var fisCard: FragmentInputSettings
 	lateinit var fisScore: FragmentInputSettings
 
-	private val isShowScore get() = calcCurrentTurn.isZero()
-	private val hideScore get() = currTurn.isZero().not()
-	private val isNextFragment get() = currTurn.isEqualTo(totalTurns)
-	private val isBoolArrAllTrue get() = booleanArrayOf(isShowScore, hideScore).all { b -> b }
-	private val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
-	private val calcTotalTurn get() = maxRounds.times(pCount).plus(maxRounds)
-	private val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
-	private val calcCurrentTurn: Int get() = currTurn % pCount.plus(1)
+	private inline val isShowScore get() = calcCurrentTurn.isZero()
+	private inline val hideScore get() = currTurn.isZero().not()
+	private inline val isNextFragment get() = currTurn.isEqualTo(totalTurns)
+	private inline val isBoolArrAllTrue get() = booleanArrayOf(isShowScore, hideScore).all { b -> b }
+	private inline val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
+	private inline val calcTotalTurn get() = maxRounds.times(pCount).plus(maxRounds)
+	private inline val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
+	private inline val calcCurrentTurn: Int get() = currTurn % pCount.plus(1)
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -301,7 +301,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		if (calcCurrentTurn.isEqualTo(1)) {
 			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
 		}
-		val listOfButtons = listOfViews.listFilterInstance<AppCompatButton>().toMutableList()
+		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
 
 		val a1 = v.flipToBackY().apply {
 			duration = Animationz.flipCardDurationOneFourth
@@ -361,7 +361,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	}
 
 	private fun pairRoundWithPoints(double: Double): Pair<Int, Double> = Pair(currRound, double)
-	private inline fun <reified T> MutableList<View>.listFilterInstance() = this.filterIsInstance<T>() //TODO move/REMOVE? to Util?
 	private fun returnListPair(index: Int, strArr: Array<String>, intArr: IntArray): Pair<String, Double>
 			= Pair(strArr[index], intArr[index].toDouble())
 
@@ -392,10 +391,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		return f.fragmentManager.beginTransaction().apply {
 
-			f.let {
+			f.apply {
 				when {(animate == true) -> {
-						setCustomAnimations(R.anim.fragment_slide_right_enter,
-							R.anim.fragment_slide_left_exit) }
+						setCustomAnimations(
+							R.anim.fragment_slide_right_enter,
+							R.anim.fragment_slide_left_exit)
+					}
 				}
 
 				when (f.replace) {
