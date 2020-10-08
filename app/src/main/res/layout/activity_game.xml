@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/kalabalabakggrund_copy"
     tools:context=".GameActivity">
 
     <TextView
@@ -12,8 +13,8 @@
         android:layout_height="33dp"
         android:layout_marginTop="100dp"
         android:text="text"
-        android:textSize="24sp"
         android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,8 +54,9 @@
         android:id="@+id/right_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#A1A9B4"
+        android:backgroundTint="#D08F959E"
         android:text="Flip"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.758"
@@ -66,6 +68,8 @@
         android:id="@+id/left_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#A1A9B4"
+        android:backgroundTint="#D08F959E"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right_btn"

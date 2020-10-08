@@ -21,13 +21,22 @@ class MainActivity : AppCompatActivity() {
 
         buttonNext.setOnClickListener{
             buttonNextPage()
+            buttonNext.visibility = View.INVISIBLE
         }
     }
+
     fun buttonNextPage(){
-        GameSettings.playerCount = playerAmount.text.toString().toInt()
+        /*GameSettings.playerCount = playerAmount.text.toString().toInt()
 
         //När next button klickas kommer vi till nästa vy
         val intent = Intent(this, PlayerActivity::class.java)
-        startActivity(intent)
+        startActivity(intent)*/
+
+        val playerFragment = PlayerFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+
+        transaction.add(R.id.container, playerFragment, "playerFragment")
+        transaction.commit()
+
     }
 }

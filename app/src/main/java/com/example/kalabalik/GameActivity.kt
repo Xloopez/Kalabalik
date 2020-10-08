@@ -79,9 +79,24 @@ class GameActivity : AppCompatActivity() {
             playerTurn()
         }
     }
-    fun scoreBoardActivity (){
-        val intent = Intent(this, HighScoreActivity::class.java)
-        startActivity(intent)
+
+    fun flipCard() {
+        when (isFront) {
+            false -> {
+                frontAnimation.setTarget(card_Front)
+                backAnimation.setTarget(card_back)
+                frontAnimation.start()
+                backAnimation.start()
+                isFront = false
+            }
+            true -> {
+                frontAnimation.setTarget(card_back)
+                backAnimation.setTarget(card_Front)
+                backAnimation.start()
+                frontAnimation.start()
+                isFront = false
+            }
+        }
     }
 
     fun playerTurn() {
@@ -121,34 +136,6 @@ class GameActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    fun flipCard() {
-        when (isFront) {
-            false -> {
-                frontAnimation.setTarget(card_Front)
-                backAnimation.setTarget(card_back)
-                frontAnimation.start()
-                backAnimation.start()
-                isFront = false
-                //playerTurn()
-                //consequenceOrMission()
-            }
-            true -> {
-                frontAnimation.setTarget(card_back)
-                backAnimation.setTarget(card_Front)
-                backAnimation.start()
-                frontAnimation.start()
-                isFront = false
-            }
-        }
-    }
-    fun increaseRounds() {
-        currentRound++
-    }
-
-    fun restartcounter() {
-        turn = 1
     }
 
     fun consequenceOrMission() {
@@ -216,19 +203,33 @@ class GameActivity : AppCompatActivity() {
 
         return consequenceCoiceStr
     }
+    fun increaseRounds() {
+        currentRound++
+    }
+
+    fun restartcounter() {
+        turn = 1
+    }
 
     fun rightButtonPoints(points: Int){
         leftButton.visibility = View.VISIBLE
         rightButton.setText("+$points")
         GameSettings.addPointsToPlayer(turn-1, points)
     }
+
     fun leftButtonPoints(points: Int){
         GameSettings.addPointsToPlayer(turn-1, points)
     }
+
     fun rightMissionButton(missionPoints: Int){
         leftButton.visibility = View.INVISIBLE
         rightButton.setText("+$missionPoints")
         GameSettings.addPointsToPlayer(turn-1, missionPoints)
+    }
+
+    fun scoreBoardActivity (){
+        val intent = Intent(this, HighScoreActivity::class.java)
+        startActivity(intent)
     }
 
 }
