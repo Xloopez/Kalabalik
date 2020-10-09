@@ -199,6 +199,10 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         increaseCounterByOne()
         (tilInput).viewApplyVis(View.INVISIBLE)
         (btnContinue).btnChangeText(getString(R.string.start_game))
+
+        sharedViewModel.updateRandomTaskList(
+            (1.rangeTo(sharedViewModel.playerCount.value!!*sharedViewModel.amountOfRounds.value!!)
+                .shuffled().take(5)))
         requireActivity().hideSoftKeyBoard(btnContinue)
     }
 

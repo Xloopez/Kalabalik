@@ -1,6 +1,7 @@
 package com.example.myapplication
 
-import android.animation.*
+import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +9,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.*
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -80,6 +84,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private inline val calcTotalTurn get() = maxRounds.times(pCount).plus(maxRounds)
 	private inline val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
 	private inline val calcCurrentTurn: Int get() = currTurn % pCount.plus(1)
+	private inline val listOfTimedTaskTurns get() = sharedViewModel.listOfRandomTimedTaskTurns
+	private inline val isTimedTask get() = listOfTimedTaskTurns.contains(currTurn)
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -105,11 +111,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		setInitialValues()
 
-
 		setUpCurrentPlayerObserver()
 		setUpCurrentTurnObserver()
 		setUpCurrentRoundObserver()
 		gamingViewModel.currentTurn.postValue(0)
+
+		listOfTimedTaskTurns.forEach { Log.d("!", "$it") }
 	}
 
 	override fun onClick(v: View?) {
@@ -194,6 +201,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun setUpCurrentTurnObserver() {
 		gamingViewModel.currentTurn.observe(this, {
 			currTurn = it
+
+			Log.d("!", "Timed Task: $isTimedTask Turn: $currTurn")
 
 			when {
 				isStart -> { gamingViewModel.updateTurn(); gamingViewModel.updateRound() }

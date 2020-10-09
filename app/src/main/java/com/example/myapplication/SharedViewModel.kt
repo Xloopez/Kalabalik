@@ -9,6 +9,7 @@ class SharedViewModel: ViewModel() {
 
     var listOfPlayers = mutableListOf<Player>()
     var lopSortedByPoints = mutableListOf<Player>()
+    var listOfRandomTimedTaskTurns = mutableListOf<Int>()
 
     var currentFragmentPos= MutableLiveData<Int>().apply {
         value = 0
@@ -18,7 +19,7 @@ class SharedViewModel: ViewModel() {
         value = 0
     }
     var amountOfRounds = MutableLiveData<Int>().apply {
-        value = 3
+        value = 15
     }
 
     fun updateFragmentPos(){
@@ -36,6 +37,11 @@ class SharedViewModel: ViewModel() {
     fun listSumPairSorted() = viewModelScope.launch {
          lopSortedByPoints = listOfPlayers.sortedByDescending { player -> player.sumPointsFromListPair()}.toMutableList()
     }
+
+    fun updateRandomTaskList(list: List<Int>) = viewModelScope.launch {
+        listOfRandomTimedTaskTurns = list.toMutableList()
+    }
+
     
 }
 
