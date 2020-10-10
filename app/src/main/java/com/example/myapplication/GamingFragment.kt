@@ -4,6 +4,8 @@ import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -120,16 +122,27 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	}
 
 	override fun onClick(v: View?) {
-		when (v?.id) {
-			R.id.button_Success -> {
-				updatePlayerPoints(SUCCESS)
-			}
-			R.id.button_Fail -> {
-				updatePlayerPoints(FAIL)
+
+		//TODO HIDE ALL
+		if (isTimedTask){
+			btnSuccess.visibility = View.INVISIBLE
+			btnFail.visibility = View.INVISIBLE
+			tvPlayerName.text = "TIMED TASK"
+			fisScore.newFragmentInstance().commit()
+			val ranna = Runnable { gamingViewModel.updateTurn() }
+			Handler(Looper.getMainLooper()).postDelayed(ranna, 5000)
+		}else {
+
+			when (v?.id) {
+				R.id.button_Success -> {
+					updatePlayerPoints(SUCCESS)
+				}
+				R.id.button_Fail -> {
+					updatePlayerPoints(FAIL)
+				}
 			}
 		}
 	}
-
 
 	private fun applyViewBinding() {
 
@@ -185,7 +198,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				listOfMissionsPoints = getIntArray(R.array.MissionPoints)
 			}
 		}
-
 		totalTurns = calcTotalTurn
 		tvTotalRounds.apply { text = "out of $maxRounds rounds" }
 		gamingViewModel.apply { currentTurn.postValue(1) }
@@ -210,6 +222,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				isPrepareNextRound -> { nextRound() }
 				!isPrepareNextRound -> { nextPlayerTurn() }
 			}
+
 		})
 	}
 
@@ -236,8 +249,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun nextRound() {
 
-		btnSuccess.isClickable = false
-		btnSuccess.visibility = View.VISIBLE
+		btnSuccess.apply {
+			isClickable = false
+			visibility = View.VISIBLE
+		}
 		var v: ValueAnimator? = null
 
 		(tvPlayerName).slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
@@ -258,7 +273,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		if(btnSuccess.isLaidOut) {
-			v = ValueAnimator.ofFloat(btnSuccess.width.toFloat(), (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight*4).toFloat())
+
+			val vFrom = (btnSuccess.width).toFloat()
+			val vTo = (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight * 4)
+
+			v = ValueAnimator.ofFloat(vFrom, vTo)
 				.apply {
 					duration = 1000
 					interpolator = AccelerateDecelerateInterpolator()
@@ -268,19 +287,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
 							layoutParams.width = inter.toInt()
 							requestLayout()
 						}
-
 					}
 					doOnEnd {
 						btnSuccess.isClickable = true
 					}
 				}
 			v.start()
-
 		}
-
-
-
-
 	}
 
 	private fun nextPlayerTurn() {
@@ -383,7 +396,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 					listOfButtons.forEach {
 						it.visibility = View.VISIBLE
 					}
-
 				}
 			}
 

@@ -19,7 +19,7 @@ class SharedViewModel: ViewModel() {
         value = 0
     }
     var amountOfRounds = MutableLiveData<Int>().apply {
-        value = 15
+        value = 4
     }
 
     fun updateFragmentPos(){
@@ -35,14 +35,21 @@ class SharedViewModel: ViewModel() {
     }
 
     fun listSumPairSorted() = viewModelScope.launch {
-         lopSortedByPoints = listOfPlayers.sortedByDescending { player -> player.sumPointsFromListPair()}.toMutableList()
+         lopSortedByPoints = listOfPlayers
+             .sortedByDescending { player -> player.sumPointsFromListPair()}
+             .toMutableList()
     }
 
-    fun updateRandomTaskList(list: List<Int>) = viewModelScope.launch {
-        listOfRandomTimedTaskTurns = list.toMutableList()
-    }
+    fun updateRandomTaskList() = viewModelScope.launch {
+        //TODO SHUFFLE TAKE PLAYERCOUNT, SPREAD OUT VALUES CANT BE TO CLOSE
+        listOfRandomTimedTaskTurns = 6.rangeTo(playerCount.value!!.times(amountOfRounds.value!!))
+            .filterNot { i: Int -> (i % playerCount.value!!.plus(1) == 0)}
+            .shuffled()
+            .distinctBy { 6 }
+            .take(playerCount.value!!)
+            .toMutableList()
+    }                                       
 
-    
 }
 
 private fun MutableLiveData<Int>.increaseBy(i: Int) {
