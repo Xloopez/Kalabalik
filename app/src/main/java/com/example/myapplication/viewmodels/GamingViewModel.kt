@@ -1,7 +1,9 @@
-package com.example.myapplication
+package com.example.myapplication.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.dataclasses.Player
+import com.example.myapplication.utilities.EnumUtil
 
 class GamingViewModel : ViewModel() {
 
@@ -41,12 +43,12 @@ class GamingViewModel : ViewModel() {
     fun updatePlayer(player: Player) = currentPlayer.postValue(player)
     fun clearCard() = clearCardFragment.postEmpty()
 
-    fun updateCardTypeAndPair(pair: Pair<String, Double>, cardType: EnumUtil.EnRandom){
-        when (cardType) {
-            EnumUtil.EnRandom.CONSEQUENCES -> consequencePair.postValue(pair)
-            EnumUtil.EnRandom.MISSION -> missionPair.postValue(pair)
+    fun updateCurrentCard(t: Triple<String, Double, EnumUtil.EnRandom>){
+        when (t.third) {
+            EnumUtil.EnRandom.CONSEQUENCES -> consequencePair.postValue(Pair(t.first, t.second))
+            EnumUtil.EnRandom.MISSION -> missionPair.postValue(Pair(t.first, t.second))
         }
-        currentCardType.postValue(cardType)
+        currentCardType.postValue(t.third)
     }
 
 }

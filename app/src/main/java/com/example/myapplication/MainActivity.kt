@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.utilities.SharedPrefUtil
+import com.example.myapplication.viewmodels.SharedViewModel
 
 class MainActivity : AppCompatActivity() {
 

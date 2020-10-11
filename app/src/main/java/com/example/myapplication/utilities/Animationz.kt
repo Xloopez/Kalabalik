@@ -1,23 +1,21 @@
-package com.example.myapplication
+package com.example.myapplication.utilities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.content.res.TypedArray
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
-import kotlin.reflect.jvm.internal.impl.resolve.constants.IntegerLiteralTypeConstructor
 
 object Animationz {
 
     private const val flipCardDuration = 1200L
-    private const val flipCardDurationOneHalf = flipCardDuration/2
-    private const val flipCardDurationOneThird = flipCardDuration/3
-    const val flipCardDurationOneFourth = flipCardDuration/4
+    private const val flipCardDurationOneHalf = flipCardDuration /2
+    private const val flipCardDurationOneThird = flipCardDuration /3
+    const val flipCardDurationOneFourth = flipCardDuration /4
 
     fun View.flipToBackY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f)}
     fun View.flipToFrontY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f)}

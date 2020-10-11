@@ -8,9 +8,12 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.adapters.CustomMutableListRecViewAdapter
 import com.example.myapplication.databinding.FragmentFinalScoreBinding
 import com.example.myapplication.databinding.FragmentItemGameScoreBinding
 import com.example.myapplication.databinding.RecyclerViewScoreBinding
+import com.example.myapplication.dataclasses.Player
+import com.example.myapplication.viewmodels.SharedViewModel
 
 class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 

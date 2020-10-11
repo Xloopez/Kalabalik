@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.utilities
 
 import android.app.Activity
 import android.view.View
@@ -7,9 +7,9 @@ import androidx.annotation.Nullable
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.example.myapplication.Animationz.fadeInAnim1
-import com.example.myapplication.Animationz.fadeOutAnim1
-import com.example.myapplication.Animationz.slideOutRight
+import com.example.myapplication.utilities.Animationz.fadeInAnim1
+import com.example.myapplication.utilities.Animationz.fadeOutAnim1
+import com.example.myapplication.utilities.Animationz.slideOutRight
 
 //object Util {
 

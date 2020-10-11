@@ -1,6 +1,6 @@
-package com.example.myapplication
+package com.example.myapplication.dataclasses
 
-class Player
+data class Player
     (
     var name: String,
     var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf(),

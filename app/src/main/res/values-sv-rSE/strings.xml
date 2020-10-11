@@ -9,4 +9,5 @@
     <string name="round">Runda</string>
     <string name="current_score">NUVARANDE POÄNG</string>
     <string name="next_round">NÄSTA RUNDA</string>
+    <string name="timed_task">TIMED TASK</string>
 </resources>

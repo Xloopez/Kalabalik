@@ -12,8 +12,14 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.Animationz.slideOutRightSlideInLeft
 import com.example.myapplication.databinding.FragmentGamingInputBinding
+import com.example.myapplication.dataclasses.Player
+import com.example.myapplication.utilities.Animationz.slideOutRightSlideInLeft
+import com.example.myapplication.utilities.btnChangeText
+import com.example.myapplication.utilities.hideSoftKeyBoard
+import com.example.myapplication.utilities.setViewVisibilityFadeInOut
+import com.example.myapplication.utilities.viewApplyVis
+import com.example.myapplication.viewmodels.SharedViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -192,6 +198,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         (tilInput).slideOutRightSlideInLeft().start()
         (btnContinue).btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
+        sharedViewModel.updateRandomTaskList()
     }
 
     private fun dnPrepareGameStart() {
@@ -199,7 +206,6 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         increaseCounterByOne()
         (tilInput).viewApplyVis(View.INVISIBLE)
         (btnContinue).btnChangeText(getString(R.string.start_game))
-        sharedViewModel.updateRandomTaskList()
         requireActivity().hideSoftKeyBoard(btnContinue)
     }
 
