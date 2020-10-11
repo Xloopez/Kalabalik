@@ -41,6 +41,8 @@ class PlayerFragment : Fragment() {
             Log.d("!!!", "Pressed")
             Log.d("!!!", "Counter: $counter")
             playersNames()
+
+
         }
     }
 
@@ -70,6 +72,8 @@ class PlayerFragment : Fragment() {
                 GameSettings.addPlayerToList(name)
                 //addPlayer(name)
                 increaseCounterByOne()
+
+                startGameFragment()
                 //val intent = Intent(this, GameActivity::class.java)
                 //startActivity(intent)
             }
@@ -78,6 +82,15 @@ class PlayerFragment : Fragment() {
 
     fun increaseCounterByOne(){
         counter++
+    }
+
+    fun startGameFragment(){
+        val gameFragment = GameFragment()
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+
+        transaction.add(R.id.container, gameFragment, "gameFragment")
+        transaction.commit()
+
     }
 
 
