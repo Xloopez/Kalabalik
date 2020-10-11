@@ -10,4 +10,5 @@
     <string name="current_score">NUVARANDE POÄNG</string>
     <string name="next_round">NÄSTA RUNDA</string>
     <string name="timed_task">TIMED TASK</string>
+    <string name="text_place_holder">TEXT_PLATS_HÅLLARE</string>
 </resources>

@@ -4,7 +4,6 @@ import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -30,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentGamingBinding
 import com.example.myapplication.dataclasses.Player
+import com.example.myapplication.dataclasses.TimedTasks
 import com.example.myapplication.utilities.*
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.flipToBackY
@@ -68,6 +68,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var frameLayout: FrameLayout
 
+	private val tt = TimedTasks()
+
 	private var currRound = 0
 	private var currTurn = 0
 	private var maxRounds = 0
@@ -87,7 +89,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private inline val isStart get() = 	(currTurn == 0) and (calcCurrentTurn == 0)
 	private inline val isNextFragment get() = currTurn.isEqualTo(totalTurns)
 	private inline val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
-	//private inline val calcTotalTurn get() = maxRounds.times(plyCount).plus(maxRounds)
 	private inline val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
 	private inline val calcCurrentTurn: Int get() = currTurn % plyCount.plus(1)
 	private inline val listOfTimedTaskTurns get() = sharedViewModel.listOfRandomTimedTaskTurns
@@ -122,14 +123,16 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		setUpCurrentRoundObserver()
 		gamingViewModel.currentTurn.postValue(0)
 
-		listOfTimedTaskTurns.forEach { Log.d("!", "$it") }
+		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
 	}
 
 	override fun onClick(v: View?) {
 
 		if (isTimedTask){
-
+			val generateRandomTask = tt.randomTask()
+			gamingViewModel.updateRandomTaskCard(generateRandomTask)
 			displayTimedTask()
+			startEndTimedTaskHandler(generateRandomTask.seconds)
 
 		}else {
 			when (v?.id) {
@@ -146,35 +149,24 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun displayTimedTask() {
 		btnSuccess.visibility = View.INVISIBLE
 		btnFail.visibility = View.INVISIBLE
-		(tvPlayerName).animateWithSetText(text = getString(R.string.timed_task))
 		(fisBlank).newFragmentInstance().commit()
-		startEndTimedTaskHandler()
 	}
 
-	private fun startEndTimedTaskHandler() {
+	private fun startEndTimedTaskHandler(seconds: Long) {
 
-		tvPlayerName.text = "Remaining: 10"
-
-		object: CountDownTimer(10000, 1000){
-			override fun onTick(p0: Long) {
-
-				val seconds = p0.div(1000)
-				Log.d("!", "Seconds: $seconds")
-				 //tvPlayerName.changeText("Remaining: $seconds")
-				tvPlayerName.changeText(sText = "Remaining: $seconds")
-			}
-
-			override fun onFinish() {
-				gamingViewModel.apply { updateTurn() }
-			}
-
-			private fun AppCompatTextView.changeText(sText: String){
-				this.post {
-					text = sText
+	//	tvPlayerName.text = "Remaining: 10"
+		(tvPlayerName).animateWithSetText(text = "10")
+		object: SecondsTimer(
+			totalRunningSeconds = seconds,
+			updateInterval = 1,
+			textView = tvPlayerName,
+			tCallBack =  object: TimerCallBack {
+				override fun onFinish() {
+					gamingViewModel.apply { updateTurn() }
 				}
 			}
+		){}.start()
 
-		}.start()
 	}
 
 
@@ -221,7 +213,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		){}
 
 		fisBlank = object : FragmentInputSettings(
-			fragmentManager = this.childFragmentManager, fragment = BlankFragment(),
+			fragmentManager = this.childFragmentManager, fragment = CardTimedTaskFragment(),
 			layoutId = frameLayout.id, tag = "TIMED_TASK", replace = true, animate = true,
 		){}
 	}
@@ -292,10 +284,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			isClickable = false
 			visibility = View.VISIBLE
 		}
-		var v: ValueAnimator? = null
+		val vFrom = (btnSuccess.width).toFloat()
+		val vTo = (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight * 4)
+		val valueAnimator: ValueAnimator? = nextRoundValueAnimator(vFrom, vTo)
 
 		tvPlayerName.animateWithSetText(text = getString(R.string.current_score))
-		//tvPlayerName.slideOutRightInLeftSetText(sText = getString(R.string.current_score)).start()
 		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
 		displayScoreFragment()
 
@@ -303,7 +296,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			text = getString(R.string.next_round)
 
 			setOnClickListener {
-				v?.reverse()
+				valueAnimator?.reverse()
 				(fisCard).apply { replace = true }.newFragmentInstance().commit()
 				gamingViewModel.apply {
 					updateRound()
@@ -313,27 +306,26 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		if(btnSuccess.isLaidOut) {
+			valueAnimator?.start()
+		}
+	}
 
-			val vFrom = (btnSuccess.width).toFloat()
-			val vTo = (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight * 4)
-
-			v = ValueAnimator.ofFloat(vFrom, vTo)
-				.apply {
-					duration = 1000
-					interpolator = AccelerateDecelerateInterpolator()
-					addUpdateListener {
-						val inter = it.animatedValue.toString().toFloat()
-						btnSuccess.apply {
-							layoutParams.width = inter.toInt()
-							requestLayout()
-						}
-					}
-					doOnEnd {
-						btnSuccess.isClickable = true
+	private fun nextRoundValueAnimator(vFrom: Float, vTo: Float): ValueAnimator? {
+		return ValueAnimator.ofFloat(vFrom, vTo)
+			.apply {
+				duration = 1000
+				interpolator = AccelerateDecelerateInterpolator()
+				addUpdateListener {
+					val inter = it.animatedValue.toString().toFloat()
+					btnSuccess.apply {
+						layoutParams.width = inter.toInt()
+						requestLayout()
 					}
 				}
-			v.start()
-		}
+				doOnEnd {
+					btnSuccess.isClickable = true
+				}
+			}
 	}
 
 	private fun AppCompatTextView.animateWithSetText(text: String){

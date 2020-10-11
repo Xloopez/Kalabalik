@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
         <string-array name="ConsequencesOrMission">
             <item>Consequences</item>
             <item>Mission</item>
@@ -199,5 +200,6 @@
             <item>Find a potato peeler, a light bulb and a ball before time runs out. </item>
             <item>Can you whistle Johanna? You whistle one song, the others guess. </item>
         </string-array>
+
 
 </resources>

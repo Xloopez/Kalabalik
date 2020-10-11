@@ -3,6 +3,7 @@ package com.example.myapplication.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dataclasses.Player
+import com.example.myapplication.TimedTask
 import com.example.myapplication.utilities.EnumUtil
 
 class GamingViewModel : ViewModel() {
@@ -22,6 +23,8 @@ class GamingViewModel : ViewModel() {
     var consequencePair = MutableLiveData<Pair<String, Double>>().apply {
         value = Pair("", 0.0)
     }
+
+    var timedTaskCard = MutableLiveData<TimedTask>()
 
     var missionPair = MutableLiveData<Pair<String, Double>>().apply {
         value = Pair("", 0.0)
@@ -49,6 +52,10 @@ class GamingViewModel : ViewModel() {
             EnumUtil.EnRandom.MISSION -> missionPair.postValue(Pair(t.first, t.second))
         }
         currentCardType.postValue(t.third)
+    }
+
+    fun updateRandomTaskCard(t: TimedTask){
+        timedTaskCard.value = t
     }
 
 }
