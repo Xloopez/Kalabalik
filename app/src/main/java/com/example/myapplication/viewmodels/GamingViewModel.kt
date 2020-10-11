@@ -2,33 +2,17 @@ package com.example.myapplication.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.dataclasses.Card
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.dataclasses.TimedTask
-import com.example.myapplication.utilities.EnumUtil
 
 class GamingViewModel : ViewModel() {
 
-    var updateCardFragment = MutableLiveData<Int>().apply {
-        value = 0
-    }
-
-    var clearCardFragment = MutableLiveData<Int>().apply {
-        value = 0
-    }
-
-    var currentCardType = MutableLiveData<EnumUtil.EnRandom>().apply {
-        value = EnumUtil.EnRandom.CONSEQUENCES
-    }
-
-    var consequencePair = MutableLiveData<Pair<String, Double>>().apply {
-        value = Pair("", 0.0)
-    }
-
+    var currentCard = MutableLiveData<Card>()
     var timedTaskCard = MutableLiveData<TimedTask>()
 
-    var missionPair = MutableLiveData<Pair<String, Double>>().apply {
-        value = Pair("", 0.0)
-    }
+    var updateCardFragment = MutableLiveData<Int>()
+    var clearCardFragment = MutableLiveData<Int>()
 
     var currentTurn = MutableLiveData<Int>().apply {
         value = 0
@@ -46,12 +30,8 @@ class GamingViewModel : ViewModel() {
     fun updatePlayer(player: Player) = currentPlayer.postValue(player)
     fun clearCard() = clearCardFragment.postEmpty()
 
-    fun updateCurrentCard(t: Triple<String, Double, EnumUtil.EnRandom>){
-        when (t.third) {
-            EnumUtil.EnRandom.CONSEQUENCES -> consequencePair.postValue(Pair(t.first, t.second))
-            EnumUtil.EnRandom.MISSION -> missionPair.postValue(Pair(t.first, t.second))
-        }
-        currentCardType.postValue(t.third)
+    fun updateCurrentCard(card: Card){
+        currentCard.postValue(card)
     }
 
     fun updateRandomTaskCard(t: TimedTask){

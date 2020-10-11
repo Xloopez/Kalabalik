@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentCardBinding
-import com.example.myapplication.utilities.EnumUtil
 import com.example.myapplication.viewmodels.GamingViewModel
 
 class CardFragment: Fragment() {
@@ -43,29 +42,17 @@ class CardFragment: Fragment() {
         })
 
         gamingViewModel.updateCardFragment.observe(this, {
-            
-            when (gamingViewModel.currentCardType.value) {
-                EnumUtil.EnRandom.CONSEQUENCES -> {
-                    
-                    mutableListOf(
-                        Pair(tvCon1, gamingViewModel.consequencePair.value?.first),
-                        Pair(tvCon1Points, "${gamingViewModel.consequencePair.value?.second}"),
-                        Pair(tvCardType, gamingViewModel.currentCardType.value?.getEnumString()),
-                        Pair(tvPlusSign, "+")
-                    ).setTextFromList()
-                    
-                }
-                EnumUtil.EnRandom.MISSION -> {
 
-                    mutableListOf(
-                        Pair(tvCon1, gamingViewModel.missionPair.value?.first),
-                        Pair(tvCon1Points, "${gamingViewModel.missionPair.value?.second}"),
-                        Pair(tvCardType, gamingViewModel.currentCardType.value?.getEnumString()),
-                        Pair(tvPlusSign, "+")
-                    ).setTextFromList()
-                    
-                }
-            }
+            val currCard = gamingViewModel.currentCard.value
+
+            currCard?.let {
+                 mutableListOf(
+                    Pair(tvCon1, currCard.listStr),
+                    Pair(tvCon1Points, "${currCard.points}"),
+                    Pair(tvCardType, currCard.getTypeString()),
+                    Pair(tvPlusSign, "+")
+                )
+            }.setTextFromListPair()
 
         })
 
@@ -74,7 +61,6 @@ class CardFragment: Fragment() {
     private fun clearViews() { viewList.forEach { it.text = "" } }
 
     private fun applyViewBinding(){
-
         binding.apply {
             tvCardType = textViewCardType
             tvCon1 = textViewConOne
@@ -83,8 +69,8 @@ class CardFragment: Fragment() {
         }
     }
 
-    private fun MutableList<Pair<AppCompatTextView, String?>>.setTextFromList(){
-        this.forEach { pair -> pair.first.text = pair.second  }
+    private fun MutableList<Pair<AppCompatTextView, String>>?.setTextFromListPair(){
+        this?.forEach { pair -> pair.first.text = pair.second  }
     }
     
     override fun onResume() {

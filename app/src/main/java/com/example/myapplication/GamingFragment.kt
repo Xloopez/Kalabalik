@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentGamingBinding
+import com.example.myapplication.dataclasses.Card
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.utilities.*
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
@@ -153,8 +154,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun startEndTimedTaskHandler(seconds: Long) {
 
-	//	tvPlayerName.text = "Remaining: 10"
-		(tvPlayerName).animateWithSetText(text = "10")
+		(tvPlayerName).animateWithSetText(text = "$seconds")
 		object: SecondsTimer(
 			totalRunningSeconds = seconds,
 			updateInterval = 1,
@@ -165,9 +165,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				}
 			}
 		){}.start()
-
 	}
-
 
 	private fun applyViewBinding() {
 
@@ -230,7 +228,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				listOfMissionsPoints = getIntArray(R.array.MissionPoints)
 			}
 		}
-
 		tvTotalRounds.apply { text = "out of $maxRounds rounds" }
 		gamingViewModel.apply { currentTurn.postValue(1) }
 	}
@@ -245,16 +242,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun setUpCurrentTurnObserver() {
 		gamingViewModel.currentTurn.observe(this, {
 			currTurn = it
-
 			Log.d("!", "Timed Task: $isTimedTask Turn: $currTurn")
-
 			when {
 				isStart -> { gamingViewModel.updateTurn(); gamingViewModel.updateRound() }
 				isNextFragment -> { endGame() }
 				isPrepareNextRound -> { nextRound() }
 				!isPrepareNextRound -> { nextPlayerTurn() }
 			}
-
 		})
 	}
 
@@ -347,14 +341,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(btnSuccess).btnChangeText("SUCCESS")
 	}
 
-	private fun generateNewCard(): Triple<String, Double, EnRandom> {
+	private fun generateNewCard(): Card {
 
 		val rIndex: Int
 		val cardText: String
 		val cardPoints: Double
 		val cardType: EnRandom
 
-		when (val rCardType = arrayOfEnRandoms.random()) {
+		when (val rCardType = arrayOfEnRandoms.random()){
 			EnRandom.CONSEQUENCES -> {
 
 				rIndex = listOfConsequences.getRandomListIndex()
@@ -368,9 +362,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				cardText = listOfMissions[rIndex]
 				cardPoints = listOfMissionsPoints[rIndex].toDouble()
 				cardType = rCardType
+
 			}
 		}
-	    return Triple(cardText, cardPoints, cardType)
+		return Card(cardText, cardPoints, cardType)
 	}
 
 	private fun FrameLayout.flip(listOfViews: MutableList<View>): AnimatorSet {
@@ -440,14 +435,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val pair: Pair<Int, Double> = when (operation) {
 			SUCCESS -> {
-				when (gamingViewModel.currentCardType.value!!) {
-					EnRandom.CONSEQUENCES -> {
-						pairRoundWithPoints(double = gamingViewModel.consequencePair.value!!.second)
-					}
-					EnRandom.MISSION -> {
-						pairRoundWithPoints(double = gamingViewModel.missionPair.value!!.second)
-					}
-				}
+				val currCard = gamingViewModel.currentCard.value!!
+				pairRoundWithPoints(double = currCard.points)
 			}
 			FAIL -> {
 				pairRoundWithPoints(double = -5.0)
