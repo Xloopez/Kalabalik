@@ -1,6 +1,6 @@
-package com.example.myapplication.dataclasses
+package com.example.myapplication
 
-import com.example.myapplication.TimedTask
+import com.example.myapplication.dataclasses.TimedTask
 import java.util.*
 
 class TimedTasks {

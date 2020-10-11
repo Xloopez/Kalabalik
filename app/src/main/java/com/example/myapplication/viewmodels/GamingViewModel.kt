@@ -3,7 +3,7 @@ package com.example.myapplication.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dataclasses.Player
-import com.example.myapplication.TimedTask
+import com.example.myapplication.dataclasses.TimedTask
 import com.example.myapplication.utilities.EnumUtil
 
 class GamingViewModel : ViewModel() {
