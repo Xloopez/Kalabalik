@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.gaminginput
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.utilities.Animationz.slideOutRightSlideInLeft

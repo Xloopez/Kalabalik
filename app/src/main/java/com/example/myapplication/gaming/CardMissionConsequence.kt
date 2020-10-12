@@ -1,14 +1,13 @@
-package com.example.myapplication.dataclasses
+package com.example.myapplication.gaming
 
 import com.example.myapplication.utilities.EnumUtil
 
-data class Card
+data class CardMissionConsequence
     (
     var listStr: String,
     var points: Double,
     var type: EnumUtil.EnRandom,
-)
-{
+) {
     fun getTypeString(): String {
         return type.getEnumString()
     }

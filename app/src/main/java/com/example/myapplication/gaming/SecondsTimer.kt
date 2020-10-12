@@ -1,4 +1,4 @@
-package com.example.myapplication.utilities
+package com.example.myapplication.gaming
 
 import android.os.CountDownTimer
 import androidx.appcompat.widget.AppCompatTextView
@@ -7,7 +7,8 @@ abstract class SecondsTimer(
     totalRunningSeconds: Long,
     private val updateInterval: Long,
     private val textView: AppCompatTextView,
-    private val tCallBack: TimerCallBack): CountDownTimer((totalRunningSeconds * 1000), (updateInterval*1000)) {
+    private val tCallBack: TimerCallBack
+) : CountDownTimer((totalRunningSeconds * 1000), (updateInterval * 1000)) {
 
     override fun onTick(p0: Long) {
         textView.updateTextViewOnTick(getSeconds(p0).toString())

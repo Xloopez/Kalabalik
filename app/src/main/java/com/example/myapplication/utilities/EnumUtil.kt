@@ -2,7 +2,6 @@ package com.example.myapplication.utilities
 
 class EnumUtil {
 
-
     enum class EnRandom {
         CONSEQUENCES,
         MISSION;

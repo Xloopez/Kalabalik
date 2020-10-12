@@ -1,6 +1,5 @@
-package com.example.myapplication
+package com.example.myapplication.gaming
 
-import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
@@ -12,13 +11,13 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
@@ -26,20 +25,18 @@ import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import com.example.myapplication.GameScoreFragment
+import com.example.myapplication.R
+import com.example.myapplication.animators.View360Flip
 import com.example.myapplication.databinding.FragmentGamingBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.utilities.*
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
-import com.example.myapplication.utilities.Animationz.flipToBackY
-import com.example.myapplication.utilities.Animationz.flipToFrontY
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.utilities.EnumUtil.EnOperation
 import com.example.myapplication.utilities.EnumUtil.EnOperation.FAIL
 import com.example.myapplication.utilities.EnumUtil.EnOperation.SUCCESS
-import com.example.myapplication.viewmodels.GamingViewModel
 import com.example.myapplication.viewmodels.SharedViewModel
-import com.example.myapplication.viewmodels.postEmpty
-import com.example.myapplication.viewmodels.postUpdateBy
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -60,8 +57,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private lateinit var listOfViews: MutableList<View>
 	private lateinit var frameLayout: FrameLayout
 
-	private val tt by lazy { TimedTasks(requireContext()) }
-	private val mos by lazy { MissionOrConsequence(requireContext()) }
+	private val generatorTimedTask by lazy { GeneratorTimedTask(requireContext()) }
+	private val generatorMissionOrConsequence by lazy { GeneratorMissionOrConsequence(requireContext()) }
 
 	private var currRound = 0
 	private var currTurn = 0
@@ -121,8 +118,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	override fun onClick(v: View?) {
 
-		if (isTimedTask){
-			val generatedTask = tt.generateRandomTaskCard()
+		if (isTimedTask) {
+			val generatedTask = generatorTimedTask.generateRandomTaskCard()
 			gamingViewModel.updateRandomTaskCard(generatedTask)
 			displayTimedTask()
 			startEndTimedTaskHandler(generatedTask.seconds)
@@ -198,8 +195,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun setFragmentInputs() {
 		fisCard = object : FragmentInputSettings(
-			fragmentManager = this.childFragmentManager, fragment = CardFragment(),
-			layoutId = frameLayout.id, tag = "CARD", replace = false, animate = false,
+			fragmentManager = this.childFragmentManager,
+			fragment = CardMissionConsequenceFragment(),
+			layoutId = frameLayout.id,
+			tag = "CARD",
+			replace = false,
+			animate = false,
 		){}
 		fisScore = object : FragmentInputSettings(
 			fragmentManager = this.childFragmentManager, fragment = GameScoreFragment(miniScore = true),
@@ -270,9 +271,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			isClickable = false
 			visibility = View.VISIBLE
 		}
-		val vFrom = (btnSuccess.width).toFloat()
-		val vTo = (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight * 4)
-		val valueAnimator: ValueAnimator? = nextRoundValueAnimator(vFrom, vTo)
+
+		val valueAnimator: ValueAnimator? = nextRoundValueAnimator()
 
 		(tvPlayerName).animateWithSetText(text = getString(R.string.current_score))
 		mutableListOf({ btnFail.viewApplyVis(View.INVISIBLE) }).runIterateUnit()
@@ -291,12 +291,15 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		}
 
-		if(btnSuccess.isLaidOut) {
+		if (btnSuccess.isLaidOut) {
 			valueAnimator?.start()
 		}
 	}
 
-	private fun nextRoundValueAnimator(vFrom: Float, vTo: Float): ValueAnimator? {
+	private fun nextRoundValueAnimator(): ValueAnimator? {
+		val vFrom = (btnSuccess.width).toFloat()
+		val vTo = (resources.displayMetrics.widthPixels).toFloat() - (btnSuccess.marginRight * 4)
+
 		return ValueAnimator.ofFloat(vFrom, vTo)
 			.apply {
 				duration = 1000
@@ -322,19 +325,21 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		btnSuccess.setOnClickListener(this)
 
-		if ((CardFragment() as? Fragment)!!.isAdded.not()){(fisCard).apply { replace = true }.newFragmentInstance().commit() }
+		if ((CardMissionConsequenceFragment() as? Fragment)!!.isAdded.not()) {
+			(fisCard).apply { replace = true }.newFragmentInstance().commit()
+		}
 
 		gamingViewModel.apply {
 			clearCardFragment.postEmpty()
-			updateCurrentCard(mos.generateNewCard())
+			updateCurrentCard(generatorMissionOrConsequence.generateNewCard())
 		}
 
-		(frameLayout).flip().start()
+		(frameLayout).flip().getAnimatorSet().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
 		(btnSuccess).btnChangeText("SUCCESS")
 	}
 
-	private fun FrameLayout.dododo(){
+	private fun FrameLayout.flip(): View360Flip {
 
 		val v = this
 
@@ -344,92 +349,42 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
 
+		return View360Flip(
+			view = frameLayout,
+			totalDuration = Animationz.flipCardDuration,
+			arrayListOf(
+				LinearInterpolator(),
+				DecelerateInterpolator(),
+				DecelerateInterpolator(),
+				LinearInterpolator()
+			),
+			flipCallBack = object : View360Flip.FlipAnimationInterface {
 
-		FlipAnimation(frameLayout, object: FlipAnimation.FlipAnimationInterface{
+				override fun firstFourthStart() {
+					listOfButtons.clickable(false)
+					v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
+				}
 
-			override fun oneOnStart() {
-				listOfButtons.clickable(false)
-				v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
-			}
-			override fun oneOnEnd() {
-				v.background = getDrawable(requireContext(), R.drawable.card_background_with_strokes)
-			}
+				override fun firstFourthEnd() {
+					v.background =
+						getDrawable(requireContext(), R.drawable.card_background_with_strokes)
+				}
 
-			override fun twoOnStart() {
-				TODO("Not yet implemented")
-			}
-
-			override fun twoOnEnd() {
-				TODO("Not yet implemented")
-			}
-
-			override fun threeOnStart() {
-				TODO("Not yet implemented")
-			}
-
-			override fun threeOnEnd() {
-				TODO("Not yet implemented")
-			}
-
-			override fun fourOnStart() {
-				TODO("Not yet implemented")
-			}
-
-			override fun fourOnEnd() {
-				TODO("Not yet implemented")
-			}
-
-
-		})
-	}
-
-	private fun FrameLayout.flip(): AnimatorSet {
-
-		val v = this
-
-		if (calcCurrentTurn.isEqualTo(1)) {
-			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
-		}
-		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
-
-		val a1 = v.flipToBackY().apply {
-			doOnStart { listOfButtons.clickable(false) }
-			v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
-
-			doOnEnd {
-				v.background =
-					getDrawable(requireContext(), R.drawable.card_background_with_strokes)
-			}
-		}
-
-		val a2 = v.flipToFrontY()
-
-		val a3 = v.flipToBackY(p = DecelerateInterpolator())
-			.apply {
-				doOnEnd {
+				override fun thirdFourthOnEnd() {
 					gamingViewModel.updateCardFragment.postValue(1)
 					v.apply {
 						animate().scaleXBy(0.5f).scaleYBy(0.5f)
-						setBackgroundColor(
-							getColor(requireActivity(), R.color.deep_purple_400)
-						) //getDrawable(requireContext(), R.drawable.card_background_front)
-					}
+						setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
+					}//getDrawable(requireContext(), R.drawable.card_background_front)
 				}
-			}
 
-		val a4 = v.flipToFrontY(polator = DecelerateInterpolator())
-			.apply {
-				doOnEnd {
+				override fun fourthFourthOnEnd() {
 					listOfButtons.forEach {
 						it.isClickable = true
 						it.visibility = View.VISIBLE
 					}
 				}
-			}
-
-		return AnimatorSet().apply {
-			playSequentially(a1, a2, a3, a4)
-		}
+			})
 	}
 
 	private fun updatePlayerPoints(operation: EnOperation) {
@@ -456,7 +411,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 					true -> {
 						setCustomAnimations(
 							R.anim.fragment_slide_right_enter,
-							R.anim.fragment_slide_left_exit)
+							R.anim.fragment_slide_left_exit
+						)
 					}
 				}
 

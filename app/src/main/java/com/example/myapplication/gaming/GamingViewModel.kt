@@ -1,14 +1,12 @@
-package com.example.myapplication.viewmodels
+package com.example.myapplication.gaming
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.dataclasses.Card
-import com.example.myapplication.dataclasses.CardTimedTask
 import com.example.myapplication.dataclasses.Player
 
 class GamingViewModel : ViewModel() {
 
-    var currentCard = MutableLiveData<Card>()
+    var currentCard = MutableLiveData<CardMissionConsequence>()
     var timedTaskCard = MutableLiveData<CardTimedTask>()
     var updateCardFragment = MutableLiveData<Int>()
     var clearCardFragment = MutableLiveData<Int>()
@@ -30,8 +28,7 @@ class GamingViewModel : ViewModel() {
     //fun clearCard() = clearCardFragment.postEmpty()
 
 
-
-    fun updateCurrentCard(card: Card){
+    fun updateCurrentCard(card: CardMissionConsequence) {
         currentCard.postValue(card)
     }
 

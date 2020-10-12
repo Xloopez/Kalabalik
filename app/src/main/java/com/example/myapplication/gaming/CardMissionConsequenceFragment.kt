@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.gaming
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentCardBinding
-import com.example.myapplication.viewmodels.GamingViewModel
 
-class CardFragment: Fragment() {
+class CardMissionConsequenceFragment : Fragment() {
 
     private var _binding: FragmentCardBinding? = null
     private val binding get() = _binding!!

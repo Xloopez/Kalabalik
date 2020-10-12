@@ -1,25 +1,26 @@
-package com.example.myapplication
+package com.example.myapplication.gaming
 
 import android.content.Context
 import android.content.res.Resources
-import com.example.myapplication.dataclasses.CardTimedTask
+import com.example.myapplication.R
 import java.util.*
 
-class TimedTasks(val context: Context) {
+class GeneratorTimedTask(val context: Context) {
 
     val res: Resources = context.resources
 
     private var listOfTasks: MutableList<CardTimedTask> = mutableListOf()
 
     private val arrayOfColors = res.getStringArray(R.array.RandomTaskArrayOfColors)
-    private val arrayOfFeel =  res.getStringArray(R.array.RandomTaskArrayOfFeel)
-    private val arrayOfShapes  = res.getStringArray(R.array.RandomTaskArrayOfShape)
-    private val listOfListTasks: MutableList<Array<String>> = arrayListOf(arrayOfColors, arrayOfFeel, arrayOfShapes)
+    private val arrayOfFeel = res.getStringArray(R.array.RandomTaskArrayOfFeel)
+    private val arrayOfShapes = res.getStringArray(R.array.RandomTaskArrayOfShape)
+    private val listOfListTasks: MutableList<Array<String>> =
+        arrayListOf(arrayOfColors, arrayOfFeel, arrayOfShapes)
     private val arrayOfCons = res.getStringArray(R.array.RandomTaskArrayOfCons)
 
     init {
 
-        //TODO ADD RANDOM SECS BETWEEN 30-60? atleast change the timer
+        //TODO ADD RANDOM SECS BETWEEN 30-60? at the least change the timer
         for (i in 1.. listOfListTasks.count().times(arrayOfColors.count())){
             val tt = CardTimedTask(randomListTask(), randomListCon(), 10L)
             listOfTasks.add(tt)
