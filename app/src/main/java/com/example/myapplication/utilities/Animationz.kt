@@ -4,9 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.*
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
 
@@ -17,8 +15,20 @@ object Animationz {
     private const val flipCardDurationOneThird = flipCardDuration /3
     const val flipCardDurationOneFourth = flipCardDuration /4
 
-    fun View.flipToBackY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f)}
-    fun View.flipToFrontY(): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f)}
+    fun View.flipToBackY(p: Interpolator? = LinearInterpolator(), d: Long? = flipCardDurationOneFourth): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.ROTATION_Y, 0f, 90f).apply {
+            interpolator = p ?: LinearInterpolator()
+            duration = d ?: flipCardDurationOneFourth
+        }
+    }
+    fun View.flipToFrontY(polator: Interpolator? = LinearInterpolator(), d: Long? = flipCardDurationOneFourth): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.ROTATION_Y, -90f, 0f).apply {
+            interpolator = polator ?: LinearInterpolator()
+            duration = d ?: flipCardDurationOneFourth
+        }
+
+    }
+
     fun View.translateX(vararg float: Float): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.TRANSLATION_X, *float)}
     fun View.sizeX(vararg float: Float): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.SCALE_X, *float)}
     fun View.translateY(vararg float: Float): ObjectAnimator { return ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, *float)}

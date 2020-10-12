@@ -24,22 +24,25 @@ class GamingViewModel : ViewModel() {
         value = Player("InitialPlayer0", playerNum = 0)
     }
 
-    fun updateRound() = currentRound.postValue(currentRound.value?.plus(1))
-    fun updateTurn()  = currentTurn.postValue(currentTurn.value?.plus(1))
+    //fun updateRound() = currentRound.postValue(currentRound.value?.plus(1))
+    //fun updateTurn()  = currentTurn.postValue(currentTurn.value?.plus(1))
     fun updatePlayer(player: Player) = currentPlayer.postValue(player)
-    fun clearCard() = clearCardFragment.postEmpty()
+    //fun clearCard() = clearCardFragment.postEmpty()
+
+
 
     fun updateCurrentCard(card: Card){
         currentCard.postValue(card)
     }
 
-    fun updateRandomTaskCard(t: CardTimedTask){
-        timedTaskCard.value = t
+    fun updateRandomTaskCard(cardTimedTask: CardTimedTask){
+        timedTaskCard.value = cardTimedTask
     }
+
 
 }
 
-private fun MutableLiveData<Int>.postEmpty() {
+fun MutableLiveData<Int>.postEmpty() {
     this.postValue(0)
 }
 fun MutableLiveData<Int>.postUpdateBy(int: Int) {

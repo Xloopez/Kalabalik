@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -39,6 +38,7 @@ import com.example.myapplication.utilities.EnumUtil.EnOperation.FAIL
 import com.example.myapplication.utilities.EnumUtil.EnOperation.SUCCESS
 import com.example.myapplication.viewmodels.GamingViewModel
 import com.example.myapplication.viewmodels.SharedViewModel
+import com.example.myapplication.viewmodels.postEmpty
 import com.example.myapplication.viewmodels.postUpdateBy
 
 class GamingFragment : Fragment(), View.OnClickListener {
@@ -287,8 +287,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				gamingViewModel.apply {
 					currentRound.postUpdateBy(1)
 					currentTurn.postUpdateBy(1)
-				//	updateRound()
-				//	updateTurn()
 				}
 			}
 		}
@@ -327,17 +325,65 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		if ((CardFragment() as? Fragment)!!.isAdded.not()){(fisCard).apply { replace = true }.newFragmentInstance().commit() }
 
 		gamingViewModel.apply {
-			clearCard()
+			clearCardFragment.postEmpty()
 			updateCurrentCard(mos.generateNewCard())
 		}
 
-		(frameLayout).flip(listOfViews = listOfViews).start()
+		(frameLayout).flip().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
 		(btnSuccess).btnChangeText("SUCCESS")
 	}
 
+	private fun FrameLayout.dododo(){
 
-	private fun FrameLayout.flip(listOfViews: MutableList<View>): AnimatorSet {
+		val v = this
+
+		if (calcCurrentTurn.isEqualTo(1)) {
+			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
+		}
+
+		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
+
+
+		FlipAnimation(frameLayout, object: FlipAnimation.FlipAnimationInterface{
+
+			override fun oneOnStart() {
+				listOfButtons.clickable(false)
+				v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
+			}
+			override fun oneOnEnd() {
+				v.background = getDrawable(requireContext(), R.drawable.card_background_with_strokes)
+			}
+
+			override fun twoOnStart() {
+				TODO("Not yet implemented")
+			}
+
+			override fun twoOnEnd() {
+				TODO("Not yet implemented")
+			}
+
+			override fun threeOnStart() {
+				TODO("Not yet implemented")
+			}
+
+			override fun threeOnEnd() {
+				TODO("Not yet implemented")
+			}
+
+			override fun fourOnStart() {
+				TODO("Not yet implemented")
+			}
+
+			override fun fourOnEnd() {
+				TODO("Not yet implemented")
+			}
+
+
+		})
+	}
+
+	private fun FrameLayout.flip(): AnimatorSet {
 
 		val v = this
 
@@ -347,9 +393,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
 
 		val a1 = v.flipToBackY().apply {
-			duration = Animationz.flipCardDurationOneFourth
-			interpolator = LinearInterpolator()
-
 			doOnStart { listOfButtons.clickable(false) }
 			v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
 
@@ -360,16 +403,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		val a2 = v.flipToFrontY()
-			.apply {
-				interpolator = LinearInterpolator()
-				duration = Animationz.flipCardDurationOneFourth
-			}
 
-
-		val a3 = v.flipToBackY()
+		val a3 = v.flipToBackY(p = DecelerateInterpolator())
 			.apply {
-				interpolator = DecelerateInterpolator()
-				duration = Animationz.flipCardDurationOneFourth
 				doOnEnd {
 					gamingViewModel.updateCardFragment.postValue(1)
 					v.apply {
@@ -381,10 +417,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				}
 			}
 
-		val a4 = v.flipToFrontY()
+		val a4 = v.flipToFrontY(polator = DecelerateInterpolator())
 			.apply {
-				interpolator = DecelerateInterpolator()
-				duration = Animationz.flipCardDurationOneFourth
 				doOnEnd {
 					listOfButtons.forEach {
 						it.isClickable = true
@@ -408,7 +442,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				FAIL -> { Pair(currRound, -5.0) }
 			}
 		)
-		gamingViewModel.updateTurn()
+		gamingViewModel.currentTurn.postUpdateBy(1)
 	}
 
 	private fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
@@ -436,31 +470,3 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 	}
 }
-
-
-//	private fun generateNewCard(): Card {
-//
-//		val rIndex: Int
-//		val cardText: String
-//		val cardPoints: Double
-//		val cardType: EnRandom
-//
-//		when (val rCardType = arrayOfEnRandoms.random()){
-//			EnRandom.CONSEQUENCES -> {
-//
-//				rIndex = listOfConsequences.getRandomListIndex()
-//				cardText = listOfConsequences[rIndex]
-//				cardPoints = listOfConsequencesPoints[rIndex].toDouble()
-//				cardType = rCardType
-//			}
-//			EnRandom.MISSION -> {
-//
-//				rIndex = listOfMissions.getRandomListIndex()
-//				cardText = listOfMissions[rIndex]
-//				cardPoints = listOfMissionsPoints[rIndex].toDouble()
-//				cardType = rCardType
-//
-//			}
-//		}
-//		return Card(cardText, cardPoints, cardType)
-//	}
