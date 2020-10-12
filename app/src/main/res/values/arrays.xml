@@ -201,5 +201,29 @@
             <item>Can you whistle Johanna? You whistle one song, the others guess. </item>
         </string-array>
 
+    <string-array name="RandomTaskArrayOfColors">
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Red</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfFeel">
+        <item>Soft</item>
+        <item>Hard</item>
+        <item>Jiggly</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfShape">
+        <item>Round</item>
+        <item>Rectangular</item>
+        <item>Square</item>
+        <item>Triangular</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfCons">
+        <item>One flick on the right ear</item>
+        <item>One flick the left ear</item>
+        <item>A pat on the head</item>
+    </string-array>
 
 </resources>

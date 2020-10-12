@@ -11,4 +11,8 @@
     <string name="next_round">NÄSTA RUNDA</string>
     <string name="timed_task">TIMED TASK</string>
     <string name="text_place_holder">TEXT_PLATS_HÅLLARE</string>
+    <string name="find_a">Leta upp en</string>
+    <string name="thing_return_before_time_over">sak och återvänd innan tiden är slut!</string>
+    <string name="all_players_give">Alla spelare får ge en</string>
+    <string name="to_those_who_fail">till den som misslyckas</string>
 </resources>

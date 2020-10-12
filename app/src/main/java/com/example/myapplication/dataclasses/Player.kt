@@ -7,6 +7,7 @@ data class Player
     var playerNum: Int,
     )
 {
+
     fun listAddRoundAndPoints(pair: Pair<Int, Double>){
         listOfRoundAndPoints.add(pair)
     }

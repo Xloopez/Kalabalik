@@ -1,41 +1,43 @@
 package com.example.myapplication
 
-import com.example.myapplication.dataclasses.TimedTask
+import android.content.Context
+import android.content.res.Resources
+import com.example.myapplication.dataclasses.CardTimedTask
 import java.util.*
 
-class TimedTasks {
+class TimedTasks(val context: Context) {
 
-    private var listOfTasks: MutableList<TimedTask> = mutableListOf()
+    val res: Resources = context.resources
 
-    //TA BORT SEN? //TODO ADD ARRAYS IN .XML
-    private val arrayOfColors = mutableListOf("Blå", "Lila", "Röd")
-    private val arrayOfFeel = mutableListOf("Mjuk", "Hård", "Sladdrig")
-    private val arrayOfShapes = mutableListOf("Rund", "Rektangulär", "Fyrkantig", "Triangulär")
-    private val listOfListTasks: MutableList<MutableList<String>> = mutableListOf(arrayOfColors, arrayOfFeel, arrayOfShapes)
+    private var listOfTasks: MutableList<CardTimedTask> = mutableListOf()
 
-    private val arrayOfCons = mutableListOf("Snäpp på höger öra", "Snäpp på vänster öra", "Klapp på huvudet")
+    private val arrayOfColors = res.getStringArray(R.array.RandomTaskArrayOfColors)
+    private val arrayOfFeel =  res.getStringArray(R.array.RandomTaskArrayOfFeel)
+    private val arrayOfShapes  = res.getStringArray(R.array.RandomTaskArrayOfShape)
+    private val listOfListTasks: MutableList<Array<String>> = arrayListOf(arrayOfColors, arrayOfFeel, arrayOfShapes)
+    private val arrayOfCons = res.getStringArray(R.array.RandomTaskArrayOfCons)
 
     init {
 
-        //TODO ADD RANDOM SECS BETWEEN 30-60?
+        //TODO ADD RANDOM SECS BETWEEN 30-60? atleast change the timer
         for (i in 1.. listOfListTasks.count().times(arrayOfColors.count())){
-            val tt = TimedTask(randomListTask(), randomListCon(), 10L)
+            val tt = CardTimedTask(randomListTask(), randomListCon(), 10L)
             listOfTasks.add(tt)
         }
     }
 
-    fun randomTask(): TimedTask { return listOfTasks.random()}
+    fun generateRandomTaskCard(): CardTimedTask { return listOfTasks.random()}
 
     private fun randomListTask(): String {
         val randomList = listOfListTasks.getRandomList()
         val randomTask = randomList.getRandom()
 
         return StringBuilder().apply {
-            append("Leta upp en")
+            append(context.getString(R.string.find_a))
             append(" ")
-            append(randomTask.toUpperCase(Locale.getDefault()))
+            append(randomTask?.toUpperCase(Locale.getDefault()))
             append(" ")
-            append("sak och återvänd innan tiden är slut!")
+            append(context.getString(R.string.thing_return_before_time_over))
             appendLine()
         }.toString()
     }
@@ -43,14 +45,15 @@ class TimedTasks {
         val randomCon = arrayOfCons.getRandom()
 
         return StringBuilder().apply {
-            append("Alla spelare får ge en")
+            append(context.getString(R.string.all_players_give))
             append(" ")
-            append(randomCon.toUpperCase(Locale.getDefault()))
+            append(randomCon?.toUpperCase(Locale.getDefault()))
             append(" ")
-            append("till den som misslyckas")
+            append(context.getString(R.string.to_those_who_fail))
         }.toString()
     }
 
 }
-private fun MutableList<MutableList<String>>.getRandomList(): MutableList<String> { return this.random() }
-private fun MutableList<String>.getRandom(): String { return this.random() }
+
+private fun <T> Array<T>.getRandom(): String? { return this.random() as? String }
+private fun MutableList<Array<String>>.getRandomList(): Array<String> { return this.random() }

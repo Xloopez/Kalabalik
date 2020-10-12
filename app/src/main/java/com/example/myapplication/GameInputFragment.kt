@@ -158,14 +158,11 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun applyViewBinding() {
         binding.apply {
 
-            /*TEXT-VIEWS*/
             tvTitle = textViewAppTitle
 
-            /*EDIT-TEXTS*/
             tilInput = textInputLayoutInput
             etInput = editTextInput
 
-            /*BUTTONS*/
             btnContinue = buttonContinue
 
         }

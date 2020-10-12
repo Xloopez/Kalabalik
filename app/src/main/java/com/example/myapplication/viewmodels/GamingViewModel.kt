@@ -3,14 +3,13 @@ package com.example.myapplication.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dataclasses.Card
+import com.example.myapplication.dataclasses.CardTimedTask
 import com.example.myapplication.dataclasses.Player
-import com.example.myapplication.dataclasses.TimedTask
 
 class GamingViewModel : ViewModel() {
 
     var currentCard = MutableLiveData<Card>()
-    var timedTaskCard = MutableLiveData<TimedTask>()
-
+    var timedTaskCard = MutableLiveData<CardTimedTask>()
     var updateCardFragment = MutableLiveData<Int>()
     var clearCardFragment = MutableLiveData<Int>()
 
@@ -34,7 +33,7 @@ class GamingViewModel : ViewModel() {
         currentCard.postValue(card)
     }
 
-    fun updateRandomTaskCard(t: TimedTask){
+    fun updateRandomTaskCard(t: CardTimedTask){
         timedTaskCard.value = t
     }
 
@@ -42,4 +41,7 @@ class GamingViewModel : ViewModel() {
 
 private fun MutableLiveData<Int>.postEmpty() {
     this.postValue(0)
+}
+fun MutableLiveData<Int>.postUpdateBy(int: Int) {
+    this.postValue(this.value?.plus(int))
 }

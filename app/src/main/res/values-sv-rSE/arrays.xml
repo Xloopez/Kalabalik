@@ -195,4 +195,29 @@
         <item>Kan du vissla Johanna? Du visslar en låt, de andra gissar.</item>
     </string-array>
 
+    <string-array name="RandomTaskArrayOfColors">
+        <item>Blå</item>
+        <item>Lila</item>
+        <item>Röd</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfFeel">
+        <item>Mjuk</item>
+        <item>Hård</item>
+        <item>Sladdrig</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfShape">
+        <item>Rund</item>
+        <item>Rektangulär</item>
+        <item>Fyrkantig</item>
+        <item>Triangulär</item>
+    </string-array>
+
+    <string-array name="RandomTaskArrayOfCons">
+        <item>Snäpp på höger öra</item>
+        <item>Snäpp på vänster öra</item>
+        <item>Klapp på huvudet</item>
+    </string-array>
+
 </resources>
