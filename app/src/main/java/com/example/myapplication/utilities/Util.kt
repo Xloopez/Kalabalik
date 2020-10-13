@@ -23,25 +23,33 @@ fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.tex
 fun Int.isZero() = (this == 0)
 fun Int.isEqualTo(value: Int) = (this == value)
 
-fun Array<String>.getRandomListIndex() = (0 until this.count()).random()
+fun MutableList<String>.getRandomListIndex() = (0 until this.count()).random()
 
-fun Iterable<() -> Unit>.runIterateUnit() {for (unit in this ) unit()}
-fun Iterable<AppCompatButton>.clickable(clickable: Boolean) { for (element in this) element.isClickable = clickable }
+fun Iterable<() -> Unit>.runIterateUnit() {
+    for (unit in this) unit()
+}
 
-fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
-fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
-fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
-fun MutableList<*>.fromListSetViewsVis(vis: Int) {for (element in this.filterIsInstance<View>() ) element.visibility = vis }
+fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {
+    for (element in this) element.isClickable = clickable
+}
 
-fun Activity.hideSoftKeyBoard(view: View){
-    (this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken,0)
+//fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
+//fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
+//fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
+//fun MutableList<*>.fromListSetViewsVis(vis: Int) {for (element in this.filterIsInstance<View>() ) element.visibility = vis }
+
+fun Activity.hideSoftKeyBoard(view: View) {
+    (this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+        view.windowToken,
+        0
+    )
 }
 
 fun View.setViewVisibilityFadeInOut(visible: Boolean) {
-    when (visible){
+    when (visible) {
         true -> {
             apply {
-                if(this.visibility != View.VISIBLE) {
+                if (this.visibility != View.VISIBLE) {
                     visibility = View.VISIBLE
                     fadeInAnim1().start()
                 }

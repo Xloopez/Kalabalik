@@ -190,11 +190,14 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         setPlayerCount()
         increaseCounterByOne()
         inputObjectUpdate()
+
         (inputPlayers).clearEditTextForNewInput()
         (tilInput).slideOutRightSlideInLeft().start()
         (btnContinue).btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
-        sharedViewModel.updateRandomTaskList()
+        sharedViewModel.createRandomTaskList()
+        sharedViewModel.createListOfMissionConsequence()
+
     }
 
     private fun dnPrepareGameStart() {

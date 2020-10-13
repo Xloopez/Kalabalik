@@ -10,10 +10,11 @@ class GeneratorMissionOrConsequence(val context: Context) {
 
 	private val res: Resources = context.resources
 
-	private val listOfConsequences = res.getStringArray(R.array.Consequences)
-	private val listOfMissions = res.getStringArray(R.array.Mission)
-	private val listOfConsequencesPoints = res.getIntArray(R.array.ConsequencesPoints)
-	private val listOfMissionsPoints = res.getIntArray(R.array.MissionPoints)
+	private val listOfConsequences = res.getStringArray(R.array.Consequences).toMutableList()
+	private val listOfMissions = res.getStringArray(R.array.Mission).toMutableList()
+	private val listOfConsequencesPoints =
+		res.getIntArray(R.array.ConsequencesPoints).toMutableList()
+	private val listOfMissionsPoints = res.getIntArray(R.array.MissionPoints).toMutableList()
 
 	fun generateNewCard(): CardMissionConsequence {
 
@@ -22,23 +23,34 @@ class GeneratorMissionOrConsequence(val context: Context) {
 		val cardPoints: Double
 		val cardType: EnumUtil.EnRandom
 
-		when (val rCardType = EnumUtil.EnRandom.values().random()) {
+		return when (val rCardType = EnumUtil.EnRandom.values().random()) {
 			EnumUtil.EnRandom.CONSEQUENCES -> {
 
 				rIndex = listOfConsequences.getRandomListIndex()
-				cardText = listOfConsequences[rIndex]
-				cardPoints = listOfConsequencesPoints[rIndex].toDouble()
+
+				rIndex.also {
+					cardText = listOfConsequences[it]
+					cardPoints = listOfConsequencesPoints[it].toDouble()
+					listOfConsequences.removeAt(it)
+					listOfConsequencesPoints.removeAt(it)
+				}
 				cardType = rCardType
+				CardMissionConsequence(cardText, cardPoints, cardType)
 			}
 			EnumUtil.EnRandom.MISSION -> {
 
 				rIndex = listOfMissions.getRandomListIndex()
-				cardText = listOfMissions[rIndex]
-				cardPoints = listOfMissionsPoints[rIndex].toDouble()
-				cardType = rCardType
 
+				rIndex.also {
+					cardText = listOfMissions[it]
+					cardPoints = listOfMissionsPoints[it].toDouble()
+					listOfMissions.removeAt(it)
+					listOfMissionsPoints.removeAt(it)
+				}
+				cardType = rCardType
+				CardMissionConsequence(cardText, cardPoints, cardType)
 			}
 		}
-		return CardMissionConsequence(cardText, cardPoints, cardType)
+		//	return CardMissionConsequence(cardText, cardPoints, cardType)
 	}
 }

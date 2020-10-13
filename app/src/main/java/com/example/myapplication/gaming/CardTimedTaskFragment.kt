@@ -1,6 +1,7 @@
 package com.example.myapplication.gaming
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.FragmentTimedTaskCardBinding
+import com.example.myapplication.utilities.Animationz
 
 class CardTimedTaskFragment : Fragment() {
 
@@ -28,7 +30,10 @@ class CardTimedTaskFragment : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 
 		applyViewBinding()
-		tvTest.text = buildCardText()
+
+		Handler(requireActivity().mainLooper).postDelayed({
+			tvTest.text = buildCardText()
+		}, Animationz.flipCardDuration - Animationz.flipCardDurationOneFourth)
 
 	}
 

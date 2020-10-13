@@ -41,7 +41,6 @@
         app:helperTextEnabled="true"
         app:helperTextTextColor="@color/pink_200"
         app:hintEnabled="true"
-        app:endIconMode="clear_text"
         app:hintAnimationEnabled="true"
         app:counterEnabled="true"
         app:counterMaxLength="15"

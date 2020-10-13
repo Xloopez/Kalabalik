@@ -14,8 +14,8 @@ object Animationz {
 
     const val flipCardDuration = 1200L
     private const val flipCardDurationOneHalf = flipCardDuration / 2
-    private const val flipCardDurationOneThird = flipCardDuration /3
-    const val flipCardDurationOneFourth = flipCardDuration /4
+    const val flipCardDurationOneThird = flipCardDuration / 3
+    const val flipCardDurationOneFourth = flipCardDuration / 4
 
     fun View.aAlpha(from: Float, to: Float): ObjectAnimator {
         return ObjectAnimator.ofPropertyValuesHolder(

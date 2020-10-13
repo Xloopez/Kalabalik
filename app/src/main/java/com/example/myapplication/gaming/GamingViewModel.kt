@@ -22,11 +22,7 @@ class GamingViewModel : ViewModel() {
         value = Player("InitialPlayer0", playerNum = 0)
     }
 
-    //fun updateRound() = currentRound.postValue(currentRound.value?.plus(1))
-    //fun updateTurn()  = currentTurn.postValue(currentTurn.value?.plus(1))
     fun updatePlayer(player: Player) = currentPlayer.postValue(player)
-    //fun clearCard() = clearCardFragment.postEmpty()
-
 
     fun updateCurrentCard(card: CardMissionConsequence) {
         currentCard.postValue(card)
@@ -36,12 +32,12 @@ class GamingViewModel : ViewModel() {
         timedTaskCard.value = cardTimedTask
     }
 
-
 }
 
 fun MutableLiveData<Int>.postEmpty() {
     this.postValue(0)
 }
-fun MutableLiveData<Int>.postUpdateBy(int: Int) {
+
+fun MutableLiveData<Int>.postUpdateIntBy(int: Int) {
     this.postValue(this.value?.plus(int))
 }

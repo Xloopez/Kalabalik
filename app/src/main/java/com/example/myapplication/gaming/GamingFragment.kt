@@ -99,6 +99,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		scale = spUtil.getFloat(R.string.displayMetrics)
 		(frameLayout).checkCameraDistance(targetScale = (scale * 8000)) //TODO MOVE TO TOP DEC ANIM
 
+		sharedViewModel.listOfMissionOrConsequenceTurns.forEach {
+			Log.d("!", "$it")
+		}
+
 		setFragmentInputs()
 		(fisCard).newFragmentInstance().commit()
 		setUpTextSwitcherRoundNum()
@@ -137,8 +141,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	}
 
 	private fun displayTimedTask() {
-		btnSuccess.visibility = View.INVISIBLE
-		btnFail.visibility = View.INVISIBLE
+		gamingViewModel.clearCardFragment.postEmpty()
+		(frameLayout).flip(R.color.purple_800, false).getAnimatorSet().start()
 		(fisBlank).newFragmentInstance().commit()
 	}
 
@@ -149,9 +153,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			totalRunningSeconds = seconds,
 			updateInterval = 1,
 			textView = tvPlayerName,
-			tCallBack =  object: TimerCallBack {
+			tCallBack = object : TimerCallBack {
 				override fun onFinish() {
-					gamingViewModel.apply { currentTurn.postUpdateBy(1) }
+					gamingViewModel.apply { currentTurn.postUpdateIntBy(1) }
 				}
 			}
 		){}.start()
@@ -236,12 +240,18 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			Log.d("!", "Timed Task: $isTimedTask Turn: $currTurn")
 			when {
 				isStart -> {
-					gamingViewModel.currentTurn.postUpdateBy(1)
-					gamingViewModel.currentRound.postUpdateBy(1)
+					gamingViewModel.currentTurn.postUpdateIntBy(1)
+					gamingViewModel.currentRound.postUpdateIntBy(1)
 				}
-				isNextFragment -> { endGame() }
-				isPrepareNextRound -> { nextRound() }
-				!isPrepareNextRound -> { nextPlayerTurn() }
+				isNextFragment -> {
+					endGame()
+				}
+				isPrepareNextRound -> {
+					nextRound()
+				}
+				!isPrepareNextRound -> {
+					nextPlayerTurn()
+				}
 			}
 		})
 	}
@@ -285,8 +295,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				valueAnimator?.reverse()
 				(fisCard).apply { replace = true }.newFragmentInstance().commit()
 				gamingViewModel.apply {
-					currentRound.postUpdateBy(1)
-					currentTurn.postUpdateBy(1)
+					currentRound.postUpdateIntBy(1)
+					currentTurn.postUpdateIntBy(1)
 				}
 			}
 		}
@@ -331,7 +341,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		gamingViewModel.apply {
 			clearCardFragment.postEmpty()
-			updateCurrentCard(generatorMissionOrConsequence.generateNewCard())
+			updateCurrentCard(sharedViewModel.getListCard(currTurn))
 		}
 
 		(frameLayout).flip().getAnimatorSet().start()
@@ -339,7 +349,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(btnSuccess).btnChangeText("SUCCESS")
 	}
 
-	private fun FrameLayout.flip(): View360Flip {
+	private fun FrameLayout.flip(
+		endBackColor: Int = R.color.deep_purple_400,
+		displayBtnOnEnd: Boolean = true
+	): View360Flip {
 
 		val v = this
 
@@ -348,6 +361,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
+		listOfButtons.forEach { it.visibility = View.INVISIBLE }
 
 		return View360Flip(
 			view = frameLayout,
@@ -374,14 +388,16 @@ class GamingFragment : Fragment(), View.OnClickListener {
 					gamingViewModel.updateCardFragment.postValue(1)
 					v.apply {
 						animate().scaleXBy(0.5f).scaleYBy(0.5f)
-						setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
+						setBackgroundColor(getColor(requireActivity(), endBackColor))
 					}//getDrawable(requireContext(), R.drawable.card_background_front)
 				}
 
 				override fun fourthFourthOnEnd() {
-					listOfButtons.forEach {
-						it.isClickable = true
-						it.visibility = View.VISIBLE
+					if (displayBtnOnEnd) {
+						listOfButtons.forEach {
+							it.isClickable = true
+							it.visibility = View.VISIBLE
+						}
 					}
 				}
 			})
@@ -393,11 +409,15 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		currPlayer.listAddRoundAndPoints(
 			when (operation) {
-				SUCCESS -> { Pair(currRound, currCard.points) }
-				FAIL -> { Pair(currRound, -5.0) }
+				SUCCESS -> {
+					Pair(currRound, currCard.points)
+				}
+				FAIL -> {
+					Pair(currRound, -5.0)
+				}
 			}
 		)
-		gamingViewModel.currentTurn.postUpdateBy(1)
+		gamingViewModel.currentTurn.postUpdateIntBy(1)
 	}
 
 	private fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {

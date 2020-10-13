@@ -32,9 +32,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-        spUtil = SharedPrefUtil(this).apply { putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density) }
-
+        sharedViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        ).get(SharedViewModel::class.java)
+        spUtil = SharedPrefUtil(this).apply {
+            putFloat(
+                getString(R.string.displayMetrics),
+                resources.displayMetrics.density
+            )
+        }
+        3
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace) }
         })

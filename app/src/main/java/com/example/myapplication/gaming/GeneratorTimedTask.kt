@@ -42,6 +42,7 @@ class GeneratorTimedTask(val context: Context) {
             appendLine()
         }.toString()
     }
+
     private fun randomListCon(): String {
         val randomCon = arrayOfCons.getRandom()
 
