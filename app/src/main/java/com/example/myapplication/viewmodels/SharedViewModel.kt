@@ -51,7 +51,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun listSumPairSort() = viewModelScope.launch(Dispatchers.IO) {
         lopSortedByPoints = listOfPlayers
-            .sortedByDescending { player -> player.sumPointsFromListPair() }
+            .sortedByDescending { player -> player.sumPointsFromListCards() }
             .toMutableList()
     }
 

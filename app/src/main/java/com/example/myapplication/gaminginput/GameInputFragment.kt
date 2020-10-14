@@ -65,6 +65,14 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private val isPrepareGame get() = counter == playerCount
     private val isGameStart get() = counter == (playerCount.plus(1))
 
+    private fun inputObjectUpdate() = inputPlayers.includeCounterValue(count = counter)
+    private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
+
+    private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
+    private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
+
+    private fun increaseCounterByOne() = counter++
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         _binding = FragmentGamingInputBinding.inflate(layoutInflater, container, false)
@@ -78,7 +86,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         tvTitle.text = getString(R.string.app_name)
 
         btnContinue.setOnClickListener(this)
-    
+
         (btnContinue).viewApplyVis(View.INVISIBLE)
         (inputNumbers).clearEditTextForNewInput()
 
@@ -93,7 +101,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         val v = this
 
         v.addTextChangedListener(object : TextWatcher {
-            
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
                 bVisible = false
@@ -195,17 +203,10 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         (tilInput).slideOutRightSlideInLeft().start()
         (btnContinue).btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
-        sharedViewModel.createRandomTaskList()
-        sharedViewModel.createListOfMissionConsequence()
-
-    }
-
-    private fun dnPrepareGameStart() {
-        (Player(name = etInput.text.toString(), playerNum = counter)).addAdditionalPlayer()
-        increaseCounterByOne()
-        (tilInput).viewApplyVis(View.INVISIBLE)
-        (btnContinue).btnChangeText(getString(R.string.start_game))
-        requireActivity().hideSoftKeyBoard(btnContinue)
+        sharedViewModel.apply {
+            createRandomTaskList()
+            createListOfMissionConsequence()
+        }
     }
 
     private fun dnPrepareForNextPlayer() {
@@ -217,11 +218,13 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
     }
 
-    private fun inputObjectUpdate() = inputPlayers.includeCounterValue(count = counter)
-    private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
-    private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
-    private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
-    private fun increaseCounterByOne() = counter++
+    private fun dnPrepareGameStart() {
+        (Player(name = etInput.text.toString(), playerNum = counter)).addAdditionalPlayer()
+        increaseCounterByOne()
+        (tilInput).viewApplyVis(View.INVISIBLE)
+        (btnContinue).btnChangeText(getString(R.string.start_game))
+        requireActivity().hideSoftKeyBoard(btnContinue)
+    }
 
     private fun InputObject.clearEditTextForNewInput() {
 
@@ -257,5 +260,4 @@ class GameInputFragment : Fragment(), View.OnClickListener {
             infoStr = "$strEnterName $count"
         }
     }
-
 }

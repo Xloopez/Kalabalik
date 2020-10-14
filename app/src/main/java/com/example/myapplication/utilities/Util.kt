@@ -7,6 +7,8 @@ import androidx.annotation.Nullable
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.myapplication.R
 import com.example.myapplication.utilities.Animationz.fadeInAnim1
 import com.example.myapplication.utilities.Animationz.fadeOutAnim1
 import com.example.myapplication.utilities.Animationz.slideOutRight
@@ -70,5 +72,31 @@ fun View.viewApplyVis(visibility: Int? = null) {
      when (visibility) {
         8, 4 -> { this.visibility = visibility; slideOutRight() }
         else -> { this.visibility = visibility ?: 0; slideOutRight() }
+    }
+}
+
+fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
+
+    val f = this
+
+    return f.fragmentManager.beginTransaction().apply {
+
+        f.apply {
+            when (animate) {
+                true -> {
+                    setCustomAnimations(
+                        R.anim.fragment_slide_right_enter,
+                        R.anim.fragment_slide_left_exit
+                    )
+                }
+            }
+
+            when (f.replace) {
+                true -> { replace(layoutId, fragment, tag)
+                }
+                false -> { add(layoutId, fragment, tag)
+                }
+            }
+        }
     }
 }

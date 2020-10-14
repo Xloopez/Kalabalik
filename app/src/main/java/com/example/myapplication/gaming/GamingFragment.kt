@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.GameScoreFragment
 import com.example.myapplication.R
@@ -115,7 +114,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		setUpCurrentPlayerObserver()
 		setUpCurrentTurnObserver()
 		setUpCurrentRoundObserver()
-		gamingViewModel.currentTurn.postValue(0)
+		gamingViewModel.currentTurn.postEmpty() //NEEDED??
 
 		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
 	}
@@ -126,7 +125,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			val generatedTask = generatorTimedTask.generateRandomTaskCard()
 			gamingViewModel.updateRandomTaskCard(generatedTask)
 			displayTimedTask()
-			startEndTimedTaskHandler(generatedTask.seconds)
+			startTimer(generatedTask.seconds)
 
 		}else {
 			when (v?.id) {
@@ -146,7 +145,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(fisBlank).newFragmentInstance().commit()
 	}
 
-	private fun startEndTimedTaskHandler(seconds: Long) {
+	private fun startTimer(seconds: Long) {
 
 		(tvPlayerName).animateWithSetText(text = "$seconds")
 		object: SecondsTimer(
@@ -240,8 +239,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			Log.d("!", "Timed Task: $isTimedTask Turn: $currTurn")
 			when {
 				isStart -> {
-					gamingViewModel.currentTurn.postUpdateIntBy(1)
-					gamingViewModel.currentRound.postUpdateIntBy(1)
+					gamingViewModel.apply {
+						currentTurn.postUpdateIntBy(1)
+						currentRound.postUpdateIntBy(1)
+					}
 				}
 				isNextFragment -> {
 					endGame()
@@ -407,42 +408,21 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val currCard = gamingViewModel.currentCard.value!!
 
-		currPlayer.listAddRoundAndPoints(
-			when (operation) {
-				SUCCESS -> {
-					Pair(currRound, currCard.points)
-				}
-				FAIL -> {
-					Pair(currRound, -5.0)
+		currPlayer.listAddRoundAndPoints(when(operation){
+			SUCCESS -> {
+				currCard.apply {
+					setRound(currRound)
 				}
 			}
-		)
+			FAIL -> {
+				currCard.apply {
+					setRound(currRound)
+					points = -5.0
+				}
+			}
+		})
+
 		gamingViewModel.currentTurn.postUpdateIntBy(1)
 	}
 
-	private fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
-
-		val f = this
-
-		return f.fragmentManager.beginTransaction().apply {
-
-			f.apply {
-				when (animate) {
-					true -> {
-						setCustomAnimations(
-							R.anim.fragment_slide_right_enter,
-							R.anim.fragment_slide_left_exit
-						)
-					}
-				}
-
-				when (f.replace) {
-					true -> { replace(layoutId, fragment, tag)
-					}
-					false -> { add(layoutId, fragment, tag)
-					}
-				}
-			}
-		}
-	}
 }

@@ -52,31 +52,34 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         applyViewBinding()
         recView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
         determineList()
-        setUpAdapter()
+        setUpAdapter() //TODO Detailed list adapter?
         recView.scheduleLayoutAnimation()
 
     }
-    
+
+    //TODO DISPLAY DETAILED LIST ONCLICK?
     private fun setUpAdapter() {
         
         scoreAdapter = object : CustomMutableListRecViewAdapter<Player>(R.layout.fragment_item_game_score, list) {
 
-            val max = list.maxOf { p: Player -> p.sumPointsFromListPair() }
+            val max = list.maxOf { p: Player -> p.sumPointsFromListCards() }
 
             override fun binder(containerView: View, item: Player, position: Int) {
                 super.binder(containerView, item, position)
 
                 val binding = FragmentItemGameScoreBinding.bind(containerView)
-                
+
                 binding.apply {
                     itemPlayerName.text = item.name
-                    itemPlacement.text = if(!miniScore and (item.sumPointsFromListPair() == max)){ "WINNER" } else { "" }
-                    itemScore.text = "${item.sumPointsFromListPair()}"
+                    itemPlacement.text = if(!miniScore and (item.sumPointsFromListCards() == max)){ "WINNER" } else { "" }
+                    itemScore.text = "${item.sumPointsFromListCards()}"
+                  //  "${item.getCardsList().forEach { Log.d("!", "$it") }}"
+
                 }
             }
+
         }
         recView.adapter = scoreAdapter
-        
 
     }
 

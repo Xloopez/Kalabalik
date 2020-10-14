@@ -1,19 +1,25 @@
 package com.example.myapplication.dataclasses
 
+import com.example.myapplication.gaming.CardMissionConsequence
+
 data class Player
     (
     var name: String,
-    var listOfRoundAndPoints: MutableList<Pair<Int, Double>> = mutableListOf(),
+    var listOfCards: MutableList<CardMissionConsequence> = mutableListOf(),
     var playerNum: Int,
     )
 {
 
-    fun listAddRoundAndPoints(pair: Pair<Int, Double>){
-        listOfRoundAndPoints.add(pair)
+    fun listAddRoundAndPoints(updatedCard: CardMissionConsequence) {
+        listOfCards.add(updatedCard)
     }
 
-    fun sumPointsFromListPair(): Double{
-        return listOfRoundAndPoints.sumByDouble { pair -> pair.second }
+    fun getCardsList(): MutableList<CardMissionConsequence> {
+        return listOfCards
+    }
+
+    fun sumPointsFromListCards(): Double {
+        return listOfCards.sumByDouble { card -> card.points }
     }
 
 }
