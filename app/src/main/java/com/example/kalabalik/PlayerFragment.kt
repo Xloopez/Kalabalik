@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_player.*
 
 
 class PlayerFragment : Fragment() {
@@ -65,7 +64,7 @@ class PlayerFragment : Fragment() {
                 playerName.setHint("Spelare $counter")
                 //Log.d("!!!", "$name")
                 when (counter){
-                    GameSettings.playerCount -> buttonNextName.setText(R.string.button_start_game)  //buttonNextName.setText("Starta spelet")
+                    GameSettings.playerCount -> addPlayerNameBtn.setText(R.string.button_start_game)  //buttonNextName.setText("Starta spelet")
                 }
             }
             GameSettings.playerCount -> {

@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_game.*
 
 
 class GameFragment : Fragment() {
@@ -57,12 +56,16 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        backCardText = view.findViewById(R.id.card_back)
+        frontCardText = view.findViewById(R.id.card_Front)
+
         //Animator object
         //modified camera scale
         val appContext = getActivity()?.applicationContext
         val scale: Float = appContext?.resources?.displayMetrics!!.density//applicationContext.resources.displayMetrics.density
-        card_Front.cameraDistance = 8000 * scale
-        card_back.cameraDistance = 8000 * scale
+
+        frontCardText.cameraDistance = 8000 * scale
+        backCardText.cameraDistance = 8000 * scale
 
         //front animation
         frontAnimation = AnimatorInflater.loadAnimator(
@@ -74,8 +77,8 @@ class GameFragment : Fragment() {
             R.animator.back_animator
         ) as AnimatorSet
 
-        backCardText = view.findViewById(R.id.card_back)
-        frontCardText = view.findViewById(R.id.card_Front)
+        /*backCardText = view.findViewById(R.id.card_back)
+        frontCardText = view.findViewById(R.id.card_Front)*/
 
         arrayConsequence = resources.getStringArray(R.array.Consequence)
         arrayConsequencePoints = resources.getIntArray(R.array.ConsequencePoints)
@@ -100,15 +103,15 @@ class GameFragment : Fragment() {
     fun flipCard() {
         when (isFront) {
             false -> {
-                frontAnimation.setTarget(card_Front)
-                backAnimation.setTarget(card_back)
+                frontAnimation.setTarget(frontCardText)
+                backAnimation.setTarget(backCardText)
                 frontAnimation.start()
                 backAnimation.start()
                 isFront = false
             }
             true -> {
-                frontAnimation.setTarget(card_back)
-                backAnimation.setTarget(card_Front)
+                frontAnimation.setTarget(backCardText)
+                backAnimation.setTarget(frontCardText)
                 backAnimation.start()
                 frontAnimation.start()
                 isFront = false
