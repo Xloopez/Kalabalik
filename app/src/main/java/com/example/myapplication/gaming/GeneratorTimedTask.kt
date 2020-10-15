@@ -9,7 +9,7 @@ class GeneratorTimedTask(val context: Context) {
 
     val res: Resources = context.resources
 
-    private var listOfTasks: MutableList<CardTimedTask> = mutableListOf()
+    var listOfTasks: MutableList<CardTimedTask> = mutableListOf()
 
     private val arrayOfColors = res.getStringArray(R.array.RandomTaskArrayOfColors)
     private val arrayOfFeel = res.getStringArray(R.array.RandomTaskArrayOfFeel)

@@ -2,9 +2,9 @@ package com.example.myapplication.gaming
 
 import android.content.Context
 import android.content.res.Resources
+import com.example.myapplication.EnRandom
 import com.example.myapplication.R
-import com.example.myapplication.utilities.EnumUtil
-import com.example.myapplication.utilities.getRandomListIndex
+import com.example.myapplication.getRandomListIndex
 
 class GeneratorMissionOrConsequence(val context: Context) {
 
@@ -21,10 +21,10 @@ class GeneratorMissionOrConsequence(val context: Context) {
 		val rIndex: Int
 		val cardText: String
 		val cardPoints: Double
-		val cardType: EnumUtil.EnRandom
+		val cardType: EnRandom
 
-		return when (val rCardType = EnumUtil.EnRandom.values().random()) {
-			EnumUtil.EnRandom.CONSEQUENCES -> {
+		return when (val rCardType = EnRandom.values().random()) {
+			EnRandom.CONSEQUENCES -> {
 
 				rIndex = listOfConsequences.getRandomListIndex()
 
@@ -37,7 +37,7 @@ class GeneratorMissionOrConsequence(val context: Context) {
 				cardType = rCardType
 				CardMissionConsequence(cardText, cardPoints, cardType)
 			}
-			EnumUtil.EnRandom.MISSION -> {
+			EnRandom.MISSION -> {
 
 				rIndex = listOfMissions.getRandomListIndex()
 

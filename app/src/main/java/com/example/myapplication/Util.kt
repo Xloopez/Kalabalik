@@ -1,24 +1,42 @@
-package com.example.myapplication.utilities
+package com.example.myapplication
 
 import android.app.Activity
+import android.content.Context
+import android.media.MediaPlayer
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.Nullable
+import androidx.annotation.RawRes
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.myapplication.R
 import com.example.myapplication.utilities.Animationz.fadeInAnim1
 import com.example.myapplication.utilities.Animationz.fadeOutAnim1
 import com.example.myapplication.utilities.Animationz.slideOutRight
 
-abstract class FragmentInputSettings(var fragmentManager: FragmentManager,
-                            var fragment: Fragment,
-                            var layoutId: Int,
-                            @Nullable var tag: String? = "",
-                            var replace: Boolean? = false,
-                            var animate: Boolean? = false)
+abstract class FragmentInputSettings(
+    var fragmentManager: FragmentManager,
+    var fragment: Fragment,
+    var layoutId: Int,
+    @Nullable var tag: String? = "",
+    var replace: Boolean? = false,
+    var animate: Boolean? = false
+)
+
+
+enum class EnOperation { SUCCESS, FAIL; }
+enum class EnScore { MINI, FINAL; }
+
+enum class EnRandom {
+    CONSEQUENCES,
+    MISSION;
+
+    fun getEnumString(): String = when (this) {
+        CONSEQUENCES -> "CONSEQUENCE"
+        MISSION -> "MISSION"
+    }
+}
 
 fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.text = text }
 
@@ -33,6 +51,27 @@ fun Iterable<() -> Unit>.runIterateUnit() {
 
 fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {
     for (element in this) element.isClickable = clickable
+}
+
+fun playSound(context: Context, @RawRes rawRes: Int) {
+
+    MediaPlayer.create(context, rawRes)
+        .apply {
+            setOnCompletionListener {
+                it?.release()
+            }
+            setOnErrorListener { mp, _, _ ->
+                with(mp) {
+                    if (isPlaying) {
+                        stop()
+                    }
+                    reset()
+                    release()
+                    false
+                }
+            }
+        }.start()
+
 }
 
 //fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
@@ -75,9 +114,10 @@ fun View.viewApplyVis(visibility: Int? = null) {
     }
 }
 
-fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
+fun FragmentInputSettings.newFragmentInstance(context: Context? = null): FragmentTransaction {
 
     val f = this
+//    context?.let {  playSound(it, R.raw.trail_swoosh) }
 
     return f.fragmentManager.beginTransaction().apply {
 

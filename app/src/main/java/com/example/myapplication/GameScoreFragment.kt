@@ -15,7 +15,7 @@ import com.example.myapplication.databinding.RecyclerViewScoreBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.viewmodels.SharedViewModel
 
-class GameScoreFragment(val miniScore: Boolean) : Fragment() {
+class GameScoreFragment(val miniScore: EnScore = EnScore.FINAL) : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
     private var scoreAdapter: CustomMutableListRecViewAdapter<Player>? = null
@@ -34,14 +34,16 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
         return when (miniScore) {
-            true -> {
+            EnScore.MINI -> {
                 _binding = RecyclerViewScoreBinding.inflate(layoutInflater, container, false)
                 binding.root
             }
-            false -> {
+            EnScore.FINAL -> {
                 _binding2 = FragmentFinalScoreBinding.inflate(layoutInflater, container, false)
                 binding2.root
             }
+
+
         }
 
     }
@@ -50,9 +52,9 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         applyViewBinding()
-        recView.layoutAnimation = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
-        determineList()
-        setUpAdapter() //TODO Detailed list adapter?
+        recView.layoutAnimation =
+            AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
+        setUpAdapter() //TODO Detailed list-adapter or list?
         recView.scheduleLayoutAnimation()
 
     }
@@ -71,10 +73,14 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
                 binding.apply {
                     itemPlayerName.text = item.name
-                    itemPlacement.text = if(!miniScore and (item.sumPointsFromListCards() == max)){ "WINNER" } else { "" }
+                    itemPlacement.text =
+                        if ((miniScore == EnScore.FINAL) and (item.sumPointsFromListCards() == max)) {
+                            "WINNER"
+                        } else {
+                            ""
+                        }
                     itemScore.text = "${item.sumPointsFromListCards()}"
                   //  "${item.getCardsList().forEach { Log.d("!", "$it") }}"
-
                 }
             }
 
@@ -83,19 +89,22 @@ class GameScoreFragment(val miniScore: Boolean) : Fragment() {
 
     }
 
-    private fun applyViewBinding(){
+    private fun applyViewBinding() {
 
-        recView = when (miniScore) {
-            true ->  binding.recyclerViewScore
-            false ->  binding2.recyclerViewFinalScore
+        when (miniScore) {
+            EnScore.MINI -> {
+                recView = binding.recyclerViewScore
+                setList(sharedViewModel.listOfPlayers)
+            }
+            EnScore.FINAL -> {
+                recView = binding2.recyclerViewFinalScore
+                setList(sharedViewModel.lopSortedByPoints)
+            }
         }
     }
 
-    private fun determineList() {
-        list = when (miniScore) {
-            true ->  sharedViewModel.listOfPlayers
-            false ->  sharedViewModel.lopSortedByPoints
-        }
+    private fun setList(sList: MutableList<Player>) {
+        list = sList
     }
 
 }

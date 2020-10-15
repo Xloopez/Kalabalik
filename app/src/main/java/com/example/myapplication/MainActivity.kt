@@ -25,7 +25,10 @@ class MainActivity : AppCompatActivity() {
         mutableListOf(
             TransactionFragment(GameInputFragment(), "mainGameInputFragment", replace = false),
             TransactionFragment(GamingFragment(), "mainGameInputFragment"),
-            TransactionFragment(GameScoreFragment(miniScore = false), "mainGameInputFragment")
+            TransactionFragment(
+                GameScoreFragment(miniScore = EnScore.FINAL),
+                "mainGameInputFragment"
+            )
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {

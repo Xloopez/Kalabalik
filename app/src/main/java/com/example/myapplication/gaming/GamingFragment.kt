@@ -24,17 +24,16 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.GameScoreFragment
-import com.example.myapplication.R
+import com.example.myapplication.*
+import com.example.myapplication.EnOperation.FAIL
+import com.example.myapplication.EnOperation.SUCCESS
 import com.example.myapplication.animators.View360Flip
 import com.example.myapplication.databinding.FragmentGamingBinding
 import com.example.myapplication.dataclasses.Player
-import com.example.myapplication.utilities.*
+import com.example.myapplication.utilities.Animationz
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
-import com.example.myapplication.utilities.EnumUtil.EnOperation
-import com.example.myapplication.utilities.EnumUtil.EnOperation.FAIL
-import com.example.myapplication.utilities.EnumUtil.EnOperation.SUCCESS
+import com.example.myapplication.utilities.SharedPrefUtil
 import com.example.myapplication.viewmodels.SharedViewModel
 
 class GamingFragment : Fragment(), View.OnClickListener {
@@ -47,6 +46,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var tvPlayerName: AppCompatTextView
 	private lateinit var tvTotalRounds: AppCompatTextView
+	private lateinit var tvCounter: AppCompatTextView
 
 	private lateinit var tSwitcherRounds: TextSwitcher
 
@@ -103,7 +103,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		setFragmentInputs()
-		(fisCard).newFragmentInstance().commit()
+		(fisCard).newFragmentInstance(requireContext()).commit()
 		setUpTextSwitcherRoundNum()
 
 		btnSuccess.setOnClickListener(this)
@@ -122,7 +122,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	override fun onClick(v: View?) {
 
 		if (isTimedTask) {
-			val generatedTask = generatorTimedTask.generateRandomTaskCard()
+//			val generatedTask = generatorTimedTask.generateRandomTaskCard()
+			val generatedTask = generatorTimedTask.listOfTasks.random()
 			gamingViewModel.updateRandomTaskCard(generatedTask)
 			displayTimedTask()
 			startTimer(generatedTask.seconds)
@@ -147,15 +148,17 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun startTimer(seconds: Long) {
 
-		(tvPlayerName).animateWithSetText(text = "$seconds")
-		object: SecondsTimer(
+		(tvPlayerName).animateWithSetText(text = getString(R.string.timed_task))
+		object : SecondsTimer(
 			totalRunningSeconds = seconds,
 			updateInterval = 1,
-			textView = tvPlayerName,
+			textView = tvCounter,
 			tCallBack = object : TimerCallBack {
 				override fun onFinish() {
 					gamingViewModel.apply { currentTurn.postUpdateIntBy(1) }
+					tvCounter.visibility = View.INVISIBLE
 				}
+
 			}
 		){}.start()
 	}
@@ -166,6 +169,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 			tvPlayerName = textViewPlayerName
 			tvTotalRounds = textViewAmountOfRounds
+			tvCounter = textViewCounter
 
 			tSwitcherRounds = textSwitcherRoundNum
 
@@ -206,8 +210,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			animate = false,
 		){}
 		fisScore = object : FragmentInputSettings(
-			fragmentManager = this.childFragmentManager, fragment = GameScoreFragment(miniScore = true),
-			layoutId = frameLayout.id, tag = "CURRENT_SCORE", replace = true, animate = true,
+			fragmentManager = this.childFragmentManager,
+			fragment = GameScoreFragment(miniScore = EnScore.MINI),
+			layoutId = frameLayout.id,
+			tag = "CURRENT_SCORE",
+			replace = true,
+			animate = true,
 		){}
 
 		fisBlank = object : FragmentInputSettings(
@@ -294,7 +302,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 			setOnClickListener {
 				valueAnimator?.reverse()
-				(fisCard).apply { replace = true }.newFragmentInstance().commit()
+				(fisCard).apply { replace = true }.newFragmentInstance(requireContext()).commit()
 				gamingViewModel.apply {
 					currentRound.postUpdateIntBy(1)
 					currentTurn.postUpdateIntBy(1)
@@ -337,7 +345,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		btnSuccess.setOnClickListener(this)
 
 		if ((CardMissionConsequenceFragment() as? Fragment)!!.isAdded.not()) {
-			(fisCard).apply { replace = true }.newFragmentInstance().commit()
+			(fisCard).apply { replace = true }.newFragmentInstance(requireContext()).commit()
 		}
 
 		gamingViewModel.apply {
@@ -383,6 +391,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				override fun firstFourthEnd() {
 					v.background =
 						getDrawable(requireContext(), R.drawable.card_background_with_strokes)
+
 				}
 
 				override fun thirdFourthOnEnd() {

@@ -12,14 +12,10 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myapplication.R
+import com.example.myapplication.*
 import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.utilities.Animationz.slideOutRightSlideInLeft
-import com.example.myapplication.utilities.btnChangeText
-import com.example.myapplication.utilities.hideSoftKeyBoard
-import com.example.myapplication.utilities.setViewVisibilityFadeInOut
-import com.example.myapplication.utilities.viewApplyVis
 import com.example.myapplication.viewmodels.SharedViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
