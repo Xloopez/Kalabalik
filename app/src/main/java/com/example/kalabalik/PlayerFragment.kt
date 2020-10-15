@@ -90,7 +90,12 @@ class PlayerFragment : Fragment() {
 
         transaction.add(R.id.container, gameFragment, "gameFragment")
         transaction.commit()
-
+    }
+    fun endPlayerFragment(){
+        val playerFragment = PlayerFragment()
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+        transaction.remove(playerFragment)
+        transaction.commit()
     }
 
 

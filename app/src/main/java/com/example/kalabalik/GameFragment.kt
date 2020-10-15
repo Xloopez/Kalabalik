@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_game.*
 
@@ -41,6 +42,7 @@ class GameFragment : Fragment() {
 
     val listOfChoices = mutableListOf("Consequence", "Mission")
     val finalRoundReached = GameSettings.amountOfRounds.plus(1)
+    //val consequenceFrontImage = ImageView
 
 
     override fun onCreateView(
@@ -147,7 +149,7 @@ class GameFragment : Fragment() {
 
                 if (currentRound == finalRoundReached){
                     Log.d("!!!", "Next Activity")
-                    //scoreBoardActivity()
+                    scoreBoardActivity()
                 }
             }
         }
@@ -170,8 +172,11 @@ class GameFragment : Fragment() {
                 //Log.d("!!!", "$consequenceStr")
                 //Log.d("!!!", "$consequencePoints")
 
-                //Front card text
-                frontCardText.text = "Konsekvens"
+                //Front card image
+                frontCardText.setBackgroundResource(R.drawable.konsekvensfram)
+                //Back card image
+                backCardText.setBackgroundResource(R.drawable.konskortbakcopy)
+
                 //Back card text
                 backCardText.setText("$consequenceStr \n+$consequencePoints poäng" +
                         "\n \nEller\n \n $consequenceOption \n+$consequenceOptionPoints poäng")
@@ -188,6 +193,11 @@ class GameFragment : Fragment() {
                 }
             }
             "Mission" -> {
+                //Front card image
+                frontCardText.setBackgroundResource(R.drawable.uppdragskortframcopy)
+                //Back card image
+                backCardText.setBackgroundResource(R.drawable.kalabalauppdragbakcopy)
+
                 val randomMissionIndex = (0 until arrayMission.count()).random()
                 //Log.d("!!!", "ranCIdex: $randomMissionIndex")
 
@@ -196,7 +206,6 @@ class GameFragment : Fragment() {
                 //Log.d("!!!", "$missionStr")
                 //Log.d("!!!", "$missionPoints")
 
-                frontCardText.text = "Uppdrag"
                 backCardText.setText("$missionStr \n+$missionPoints poäng")
                 rightMissionButton(missionPoints)
             }
@@ -242,8 +251,12 @@ class GameFragment : Fragment() {
         GameSettings.addPointsToPlayer(turn-1, missionPoints)
     }
 
-    /*fun scoreBoardActivity (){
-        val intent = Intent(this, HighScoreActivity::class.java)
-        startActivity(intent)
-    }*/
+    fun scoreBoardActivity (){
+        activity.let {
+            val intent = Intent(it, HighScoreActivity::class.java)
+            it!!.startActivity(intent)
+        }
+        /*val intent = Intent(getActivity(), HighScoreActivity::class.java)
+        startActivity(intent)*/
+    }
 }
