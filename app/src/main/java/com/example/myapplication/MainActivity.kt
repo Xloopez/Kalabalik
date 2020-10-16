@@ -10,7 +10,6 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.gaming.GamingFragment
 import com.example.myapplication.gaminginput.GameInputFragment
 import com.example.myapplication.utilities.SharedPrefUtil
-import com.example.myapplication.viewmodels.SharedViewModel
 
 class MainActivity : AppCompatActivity() {
 

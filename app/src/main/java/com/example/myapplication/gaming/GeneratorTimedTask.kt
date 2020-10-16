@@ -22,7 +22,7 @@ class GeneratorTimedTask(val context: Context) {
 
         //TODO ADD RANDOM SECS BETWEEN 30-60? at the least change the timer
         for (i in 1.. listOfListTasks.count().times(arrayOfColors.count())){
-            val tt = CardTimedTask(randomListTask(), randomListCon(), 10L)
+            val tt = CardTimedTask(randomListTask(), randomListCon(), 2L)
             listOfTasks.add(tt)
         }
     }

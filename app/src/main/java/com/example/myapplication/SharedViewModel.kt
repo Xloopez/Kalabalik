@@ -1,7 +1,6 @@
-package com.example.myapplication.viewmodels
+package com.example.myapplication
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,66 +11,66 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class SharedViewModel(application: Application) : AndroidViewModel(application) {
+class SharedViewModel(application: Application) : AndroidViewModel(application), ISharedViewModel {
 
     private val context = getApplication<Application>().applicationContext
 
-    var listOfPlayers = mutableListOf<Player>()
-    var lopSortedByPoints = mutableListOf<Player>()
-    var listOfRandomTimedTaskTurns = mutableListOf<Int>()
-    var listOfMissionOrConsequenceTurns = mutableListOf<Pair<Int, CardMissionConsequence>>()
+    override var listOfPlayers = mutableListOf<Player>()
+    override var lopSortedByPoints = mutableListOf<Player>()
+    override var listOfRandomTimedTaskTurns =
+        mutableListOf<Int>() //TODO MAKE LIST IN ADVANCE LIKE listOfMissionAND
+    override var listOfMissionOrConsequenceTurns =
+        mutableListOf<Pair<Int, CardMissionConsequence>>()
     private val evenTurns: Int get() = pCount.plus(1)
-    val amRounds: Int get() = amountOfRounds.value!!
-    val pCount: Int get() = playerCount.value!!
-    val totalTurnsPlus: Int get() = amRounds.times(pCount).plus(amRounds)
+    override val amRounds: Int get() = amountOfRounds.value!!
+    override val pCount: Int get() = playerCount.value!!
+    override val totalTurnsPlus: Int get() = amRounds.times(pCount).plus(amRounds)
 
-    var currentFragmentPos = MutableLiveData<Int>().apply {
+    override var currentFragmentPos = MutableLiveData<Int>().apply {
         value = 0
     }
 
-    var playerCount = MutableLiveData<Int>().apply {
+    override var playerCount = MutableLiveData<Int>().apply {
         value = 0
     }
 
-    var amountOfRounds = MutableLiveData<Int>().apply {
-        value = 4
+    override var amountOfRounds = MutableLiveData<Int>().apply {
+        value = 3
     }
 
-    fun updateFragmentPos(){
+    override fun updateFragmentPos() {
         currentFragmentPos.increaseBy(1)
     }
 
-    fun setPlayerCount(i: Int) = viewModelScope.launch {
+    override fun setPlayerCount(i: Int) = viewModelScope.launch {
         playerCount.putValue(i)
     }
 
-    fun addPlayerToList(player: Player) = viewModelScope.launch(Dispatchers.IO) {
+    override fun addPlayerToList(player: Player) = viewModelScope.launch(Dispatchers.IO) {
         listOfPlayers.add(player)
     }
 
-    fun listSumPairSort() = viewModelScope.launch(Dispatchers.IO) {
+    override fun listSumPairSort() = viewModelScope.launch(Dispatchers.IO) {
         lopSortedByPoints = listOfPlayers
             .sortedByDescending { player -> player.sumPointsFromListCards() }
             .toMutableList()
     }
 
-    fun createListOfMissionConsequence() = viewModelScope.launch {
+
+    override fun createListOfMissionConsequence() = viewModelScope.launch {
         for (i in ((1..totalTurnsPlus).filter { (it % evenTurns) != 0 })) {
             listOfMissionOrConsequenceTurns.add(
-                Pair(
-                    i,
-                    GeneratorMissionOrConsequence(context).generateNewCard()
-                )
+                Pair(i, GeneratorMissionOrConsequence(context).generateNewCard())
             )
         }
     }
 
-    fun getListCard(currentTurn: Int): CardMissionConsequence {
-        Log.d("!", "getListCard() $currentTurn")
+    override fun getListCard(currentTurn: Int): CardMissionConsequence {
+        //Log.d("!", "getListCard() $currentTurn")
         return listOfMissionOrConsequenceTurns.find { it.first == currentTurn }!!.second
     }
 
-    fun createRandomTaskList() = viewModelScope.launch {
+    override fun createRandomTaskList() = viewModelScope.launch {
 
         var ran: Int
         val random = Random

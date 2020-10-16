@@ -15,4 +15,5 @@
     <string name="thing_return_before_time_over">sak och återvänd innan tiden är slut!</string>
     <string name="all_players_give">Alla spelare får ge en</string>
     <string name="to_those_who_fail">till den som misslyckas</string>
+    <string name="play_again">SPELA IGEN</string>
 </resources>

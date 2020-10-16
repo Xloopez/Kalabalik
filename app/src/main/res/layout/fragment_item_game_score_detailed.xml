@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="@color/deep_purple_600"
+    android:elevation="1dp"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/item_detailed_round"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ROUND" />
+
+    <TextView
+        android:id="@+id/item_detailed_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/divider"
+        app:layout_constraintTop_toTopOf="@id/item_detailed_round"
+        tools:text="0.0" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/deep_purple_400"
+        app:layout_constraintTop_toBottomOf="@id/item_detailed_round" />
+
+    <TextView
+        android:id="@+id/item_detailed_card_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/item_detailed_round"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:text="CARDTYPE" />
+
+    <TextView
+        android:id="@+id/item_detailed_list_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/item_detailed_round"
+        app:layout_constraintTop_toBottomOf="@id/item_detailed_card_type"
+        tools:text="CARDSTRING" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,7 +34,6 @@ import com.example.myapplication.utilities.Animationz
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.utilities.SharedPrefUtil
-import com.example.myapplication.viewmodels.SharedViewModel
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -57,7 +56,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private lateinit var frameLayout: FrameLayout
 
 	private val generatorTimedTask by lazy { GeneratorTimedTask(requireContext()) }
-	private val generatorMissionOrConsequence by lazy { GeneratorMissionOrConsequence(requireContext()) }
 
 	private var currRound = 0
 	private var currTurn = 0
@@ -121,21 +119,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	override fun onClick(v: View?) {
 
-		if (isTimedTask) {
-//			val generatedTask = generatorTimedTask.generateRandomTaskCard()
-			val generatedTask = generatorTimedTask.listOfTasks.random()
-			gamingViewModel.updateRandomTaskCard(generatedTask)
-			displayTimedTask()
-			startTimer(generatedTask.seconds)
-
-		}else {
-			when (v?.id) {
-				R.id.button_Success -> {
-					updatePlayerPoints(SUCCESS)
-				}
-				R.id.button_Fail -> {
-					updatePlayerPoints(FAIL)
-				}
+		when (v?.id) {
+			R.id.button_Success -> {
+				updatePlayerPoints(SUCCESS)
+			}
+			R.id.button_Fail -> {
+				updatePlayerPoints(FAIL)
 			}
 		}
 	}
@@ -278,6 +267,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	}
 
 	private fun endGame() {
+
 		sharedViewModel.apply {
 			listSumPairSort()
 			updateFragmentPos()
@@ -417,10 +407,11 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val currCard = gamingViewModel.currentCard.value!!
 
-		currPlayer.listAddRoundAndPoints(when(operation){
+		currPlayer.listAddRoundAndPoints(when (operation) {
 			SUCCESS -> {
 				currCard.apply {
 					setRound(currRound)
+					Log.d("!", "POINTS $points")
 				}
 			}
 			FAIL -> {
@@ -431,7 +422,17 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			}
 		})
 
-		gamingViewModel.currentTurn.postUpdateIntBy(1)
+		if (isTimedTask) {
+			val generatedTask = generatorTimedTask.listOfTasks.random()
+			gamingViewModel.updateRandomTaskCard(generatedTask)
+
+			displayTimedTask()
+			startTimer(generatedTask.seconds)
+		} else {
+			gamingViewModel.currentTurn.postUpdateIntBy(1)
+		}
+
+
 	}
 
 }

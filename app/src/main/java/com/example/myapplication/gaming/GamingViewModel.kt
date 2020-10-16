@@ -4,31 +4,31 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dataclasses.Player
 
-class GamingViewModel : ViewModel() {
+class GamingViewModel : ViewModel(), InterfaceGamingViewModel {
 
-    var currentCard = MutableLiveData<CardMissionConsequence>()
-    var timedTaskCard = MutableLiveData<CardTimedTask>()
-    var updateCardFragment = MutableLiveData<Int>()
-    var clearCardFragment = MutableLiveData<Int>()
+    override var currentCard = MutableLiveData<CardMissionConsequence>()
+    override var timedTaskCard = MutableLiveData<CardTimedTask>()
+    override var updateCardFragment = MutableLiveData<Int>()
+    override var clearCardFragment = MutableLiveData<Int>()
 
-    var currentTurn = MutableLiveData<Int>().apply {
+    override var currentTurn = MutableLiveData<Int>().apply {
         value = 0
     }
-    var currentRound = MutableLiveData<Int>().apply {
+    override var currentRound = MutableLiveData<Int>().apply {
         value = 0
     }
 
-    var currentPlayer = MutableLiveData<Player>().apply {
+    override var currentPlayer = MutableLiveData<Player>().apply {
         value = Player("InitialPlayer0", playerNum = 0)
     }
 
-    fun updatePlayer(player: Player) = currentPlayer.postValue(player)
+    override fun updatePlayer(player: Player) = currentPlayer.postValue(player)
 
-    fun updateCurrentCard(card: CardMissionConsequence) {
+    override fun updateCurrentCard(card: CardMissionConsequence) {
         currentCard.postValue(card)
     }
 
-    fun updateRandomTaskCard(cardTimedTask: CardTimedTask){
+    override fun updateRandomTaskCard(cardTimedTask: CardTimedTask) {
         timedTaskCard.value = cardTimedTask
     }
 

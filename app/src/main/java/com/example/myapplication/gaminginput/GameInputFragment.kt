@@ -16,7 +16,6 @@ import com.example.myapplication.*
 import com.example.myapplication.databinding.FragmentGamingInputBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.utilities.Animationz.slideOutRightSlideInLeft
-import com.example.myapplication.viewmodels.SharedViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -65,6 +64,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
     private fun moveToNextFragment() = sharedViewModel.updateFragmentPos()
 
     private fun Player.addAdditionalPlayer() = sharedViewModel.addPlayerToList(player = this)
+
     private fun setPlayerCount() = sharedViewModel.setPlayerCount(Integer.parseInt(etInput.text.toString()))
 
     private fun increaseCounterByOne() = counter++
@@ -199,6 +199,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         (tilInput).slideOutRightSlideInLeft().start()
         (btnContinue).btnChangeText(getString(R.string.add_player))
         etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
+
         sharedViewModel.apply {
             createRandomTaskList()
             createListOfMissionConsequence()

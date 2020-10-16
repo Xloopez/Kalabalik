@@ -16,5 +16,6 @@
     <string name="thing_return_before_time_over">thing and return it before the time is over!</string>
     <string name="all_players_give">All players will be allowed</string>
     <string name="to_those_who_fail">to those who fail</string>
+    <string name="play_again">Play again</string>
 
 </resources>

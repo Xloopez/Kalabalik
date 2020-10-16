@@ -117,7 +117,7 @@ fun View.viewApplyVis(visibility: Int? = null) {
 fun FragmentInputSettings.newFragmentInstance(context: Context? = null): FragmentTransaction {
 
     val f = this
-//    context?.let {  playSound(it, R.raw.trail_swoosh) }
+    context?.let { playSound(it, R.raw.trail_swoosh) }
 
     return f.fragmentManager.beginTransaction().apply {
 
