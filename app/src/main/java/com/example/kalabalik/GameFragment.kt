@@ -7,11 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
 
 
 class GameFragment : Fragment() {
@@ -41,8 +44,11 @@ class GameFragment : Fragment() {
 
     val listOfChoices = mutableListOf("Consequence", "Mission")
     val finalRoundReached = GameSettings.amountOfRounds.plus(1)
+    val instructionFragment = InstructionFragment()
     //val consequenceFrontImage = ImageView
 
+
+    lateinit var instructionScreen: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,14 +56,43 @@ class GameFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_game, container, false)
+
+        /*val instructionFragment = InstructionFragment()
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+
+        transaction.add(R.id.screenInstruction, instructionFragment, "instructionFragment")
+        transaction.commit()*/
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        instructionScreen = view!!.findViewById(R.id.constraintLayout)
+
+        instructionScreen.setOnTouchListener{v, event ->
+            //Här sätter vi så att vår bild kan känna igen touch
+            when(event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    Log.d("!!!", "klickkkkk")
+                    removeInstructionFragment()
+                }
+            }
+            true
+        }
+
+       /* //Här kommer fragment med instruktionerna
+        val instructionFragment = InstructionFragment()
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+
+        transaction.add(R.id.screenInstruction, instructionFragment, "instructionFragment")
+        transaction.commit()*/
+
+        //Hit kommer vi efter att användaren klickat bort instruktionerna
         backCardText = view.findViewById(R.id.card_back)
         frontCardText = view.findViewById(R.id.card_Front)
+
 
         //Animator object
         //modified camera scale
@@ -91,7 +126,15 @@ class GameFragment : Fragment() {
 
         displayPlayerName = view.findViewById(R.id.playerNameTurn)
 
-        displayPlayerName.text = "${GameSettings.listOfPlayers[0].name}:s tur!"
+        displayPlayerName.text = ""//"${GameSettings.listOfPlayers[0].name}:s tur!"
+
+        /*frontCardText.visibility = View.INVISIBLE
+        backCardText.visibility = View.INVISIBLE
+        rightButton.visibility = View.INVISIBLE
+        leftButton.visibility = View.INVISIBLE*/
+
+        instructionFragment()
+        //Snackbar.make(getView()!!, "Nicolinaaaaa", Snackbar.LENGTH_INDEFINITE).show()
 
         rightButton.setOnClickListener {
             flipCard()
@@ -160,6 +203,8 @@ class GameFragment : Fragment() {
 
     fun consequenceOrMission() {
         //val randomIndex = mutableListOf<String>(arrayConsequence, arrayMission).random()
+        //frontCardText.visibility = View.VISIBLE
+        //backCardText.visibility = View.VISIBLE
 
         val randomC = listOfChoices.random()
         //Log.d("!!!", "randomC: $randomC")
@@ -259,7 +304,17 @@ class GameFragment : Fragment() {
             val intent = Intent(it, HighScoreActivity::class.java)
             it!!.startActivity(intent)
         }
-        /*val intent = Intent(getActivity(), HighScoreActivity::class.java)
-        startActivity(intent)*/
+    }
+    fun instructionFragment(){
+        //Här kommer fragment med instruktionerna
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+
+        transaction.add(R.id.playerFragmentContainer, instructionFragment, "instructionFragment")
+        transaction.commit()
+    }
+    fun removeInstructionFragment(){
+        val transaction = activity?.supportFragmentManager!!.beginTransaction()
+        transaction.remove(instructionFragment)
+        transaction.commit()
     }
 }

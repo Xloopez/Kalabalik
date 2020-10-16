@@ -1,6 +1,5 @@
 package com.example.kalabalik
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val playerFragment = PlayerFragment()
         val transaction = supportFragmentManager.beginTransaction()
 
-        transaction.add(R.id.container, playerFragment, "playerFragment")
+        transaction.add(R.id.playerFragmentContainer, playerFragment, "playerFragment")
         transaction.commit()
 
     }
