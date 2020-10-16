@@ -3,10 +3,10 @@ package com.example.myapplication
 import android.app.Activity
 import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.Nullable
-import androidx.annotation.RawRes
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -21,8 +21,10 @@ abstract class FragmentInputSettings(
     var layoutId: Int,
     @Nullable var tag: String? = "",
     var replace: Boolean? = false,
-    var animate: Boolean? = false
+    var animate: Boolean? = false,
 )
+
+//class SoundPoolSettings(var context: Context, @RawRes var soundRes: Int, var priority: Int)
 
 
 enum class EnOperation { SUCCESS, FAIL; }
@@ -53,26 +55,6 @@ fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {
     for (element in this) element.isClickable = clickable
 }
 
-fun playSound(context: Context, @RawRes rawRes: Int) {
-
-    MediaPlayer.create(context, rawRes)
-        .apply {
-            setOnCompletionListener {
-                it?.release()
-            }
-            setOnErrorListener { mp, _, _ ->
-                with(mp) {
-                    if (isPlaying) {
-                        stop()
-                    }
-                    reset()
-                    release()
-                    false
-                }
-            }
-        }.start()
-
-}
 
 //fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
 //fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
@@ -98,7 +80,7 @@ fun View.setViewVisibilityFadeInOut(visible: Boolean) {
         }
         false -> {
             apply {
-                if(this.visibility != View.INVISIBLE) {
+                if (this.visibility != View.INVISIBLE) {
                     visibility = View.INVISIBLE
                     fadeOutAnim1().start()
                 }
@@ -108,16 +90,48 @@ fun View.setViewVisibilityFadeInOut(visible: Boolean) {
 }
 
 fun View.viewApplyVis(visibility: Int? = null) {
-     when (visibility) {
-        8, 4 -> { this.visibility = visibility; slideOutRight() }
-        else -> { this.visibility = visibility ?: 0; slideOutRight() }
+    when (visibility) {
+        8, 4 -> {
+            this.visibility = visibility; slideOutRight()
+        }
+        else -> {
+            this.visibility = visibility ?: 0; slideOutRight()
+        }
     }
 }
+
+fun makeLogD(sText: String) = Log.d("!", sText)
+
+fun createMediaPlayer(context: Context, rawRes: Int): MediaPlayer {
+
+    return MediaPlayer.create(context, rawRes).apply {
+
+        setOnCompletionListener {
+            makeLogD("Sound completed $it + $duration")
+            pause()
+        }
+
+        setOnErrorListener(MediaPlayer.OnErrorListener { mp, _, _ ->
+            with(mp) {
+                if (isPlaying) {
+                    stop()
+                }
+                reset()
+                release()
+                return@OnErrorListener false
+            }
+        })
+
+    }
+
+}
+
 
 fun FragmentInputSettings.newFragmentInstance(context: Context? = null): FragmentTransaction {
 
     val f = this
-    context?.let { playSound(it, R.raw.trail_swoosh) }
+
+    // context?.let { playSound(it, rawRes = R.raw.trail_swoosh)?.start()}
 
     return f.fragmentManager.beginTransaction().apply {
 
@@ -139,4 +153,6 @@ fun FragmentInputSettings.newFragmentInstance(context: Context? = null): Fragmen
             }
         }
     }
+
+
 }

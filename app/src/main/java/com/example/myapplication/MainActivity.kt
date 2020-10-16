@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var spUtil: SharedPrefUtil
-    
+
 
     private val listOfFragment: MutableList<TransactionFragment> =
         mutableListOf(
@@ -39,12 +39,9 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         ).get(SharedViewModel::class.java)
         spUtil = SharedPrefUtil(this).apply {
-            putFloat(
-                getString(R.string.displayMetrics),
-                resources.displayMetrics.density
-            )
+            putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density)
         }
-        3
+
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace) }
         })

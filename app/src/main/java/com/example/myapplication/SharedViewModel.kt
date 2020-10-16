@@ -35,7 +35,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application),
     }
 
     override var amountOfRounds = MutableLiveData<Int>().apply {
-        value = 3
+        value = 4
     }
 
     override fun updateFragmentPos() {

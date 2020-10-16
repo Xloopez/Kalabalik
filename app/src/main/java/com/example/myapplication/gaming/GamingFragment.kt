@@ -2,6 +2,7 @@ package com.example.myapplication.gaming
 
 import android.animation.ValueAnimator
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -34,6 +35,7 @@ import com.example.myapplication.utilities.Animationz
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.utilities.SharedPrefUtil
+import android.animation.ValueAnimatorimport android.graphics.Colorimport android.media.MediaPlayerimport android.os.Bundleimport android.util.Logimport android.view.Gravityimport android.view.LayoutInflaterimport android.view.Viewimport android.view.ViewGroupimport android.view.animation.AccelerateDecelerateInterpolatorimport android.view.animation.AnimationUtilsimport android.view.animation.DecelerateInterpolatorimport android.view.animation.LinearInterpolatorimport android.widget.FrameLayoutimport android.widget.TextSwitcherimport android.widget.TextViewimport androidx.appcompat.widget.AppCompatButtonimport androidx.appcompat.widget.AppCompatTextViewimport androidx.core.animation.doOnEndimport androidx.core.content.ContextCompat.getColorimport androidx.core.content.ContextCompat.getDrawableimport androidx.core.content.res.ResourcesCompatimport androidx.core.view.marginRightimport androidx.fragment.app.Fragmentimport androidx.lifecycle.ViewModelProviderimport com.example.myapplication.*import com.example.myapplication.EnOperation.FAILimport com.example.myapplication.EnOperation.SUCCESSimport com.example.myapplication.animators.View360Flipimport com.example.myapplication.databinding.FragmentGamingBindingimport com.example.myapplication.dataclasses.Playerimport com.example.myapplication.utilities.Animationzimport com.example.myapplication.utilities.Animationz.checkCameraDistanceimport com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetTextimport java.lang.Exception
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -70,7 +72,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var fisCard: FragmentInputSettings
 	private lateinit var fisScore: FragmentInputSettings
-	private lateinit var fisBlank: FragmentInputSettings
+	private lateinit var fisTimedScore: FragmentInputSettings
 
 	private inline val isPrepareNextRound get() = calcCurrentTurn.isZero()
 	private inline val isStart get() = 	(currTurn == 0) and (calcCurrentTurn == 0)
@@ -80,6 +82,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private inline val calcCurrentTurn: Int get() = currTurn % plyCount.plus(1)
 	private inline val listOfTimedTaskTurns get() = sharedViewModel.listOfRandomTimedTaskTurns
 	private inline val isTimedTask get() = listOfTimedTaskTurns.contains(currTurn)
+
+	private var soundMissionOrConsequence: MediaPlayer? = null
+	private var soundTimedTask: MediaPlayer? = null
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -94,7 +99,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		applyViewBinding()
 		spUtil = SharedPrefUtil(requireActivity())
 		scale = spUtil.getFloat(R.string.displayMetrics)
-		(frameLayout).checkCameraDistance(targetScale = (scale * 8000)) //TODO MOVE TO TOP DEC ANIM
+		(frameLayout).checkCameraDistance(targetScale = (scale * 16000))
+
+		soundMissionOrConsequence = createMediaPlayer(requireActivity(), R.raw.trail_swoosh_1_195)
+		soundTimedTask = createMediaPlayer(requireActivity(), R.raw.balalaika_russian_14_930)
 
 		sharedViewModel.listOfMissionOrConsequenceTurns.forEach {
 			Log.d("!", "$it")
@@ -132,7 +140,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private fun displayTimedTask() {
 		gamingViewModel.clearCardFragment.postEmpty()
 		(frameLayout).flip(R.color.purple_800, false).getAnimatorSet().start()
-		(fisBlank).newFragmentInstance().commit()
+
+		(fisTimedScore).newFragmentInstance().commit()
+
+		try {
+			soundTimedTask?.start()
+		}catch (e: Exception){
+			makeLogD("Sound timed task ERROR: $e")
+		}
 	}
 
 	private fun startTimer(seconds: Long) {
@@ -207,7 +222,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			animate = true,
 		){}
 
-		fisBlank = object : FragmentInputSettings(
+		fisTimedScore = object : FragmentInputSettings(
 			fragmentManager = this.childFragmentManager, fragment = CardTimedTaskFragment(),
 			layoutId = frameLayout.id, tag = "TIMED_TASK", replace = true, animate = true,
 		){}
@@ -293,6 +308,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			setOnClickListener {
 				valueAnimator?.reverse()
 				(fisCard).apply { replace = true }.newFragmentInstance(requireContext()).commit()
+
 				gamingViewModel.apply {
 					currentRound.postUpdateIntBy(1)
 					currentTurn.postUpdateIntBy(1)
@@ -357,6 +373,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		if (calcCurrentTurn.isEqualTo(1)) {
 			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
+		}
+
+
+
+		try {
+			soundMissionOrConsequence?.start()
+		}catch (e: Exception){
+			makeLogD("$e")
 		}
 
 		val listOfButtons = listOfViews.filterIsInstance<AppCompatButton>().toMutableList()
