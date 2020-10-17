@@ -9,7 +9,7 @@ data class CardMissionConsequence
     var type: EnRandom,
     private var round: Int? = null,
 ) {
-    fun getTypeString(): String {
+    fun getTypeString(): Int {
         return type.getEnumString()
     }
 

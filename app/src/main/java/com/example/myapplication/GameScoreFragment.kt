@@ -62,7 +62,7 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
         applyViewBinding()
         recView.layoutAnimation =
             AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
-        setUpAdapter() //TODO Detailed list-adapter or list?
+        setUpAdapter()
         recView.scheduleLayoutAnimation()
 
     }
@@ -134,7 +134,7 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
                     itemDetailedRound.text = item.getRound().toString()
                     itemDetailedPoints.text = item.points.toString()
                     itemDetailedListString.text = item.listStr
-                    itemDetailedCardType.text = item.getTypeString()
+                    itemDetailedCardType.text = resources.getString(item.getTypeString())
                 }
             }
 

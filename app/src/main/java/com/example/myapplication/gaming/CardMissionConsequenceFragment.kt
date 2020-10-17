@@ -45,10 +45,10 @@ class CardMissionConsequenceFragment : Fragment() {
             val currCard = gamingViewModel.currentCard.value
 
             currCard?.let {
-                 mutableListOf(
+                mutableListOf(
                     Pair(tvCon1, currCard.listStr),
                     Pair(tvCon1Points, "${currCard.points}"),
-                    Pair(tvCardType, currCard.getTypeString()),
+                    Pair(tvCardType, resources.getString(currCard.getTypeString())),
                     Pair(tvPlusSign, "+")
                 )
             }.setTextFromListPair()

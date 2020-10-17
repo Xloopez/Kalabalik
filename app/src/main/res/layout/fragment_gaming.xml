@@ -71,7 +71,7 @@
         android:shadowDy="2"
         android:shadowRadius="2"
         android:text="@string/round"
-        android:textColor="@android:color/holo_green_light"
+        android:textColor="@color/pink_200"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/space"
         app:layout_constraintEnd_toEndOf="@+id/space" />
@@ -107,7 +107,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
         app:layout_constraintBottom_toTopOf="@id/guideline_card_bottom"
-        tools:background="@drawable/card_background_front" />
+        tools:background="@drawable/card_background_back_shape" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_Counter"

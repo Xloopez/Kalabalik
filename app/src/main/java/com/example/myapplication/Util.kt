@@ -24,9 +24,6 @@ abstract class FragmentInputSettings(
     var animate: Boolean? = false,
 )
 
-//class SoundPoolSettings(var context: Context, @RawRes var soundRes: Int, var priority: Int)
-
-
 enum class EnOperation { SUCCESS, FAIL; }
 enum class EnScore { MINI, FINAL; }
 
@@ -34,9 +31,9 @@ enum class EnRandom {
     CONSEQUENCES,
     MISSION;
 
-    fun getEnumString(): String = when (this) {
-        CONSEQUENCES -> "CONSEQUENCE"
-        MISSION -> "MISSION"
+    fun getEnumString(): Int = when (this) {
+        CONSEQUENCES -> R.string.consequence
+        MISSION -> R.string.mission
     }
 }
 
@@ -127,11 +124,9 @@ fun createMediaPlayer(context: Context, rawRes: Int): MediaPlayer {
 }
 
 
-fun FragmentInputSettings.newFragmentInstance(context: Context? = null): FragmentTransaction {
+fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
 
     val f = this
-
-    // context?.let { playSound(it, rawRes = R.raw.trail_swoosh)?.start()}
 
     return f.fragmentManager.beginTransaction().apply {
 

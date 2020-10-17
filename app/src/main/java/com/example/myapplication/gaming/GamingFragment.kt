@@ -19,7 +19,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
-import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginRight
@@ -35,7 +34,6 @@ import com.example.myapplication.utilities.Animationz
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.utilities.SharedPrefUtil
-import java.lang.Exception
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -104,12 +102,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		soundMissionOrConsequence = createMediaPlayer(requireActivity(), R.raw.trail_swoosh_1_195)
 		soundTimedTask = createMediaPlayer(requireActivity(), R.raw.balalaika_russian_14_930)
 
-		sharedViewModel.listOfMissionOrConsequenceTurns.forEach {
-			Log.d("!", "$it")
-		}
+
 
 		setFragmentInputs()
-		(fisCard).newFragmentInstance(requireContext()).commit()
+		(fisCard).newFragmentInstance().commit()
 		setUpTextSwitcherRoundNum()
 
 		btnSuccess.setOnClickListener(this)
@@ -122,6 +118,9 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		setUpCurrentRoundObserver()
 		gamingViewModel.currentTurn.postEmpty() //NEEDED??
 
+//		sharedViewModel.listOfMissionOrConsequenceTurns.forEach {
+//			Log.d("!", "$it")
+//		}
 		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
 	}
 
@@ -139,13 +138,13 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 	private fun displayTimedTask() {
 		gamingViewModel.clearCardFragment.postEmpty()
-		(frameLayout).flip(R.color.purple_800, false).getAnimatorSet().start()
+		(frameLayout).flip(false).getAnimatorSet().start()
 
 		(fisTimedScore).newFragmentInstance().commit()
 
 		try {
-			soundTimedTask?.start()
-		}catch (e: Exception){
+			//soundTimedTask?.start()
+		} catch (e: Exception) {
 			makeLogD("Sound timed task ERROR: $e")
 		}
 	}
@@ -234,6 +233,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			maxRounds = amRounds
 			totalTurns = totalTurnsPlus
 		}
+		// TODO: 2020-10-18 add R.string with vararg
 		tvTotalRounds.apply { text = "out of $maxRounds rounds" }
 		gamingViewModel.apply { currentTurn.postValue(1) }
 	}
@@ -307,7 +307,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 			setOnClickListener {
 				valueAnimator?.reverse()
-				(fisCard).apply { replace = true }.newFragmentInstance(requireContext()).commit()
+				(fisCard).apply { replace = true }.newFragmentInstance().commit()
 
 				gamingViewModel.apply {
 					currentRound.postUpdateIntBy(1)
@@ -351,7 +351,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		btnSuccess.setOnClickListener(this)
 
 		if ((CardMissionConsequenceFragment() as? Fragment)!!.isAdded.not()) {
-			(fisCard).apply { replace = true }.newFragmentInstance(requireContext()).commit()
+			(fisCard).apply { replace = true }.newFragmentInstance().commit()
 		}
 
 		gamingViewModel.apply {
@@ -361,25 +361,25 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		(frameLayout).flip().getAnimatorSet().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
-		(btnSuccess).btnChangeText("SUCCESS")
+		(btnSuccess).btnChangeText("SUCCESS") //TODO R.string.
 	}
 
 	private fun FrameLayout.flip(
-		endBackColor: Int = R.color.deep_purple_400,
 		displayBtnOnEnd: Boolean = true
 	): View360Flip {
+
+		//TODO fix background for timed task again
+		val backgroundFront = getDrawable(requireContext(), R.drawable.card_background_front_shape)
 
 		val v = this
 
 		if (calcCurrentTurn.isEqualTo(1)) {
-			v.setBackgroundColor(getColor(requireActivity(), R.color.deep_purple_400))
+			v.background = backgroundFront
 		}
 
-
-
 		try {
-			soundMissionOrConsequence?.start()
-		}catch (e: Exception){
+			//soundMissionOrConsequence?.start()
+		} catch (e: Exception) {
 			makeLogD("$e")
 		}
 
@@ -404,7 +404,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 				override fun firstFourthEnd() {
 					v.background =
-						getDrawable(requireContext(), R.drawable.card_background_with_strokes)
+						getDrawable(requireContext(), R.drawable.card_background_back)
 
 				}
 
@@ -412,8 +412,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 					gamingViewModel.updateCardFragment.postValue(1)
 					v.apply {
 						animate().scaleXBy(0.5f).scaleYBy(0.5f)
-						setBackgroundColor(getColor(requireActivity(), endBackColor))
-					}//getDrawable(requireContext(), R.drawable.card_background_front)
+						background = backgroundFront
+					}
 				}
 
 				override fun fourthFourthOnEnd() {

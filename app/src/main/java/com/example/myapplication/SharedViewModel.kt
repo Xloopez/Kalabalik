@@ -18,7 +18,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application),
     override var listOfPlayers = mutableListOf<Player>()
     override var lopSortedByPoints = mutableListOf<Player>()
     override var listOfRandomTimedTaskTurns =
-        mutableListOf<Int>() //TODO MAKE LIST IN ADVANCE LIKE listOfMissionAND
+        mutableListOf<Int>() // TODO: 2020-10-18 MAKE LIST IN ADVANCE, LIKE listOfMissionAND
     override var listOfMissionOrConsequenceTurns =
         mutableListOf<Pair<Int, CardMissionConsequence>>()
     private val evenTurns: Int get() = pCount.plus(1)
