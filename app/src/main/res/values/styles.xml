@@ -8,18 +8,30 @@
         <item name="android:windowFullscreen">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="recyclerViewStyle">@style/DefaultRecyclerViewStyle</item>
     </style>
 
-    <style name="TitleViews">
-        <item name="fontFamily">@font/irish_grover</item>
+    <style name="FontPermMark" parent="AppTheme">
+        <item name="fontFamily">@font/permanent_marker</item>
+    </style>
+
+    <style name="IrishGloverFontCapped" parent="AppTheme">
+        <item name="android:fontFamily">@font/irish_grover</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TitleViews"> <!-- REMOVE? -->
+<!--        <item name="fontFamily">@font/irish_grover</item>-->
+        <item name="theme">@style/IrishGloverFontCapped</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">40dp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">20sp</item>
-        <item name="textAllCaps">true</item>
         <item name="android:textStyle">normal</item>
+
     </style>
+
 
     <style name="CardBackAppNameStyle">
         <item name="android:fontFamily">@font/irish_grover</item>
@@ -55,5 +67,118 @@
         <item name="android:padding">5dp</item>w
     </style>
 
+    <style name="RoundsStylePlus">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:fontFamily">@font/permanent_marker</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CardStylePoint">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">40sp</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CardStyleContent">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CardStyleType">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:alpha">0.1</item>
+        <item name="android:fontFamily">@font/permanent_marker</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:rotation">340</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="AmountOfRoundsStyle" parent="IrishGloverFontCapped">
+        <item name="theme">@style/IrishGloverFontCapped</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="CurrentSectionStyle">
+        <item name="android:fontFamily">@font/irish_grover</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <style name="RoundStyleGreen" parent="RoundsStyle">
+        <item name="android:elevation">2dp</item>
+        <item name="android:fontFamily">@font/irish_grover</item>
+        <item name="android:shadowColor">@android:color/white</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:textColor">@android:color/holo_green_light</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ItemGameTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ItemGameScoreRecyclerViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">30dp</item>
+<!--        <item name="android:orientation">vertical</item>-->
+    </style>
+
+    <style name="DefaultRecyclerViewStyle">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+        <item name="android:orientation">vertical</item>
+    </style>
 
 </resources>

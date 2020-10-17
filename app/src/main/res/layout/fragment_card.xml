@@ -16,49 +16,23 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_cardType"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.1"
-        android:fontFamily="@font/permanent_marker"
-        android:gravity="center"
-        android:maxLines="1"
-        android:rotation="340"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="CONSEQUENCE" />
+        tools:text="CONSEQUENCE"
+        style="@style/CardStyleType" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_conOne"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:shadowColor="@android:color/black"
-        android:shadowRadius="5"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="12sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="9dp"
-        tools:text="Consequence 1" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Consequence 1"
+        style="@style/CardStyleContent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_plusSign"
-        style="@style/RoundsStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:elevation="2dp"
-        android:fontFamily="@font/permanent_marker"
-        android:gravity="center"
-        android:shadowColor="@android:color/black"
-        android:shadowRadius="5"
-        android:textAlignment="center"
-        android:textSize="25sp"
+        style="@style/RoundsStylePlus"
         app:layout_constraintBottom_toBottomOf="@id/textView_conOne_points"
         app:layout_constraintEnd_toStartOf="@id/textView_conOne_points"
         app:layout_constraintTop_toTopOf="@id/textView_conOne_points"
@@ -66,15 +40,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_conOne_points"
-        style="@style/RoundsStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:elevation="2dp"
-        android:gravity="center"
-        android:shadowColor="@android:color/black"
-        android:shadowRadius="5"
-        android:textAlignment="center"
+        style="@style/CardStylePoint"
         app:layout_constraintBottom_toBottomOf="@id/textView_conOne"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

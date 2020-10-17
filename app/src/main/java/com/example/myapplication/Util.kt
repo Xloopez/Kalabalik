@@ -20,8 +20,8 @@ abstract class FragmentInputSettings(
     var fragment: Fragment,
     var layoutId: Int,
     @Nullable var tag: String? = "",
-    var replace: Boolean? = false,
-    var animate: Boolean? = false,
+    var replace: Boolean? = true,
+    var animate: Boolean? = true,
 )
 
 //class SoundPoolSettings(var context: Context, @RawRes var soundRes: Int, var priority: Int)

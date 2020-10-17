@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var spUtil: SharedPrefUtil
 
-
     private val listOfFragment: MutableList<TransactionFragment> =
         mutableListOf(
             TransactionFragment(GameInputFragment(), "mainGameInputFragment", replace = false),

@@ -9,7 +9,6 @@
     <string name="next_round">NEXT ROUND</string>
     <string name="displayMetrics" translatable="false">0</string>
     <string name="round">Round</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="timed_task">TIMED TASK</string>
     <string name="text_place_holder">TEXT_PLACE_HOLDER</string>
     <string name="find_a">Find a</string>
@@ -17,5 +16,6 @@
     <string name="all_players_give">All players will be allowed</string>
     <string name="to_those_who_fail">to those who fail</string>
     <string name="play_again">Play again</string>
+    <string name="out_of_var_rounds">out of %d rounds</string>
 
 </resources>

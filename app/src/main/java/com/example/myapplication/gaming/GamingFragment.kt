@@ -35,7 +35,6 @@ import com.example.myapplication.utilities.Animationz
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
 import com.example.myapplication.utilities.SharedPrefUtil
-import java.lang.Exception
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -218,13 +217,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			fragment = GameScoreFragment(miniScore = EnScore.MINI),
 			layoutId = frameLayout.id,
 			tag = "CURRENT_SCORE",
-			replace = true,
-			animate = true,
 		){}
-
 		fisTimedScore = object : FragmentInputSettings(
-			fragmentManager = this.childFragmentManager, fragment = CardTimedTaskFragment(),
-			layoutId = frameLayout.id, tag = "TIMED_TASK", replace = true, animate = true,
+			fragmentManager = this.childFragmentManager,
+			fragment = CardTimedTaskFragment(),
+			layoutId = frameLayout.id,
+			tag = "TIMED_TASK",
 		){}
 	}
 
@@ -234,7 +232,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			maxRounds = amRounds
 			totalTurns = totalTurnsPlus
 		}
-		tvTotalRounds.apply { text = "out of $maxRounds rounds" }
+
+		tvTotalRounds.apply { text = String.format(getString(R.string.out_of_var_rounds, maxRounds)) }
 		gamingViewModel.apply { currentTurn.postValue(1) }
 	}
 

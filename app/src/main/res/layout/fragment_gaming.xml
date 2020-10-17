@@ -48,31 +48,16 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_amount_of_rounds"
-        style="@style/RoundsStyle"
-        android:fontFamily="@font/irish_grover"
-        android:shadowColor="@android:color/black"
-        android:shadowDx="1"
-        android:shadowDy="2"
-        android:shadowRadius="1"
-        android:textSize="14sp"
-        android:textStyle="normal"
         app:layout_constraintEnd_toStartOf="@+id/textSwitcher_round_num"
         app:layout_constraintStart_toEndOf="@+id/space"
         app:layout_constraintTop_toTopOf="@+id/space"
-        tools:text="out of 15 rounds" />
+        tools:text="out of 15 rounds"
+        style="@style/AmountOfRoundsStyle" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_current_round"
-        style="@style/RoundsStyle"
-        android:elevation="2dp"
-        android:fontFamily="@font/irish_grover"
-        android:shadowColor="@android:color/white"
-        android:shadowDx="1"
-        android:shadowDy="2"
-        android:shadowRadius="2"
+        style="@style/RoundStyleGreen"
         android:text="@string/round"
-        android:textColor="@android:color/holo_green_light"
-        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/space"
         app:layout_constraintEnd_toEndOf="@+id/space" />
 
@@ -87,15 +72,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_playerName"
-        style="@style/TitleViews"
-        android:layout_marginBottom="10dp"
-        android:textColor="@android:color/white"
-        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/guideline_card_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Playername" />
-
+        tools:text="Playername"
+        style="@style/CurrentSectionStyle" />
 
     <FrameLayout
         android:id="@+id/frame_layout_card_points"

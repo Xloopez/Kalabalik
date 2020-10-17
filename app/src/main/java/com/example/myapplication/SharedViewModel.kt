@@ -56,7 +56,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application),
             .toMutableList()
     }
 
-
     override fun createListOfMissionConsequence() = viewModelScope.launch {
         for (i in ((1..totalTurnsPlus).filter { (it % evenTurns) != 0 })) {
             listOfMissionOrConsequenceTurns.add(
@@ -66,7 +65,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application),
     }
 
     override fun getListCard(currentTurn: Int): CardMissionConsequence {
-        //Log.d("!", "getListCard() $currentTurn")
+        makeLogD("GetListCard() $currentTurn")
         return listOfMissionOrConsequenceTurns.find { it.first == currentTurn }!!.second
     }
 

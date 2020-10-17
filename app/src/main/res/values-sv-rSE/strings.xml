@@ -16,4 +16,5 @@
     <string name="all_players_give">Alla spelare får ge en</string>
     <string name="to_those_who_fail">till den som misslyckas</string>
     <string name="play_again">SPELA IGEN</string>
+    <string name="out_of_var_rounds">out of % rounds</string>
 </resources>
