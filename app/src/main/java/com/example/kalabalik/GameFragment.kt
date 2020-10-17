@@ -71,23 +71,21 @@ class GameFragment : Fragment() {
 
         instructionScreen = view!!.findViewById(R.id.constraintLayout)
 
+        instructionFragment()
+        val snackBar = Snackbar.make(activity!!.findViewById(android.R.id.content), R.string.instruction_snackbar, Snackbar.LENGTH_INDEFINITE)
+
         instructionScreen.setOnTouchListener{v, event ->
             //Här sätter vi så att vår bild kan känna igen touch
             when(event?.action) {
                 MotionEvent.ACTION_DOWN -> {
                     Log.d("!!!", "klickkkkk")
                     removeInstructionFragment()
+                    snackBar.dismiss()
                 }
             }
             true
         }
-
-       /* //Här kommer fragment med instruktionerna
-        val instructionFragment = InstructionFragment()
-        val transaction = activity?.supportFragmentManager!!.beginTransaction()
-
-        transaction.add(R.id.screenInstruction, instructionFragment, "instructionFragment")
-        transaction.commit()*/
+        snackBar.show()
 
         //Hit kommer vi efter att användaren klickat bort instruktionerna
         backCardText = view.findViewById(R.id.card_back)
@@ -133,8 +131,8 @@ class GameFragment : Fragment() {
         rightButton.visibility = View.INVISIBLE
         leftButton.visibility = View.INVISIBLE*/
 
-        instructionFragment()
-        //Snackbar.make(getView()!!, "Nicolinaaaaa", Snackbar.LENGTH_INDEFINITE).show()
+        //instructionFragment()
+        //Snackbar.make(activity!!.findViewById(android.R.id.content), "${R.string.instruction_toast}", Snackbar.LENGTH_INDEFINITE).show()
 
         rightButton.setOnClickListener {
             flipCard()
