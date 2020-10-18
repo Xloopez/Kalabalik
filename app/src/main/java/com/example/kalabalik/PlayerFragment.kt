@@ -51,7 +51,7 @@ class PlayerFragment : Fragment() {
 
     fun playersNames(){
         val  name = playerName.text.toString()
-        Log.d("!!!", "Name: $name")
+        //Log.d("!!!", "Name: $name")
 
         when (counter){
             in 1 until GameSettings.playerCount -> {

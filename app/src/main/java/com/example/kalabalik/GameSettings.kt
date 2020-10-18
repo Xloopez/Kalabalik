@@ -6,7 +6,7 @@ import android.util.Log
 object GameSettings {
 
     var playerCount: Int = 0
-    var amountOfRounds: Int = 2
+    var amountOfRounds: Int = 3
     var listOfPlayers: MutableList<Player> = mutableListOf()
     //var listOfPlayerPoints: MutableList<Player> = mutableListOf()
 
@@ -15,7 +15,12 @@ object GameSettings {
         listOfPlayers.add(Player(name))
     }
     fun addPointsToPlayer(counter: Int, points: Int){
+        Log.d("!!!", "POÄNG $points")
         //Log.d("!!!", "Counter is: $counter")
         listOfPlayers[counter].points += points
+    }
+    fun removePointsFromPlayer(counter: Int, points: Int){
+        Log.d("!!!", "POÄNG $points")
+        listOfPlayers[counter].points -= points
     }
 }

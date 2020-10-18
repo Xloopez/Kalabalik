@@ -14,4 +14,5 @@
     <string name="high_score_list">High Score</string>
     <string name="consequence_title">Konsekvens kort</string>
     <string name="mission_title">Uppdrag\'s kort</string>
+    <string name="flip_buttons_deafaults">Poäng</string>
 </resources>

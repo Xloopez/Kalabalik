@@ -27,10 +27,6 @@ class MainActivity : AppCompatActivity() {
     fun buttonNextPage(){
         GameSettings.playerCount = playerAmount.text.toString().toInt()
 
-        /*När next button klickas kommer vi till nästa vy
-        val intent = Intent(this, PlayerActivity::class.java)
-        startActivity(intent)*/
-
         val playerFragment = PlayerFragment()
         val transaction = supportFragmentManager.beginTransaction()
 
