@@ -122,11 +122,8 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
                             }
                         }
                     }
-
                 }
-
             }
-
         }
         recView.adapter = scoreAdapter
 
@@ -156,11 +153,8 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
                     itemDetailedCardType.text = cardType
                 }
             }
-
         }
-
     }
-
 
     private fun applyViewBinding() {
 
@@ -181,6 +175,5 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
     private fun setList(sList: MutableList<Player>) {
         list = sList
     }
-
 
 }

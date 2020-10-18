@@ -10,7 +10,7 @@ data class Player(
 
     var isDetailedShow: Boolean = false
 
-    fun listAddRoundAndPoints(updatedCard: CardMissionConsequence) {
+    fun listAddCard(updatedCard: CardMissionConsequence) {
         listOfCards.add(updatedCard)
     }
 

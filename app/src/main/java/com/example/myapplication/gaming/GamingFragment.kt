@@ -454,7 +454,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		val currCard = gamingViewModel.currentCard.value!!
 
-		currPlayer.listAddRoundAndPoints(
+		currPlayer.listAddCard(
 			when (operation) {
 				SUCCESS -> {
 					currCard.apply {
