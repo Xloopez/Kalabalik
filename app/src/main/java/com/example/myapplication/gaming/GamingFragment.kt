@@ -123,9 +123,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		setUpCurrentRoundObserver()
 		gamingViewModel.currentTurn.postEmpty() //NEEDED??
 
-//		sharedViewModel.listOfMissionOrConsequenceTurns.forEach {
-//			Log.d("!", "$it")
-//		}
+//		sharedViewModel.listOfMissionOrConsequenceTurns.forEach { Log.d("!", "$it") }
 		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
 	}
 
@@ -148,7 +146,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(fisTimedScore).newFragmentInstance().commit()
 
 		try {
-
 			// TODO: 2020-10-18 uncomment below
 			//soundTimedTask?.start()
 		} catch (e: Exception) {
@@ -289,7 +286,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	}
 
 	private fun endGame() {
-
 		sharedViewModel.apply {
 			listSumPairSort()
 			updateFragmentPos()
@@ -370,7 +366,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		(frameLayout).flip(card = nextCard).getAnimatorSet().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
-		(btnSuccess).btnChangeText(getString(R.string.Flipp)) //TODO R.string.
+		(btnSuccess).btnChangeText(getString(R.string.Flipp))
 	}
 
 	private fun FrameLayout.flip(
@@ -463,7 +459,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				SUCCESS -> {
 					currCard.apply {
 						setRound(currRound)
-						//Log.d("!", "POINTS $points")
 					}
 				}
 				FAIL -> {

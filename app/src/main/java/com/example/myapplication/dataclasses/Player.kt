@@ -2,13 +2,13 @@ package com.example.myapplication.dataclasses
 
 import com.example.myapplication.gaming.CardMissionConsequence
 
-data class Player
-    (
+data class Player(
     var name: String,
     var listOfCards: MutableList<CardMissionConsequence> = mutableListOf(),
     var playerNum: Int,
-    )
-{
+) {
+
+    var isDetailedShow: Boolean = false
 
     fun listAddRoundAndPoints(updatedCard: CardMissionConsequence) {
         listOfCards.add(updatedCard)

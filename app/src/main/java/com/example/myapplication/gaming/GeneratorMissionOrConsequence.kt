@@ -51,6 +51,5 @@ class GeneratorMissionOrConsequence(val context: Context) {
 				CardMissionConsequence(cardText, cardPoints, cardType)
 			}
 		}
-		//	return CardMissionConsequence(cardText, cardPoints, cardType)
 	}
 }

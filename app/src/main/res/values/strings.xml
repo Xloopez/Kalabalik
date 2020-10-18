@@ -22,5 +22,6 @@
     <string name="displayMetrics">displayMetrics</string>
     <string name="Flipp">flipp</string>
     <string name="Flopp">Flopp</string>
+    <string name="detailed_view">Detaljerad vy</string>
 
 </resources>

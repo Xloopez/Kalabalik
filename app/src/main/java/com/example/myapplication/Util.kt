@@ -57,7 +57,6 @@ fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {
     for (element in this) element.isClickable = clickable
 }
 
-
 //fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
 //fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
 //fun MutableList<Unit>.runListUnits() = this.forEach { return@forEach it }
