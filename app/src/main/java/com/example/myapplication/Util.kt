@@ -35,6 +35,11 @@ enum class EnRandom {
         CONSEQUENCES -> R.string.consequence
         MISSION -> R.string.mission
     }
+
+    fun getBackGroundColor(): Int = when (this) {
+        CONSEQUENCES -> R.color.deep_purple_200
+        MISSION -> R.color.deep_purple_600
+    }
 }
 
 fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.text = text }

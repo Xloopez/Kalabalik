@@ -7,7 +7,7 @@
     android:elevation="1dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:background="@color/deep_purple_400"
+    android:background="@color/deep_purple_600"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="20dp">
 

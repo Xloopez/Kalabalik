@@ -134,7 +134,7 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
                     itemDetailedRound.text = item.getRound().toString()
                     itemDetailedPoints.text = item.points.toString()
                     itemDetailedListString.text = item.listStr
-                    itemDetailedCardType.text = resources.getString(item.getTypeString())
+                    itemDetailedCardType.text = resources.getString(item.getType())
                 }
             }
 

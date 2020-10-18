@@ -1,8 +1,14 @@
 package com.example.myapplication.gaming
 
 import android.animation.ValueAnimator
+import android.graphics.BlendMode.SRC_ATOP
+import android.graphics.BlendModeColorFilter
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff.Mode
+import android.graphics.PorterDuffColorFilter
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -19,6 +25,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginRight
@@ -215,8 +222,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			fragment = GameScoreFragment(miniScore = EnScore.MINI),
 			layoutId = frameLayout.id,
 			tag = "CURRENT_SCORE",
-			replace = false,
-			animate = false,
+			replace = true,
+			animate = true,
 		){}
 
 		fisTimedScore = object : FragmentInputSettings(
@@ -354,27 +361,33 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			(fisCard).apply { replace = true }.newFragmentInstance().commit()
 		}
 
+		val nextCard = sharedViewModel.getListCard(currTurn)
+
 		gamingViewModel.apply {
 			clearCardFragment.postEmpty()
-			updateCurrentCard(sharedViewModel.getListCard(currTurn))
+			updateCurrentCard(nextCard)
 		}
 
-		(frameLayout).flip().getAnimatorSet().start()
+		(frameLayout).flip(card = nextCard).getAnimatorSet().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
 		(btnSuccess).btnChangeText(getString(R.string.Flipp)) //TODO R.string.
 	}
 
 	private fun FrameLayout.flip(
-		displayBtnOnEnd: Boolean = true
+		isNotTimedTask: Boolean = true,
+		card: CardMissionConsequence? = null
 	): View360Flip {
-
-		//TODO fix background for timed task again
-		val backgroundFront = getDrawable(requireContext(), R.drawable.card_background_front_shape)
-
 		val v = this
 
+		var colorFilterDefault: ColorFilter = getColorFilter()
+
 		if (calcCurrentTurn.isEqualTo(1)) {
-			v.background = backgroundFront
+			v.background = getDrawable(requireContext(), R.drawable.card_background_back)
+			v.background.clearColorFilter()
+		}
+
+		card?.type?.getBackGroundColor()?.let {
+			colorFilterDefault = getColorFilter(resColor = card.getBackColor())
 		}
 
 		try {
@@ -401,24 +414,26 @@ class GamingFragment : Fragment(), View.OnClickListener {
 				override fun firstFourthStart() {
 					listOfButtons.clickable(false)
 					v.animate().scaleXBy(-0.5f).scaleYBy(-0.5f)
+
 				}
 
 				override fun firstFourthEnd() {
-					v.background =
-						getDrawable(requireContext(), R.drawable.card_background_back)
-
+					v.apply {
+						background = getDrawable(requireContext(), R.drawable.card_background_back)
+						background.clearColorFilter()
+					}
 				}
 
 				override fun thirdFourthOnEnd() {
 					gamingViewModel.updateCardFragment.postValue(1)
 					v.apply {
 						animate().scaleXBy(0.5f).scaleYBy(0.5f)
-						background = backgroundFront
+						background.colorFilter = colorFilterDefault
 					}
 				}
 
 				override fun fourthFourthOnEnd() {
-					if (displayBtnOnEnd) {
+					if (isNotTimedTask) {
 						listOfButtons.forEach {
 							it.isClickable = true
 							it.visibility = View.VISIBLE
@@ -428,24 +443,36 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			})
 	}
 
+	private fun getColorFilter(resColor: Int = R.color.purple_800): ColorFilter {
+		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			BlendModeColorFilter(getColor(requireContext(), resColor), SRC_ATOP)
+		} else {
+			PorterDuffColorFilter(
+				getColor(requireContext(), resColor),
+				Mode.SRC_ATOP
+			)
+		}
+	}
+
 	private fun updatePlayerPoints(operation: EnOperation) {
 
 		val currCard = gamingViewModel.currentCard.value!!
 
-		currPlayer.listAddRoundAndPoints(when (operation) {
-			SUCCESS -> {
-				currCard.apply {
-					setRound(currRound)
-					//Log.d("!", "POINTS $points")
+		currPlayer.listAddRoundAndPoints(
+			when (operation) {
+				SUCCESS -> {
+					currCard.apply {
+						setRound(currRound)
+						//Log.d("!", "POINTS $points")
+					}
 				}
-			}
-			FAIL -> {
-				currCard.apply {
-					setRound(currRound)
-					points = -5.0
+				FAIL -> {
+					currCard.apply {
+						setRound(currRound)
+						points = -5.0
+					}
 				}
-			}
-		})
+			})
 
 		if (isTimedTask) {
 			val generatedTask = generatorTimedTask.listOfTasks.random()

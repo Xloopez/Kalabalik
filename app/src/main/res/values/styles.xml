@@ -32,8 +32,11 @@
     <style name="RoundsStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/irish_grover</item>
         <item name="android:textSize">40sp</item>
         <item name="textAllCaps">true</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">bold</item>
@@ -53,7 +56,17 @@
         <item name="android:background">@drawable/button_standard_selector</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:padding">5dp</item>w
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="ButtonStyleGamingFragment">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_standard_selector</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">5dp</item>w
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="layout_constraintWidth_percent">0.45</item>
+    </style>
 
 </resources>

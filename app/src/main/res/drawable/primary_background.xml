@@ -5,6 +5,8 @@
         android:startColor="@color/deep_purple_800"
         android:centerColor="@color/deep_purple_600"
         android:endColor="@color/deep_purple_400"
-        android:angle="90"/>
+        android:angle="90" />
+
+    <solid android:color="@color/deep_purple_400" />
 
 </shape>

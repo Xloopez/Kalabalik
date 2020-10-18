@@ -9,15 +9,19 @@ data class CardMissionConsequence
     var type: EnRandom,
     private var round: Int? = null,
 ) {
-    fun getTypeString(): Int {
+    fun getType(): Int {
         return type.getEnumString()
+    }
+
+    fun getBackColor(): Int {
+        return type.getBackGroundColor()
     }
 
     fun getRound(): Int? {
         return round
     }
 
-    fun setRound(int: Int){
+    fun setRound(int: Int) {
         round = int
     }
 

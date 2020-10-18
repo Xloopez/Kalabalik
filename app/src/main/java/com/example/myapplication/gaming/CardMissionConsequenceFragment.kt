@@ -48,7 +48,7 @@ class CardMissionConsequenceFragment : Fragment() {
                 mutableListOf(
                     Pair(tvCon1, currCard.listStr),
                     Pair(tvCon1Points, "${currCard.points}"),
-                    Pair(tvCardType, resources.getString(currCard.getTypeString())),
+                    Pair(tvCardType, resources.getString(currCard.getType())),
                     Pair(tvPlusSign, "+")
                 )
             }.setTextFromListPair()
