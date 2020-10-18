@@ -1,22 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">KALABALIK</string>
-    <string name="add_player">ADD PLAYER</string>
-    <string name="start_game">START GAME</string>
-    <string name="now_playing_round">Now playing round %d out of %d</string>
-    <string name="amount_of_players">Amount of players</string>
-    <string name="enter_amount_of_players_2_5">Enter amount of players, 2–5!</string>
-    <string name="current_score">CURRENT SCORE</string>
-    <string name="next_round">NEXT ROUND</string>
-    <string name="displayMetrics" translatable="false">0</string>
-    <string name="round">Round</string>
-    <string name="timed_task">TIMED TASK</string>
-    <string name="text_place_holder">TEXT_PLACE_HOLDER</string>
-    <string name="find_a">Find a</string>
-    <string name="thing_return_before_time_over">thing and return it before the time is over!</string>
-    <string name="all_players_give">All players will be allowed</string>
-    <string name="to_those_who_fail">to those who fail</string>
-    <string name="play_again">Play again</string>
-    <string name="consequence">Consequence</string>
-    <string name="mission">Mission</string>
+    <string name="add_player">LÄGG TILL</string>
+    <string name="start_game">STARTA SPELET</string>
+    <string name="now_playing_round">Spelar nu runda %d av %d</string>
+    <string name="amount_of_players">Antal spelare</string>
+    <string name="enter_amount_of_players_2_5">Ange antal spelare, 2–5!</string>
+    <string name="round">Runda</string>
+    <string name="current_score">NUVARANDE POÄNG</string>
+    <string name="next_round">NÄSTA RUNDA</string>
+    <string name="timed_task">Skynda dig</string>
+    <string name="text_place_holder">TEXT_PLATS_HÅLLARE</string>
+    <string name="find_a">Leta upp en</string>
+    <string name="thing_return_before_time_over">sak och återvänd innan tiden är slut!</string>
+    <string name="all_players_give">Alla spelare får ge en</string>
+    <string name="to_those_who_fail">till den som misslyckas</string>
+    <string name="play_again">SPELA IGEN</string>
+    <string name="consequence">Konsekvens</string>
+    <string name="mission">Uppdrag</string>
+    <string name="out_of_x_rounds">Utav %d rundor</string>
+    <string name="displayMetrics">displayMetrics</string>
+    <string name="Flipp">flipp</string>
+    <string name="flopp">Flopp</string>
 
 </resources>

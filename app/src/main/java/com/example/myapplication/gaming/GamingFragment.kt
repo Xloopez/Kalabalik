@@ -102,8 +102,6 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		soundMissionOrConsequence = createMediaPlayer(requireActivity(), R.raw.trail_swoosh_1_195)
 		soundTimedTask = createMediaPlayer(requireActivity(), R.raw.balalaika_russian_14_930)
 
-
-
 		setFragmentInputs()
 		(fisCard).newFragmentInstance().commit()
 		setUpTextSwitcherRoundNum()
@@ -143,6 +141,8 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(fisTimedScore).newFragmentInstance().commit()
 
 		try {
+
+			// TODO: 2020-10-18 uncomment below
 			//soundTimedTask?.start()
 		} catch (e: Exception) {
 			makeLogD("Sound timed task ERROR: $e")
@@ -209,16 +209,14 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			fragment = CardMissionConsequenceFragment(),
 			layoutId = frameLayout.id,
 			tag = "CARD",
-			replace = false,
-			animate = false,
 		){}
 		fisScore = object : FragmentInputSettings(
 			fragmentManager = this.childFragmentManager,
 			fragment = GameScoreFragment(miniScore = EnScore.MINI),
 			layoutId = frameLayout.id,
 			tag = "CURRENT_SCORE",
-			replace = true,
-			animate = true,
+			replace = false,
+			animate = false,
 		){}
 
 		fisTimedScore = object : FragmentInputSettings(
@@ -233,8 +231,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			maxRounds = amRounds
 			totalTurns = totalTurnsPlus
 		}
-		// TODO: 2020-10-18 add R.string with vararg
-		tvTotalRounds.apply { text = "out of $maxRounds rounds" }
+		tvTotalRounds.apply {
+			text = getString(R.string.out_of_x_rounds, maxRounds)
+		}
+
 		gamingViewModel.apply { currentTurn.postValue(1) }
 	}
 
@@ -361,7 +361,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		(frameLayout).flip().getAnimatorSet().start()
 		gamingViewModel.updatePlayer(getCurrPlayerObj)
-		(btnSuccess).btnChangeText("SUCCESS") //TODO R.string.
+		(btnSuccess).btnChangeText(getString(R.string.Flipp)) //TODO R.string.
 	}
 
 	private fun FrameLayout.flip(
@@ -378,6 +378,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		}
 
 		try {
+			// TODO: 2020-10-18 uncomment below
 			//soundMissionOrConsequence?.start()
 		} catch (e: Exception) {
 			makeLogD("$e")
@@ -435,7 +436,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 			SUCCESS -> {
 				currCard.apply {
 					setRound(currRound)
-					Log.d("!", "POINTS $points")
+					//Log.d("!", "POINTS $points")
 				}
 			}
 			FAIL -> {

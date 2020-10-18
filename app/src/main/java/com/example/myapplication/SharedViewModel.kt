@@ -58,11 +58,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application),
 
 
     override fun createListOfMissionConsequence() = viewModelScope.launch {
+
+        val list: MutableList<Pair<Int, CardMissionConsequence>> = mutableListOf()
         for (i in ((1..totalTurnsPlus).filter { (it % evenTurns) != 0 })) {
-            listOfMissionOrConsequenceTurns.add(
-                Pair(i, GeneratorMissionOrConsequence(context).generateNewCard())
-            )
+            list.add(Pair(i, GeneratorMissionOrConsequence(context).generateNewCard()))
         }
+        listOfMissionOrConsequenceTurns.addAll(list)
     }
 
     override fun getListCard(currentTurn: Int): CardMissionConsequence {
