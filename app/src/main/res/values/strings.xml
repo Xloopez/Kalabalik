@@ -15,4 +15,6 @@
     <string name="consequence_title">Konsekvens kort</string>
     <string name="mission_title">Uppdrag\'s kort</string>
     <string name="flip_buttons_deafaults">Poäng</string>
+    <string name="consequence">Consequence</string>
+    <string name="mission">Mission</string>
 </resources>

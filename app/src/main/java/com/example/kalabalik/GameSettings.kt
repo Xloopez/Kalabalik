@@ -6,7 +6,7 @@ import android.util.Log
 object GameSettings {
 
     var playerCount: Int = 0
-    var amountOfRounds: Int = 3
+    var amountOfRounds: Int = 6
     var listOfPlayers: MutableList<Player> = mutableListOf()
     //var listOfPlayerPoints: MutableList<Player> = mutableListOf()
 
