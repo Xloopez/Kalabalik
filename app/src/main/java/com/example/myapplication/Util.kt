@@ -2,7 +2,9 @@ package com.example.myapplication
 
 import android.app.Activity
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -24,38 +26,12 @@ abstract class FragmentInputSettings(
     var animate: Boolean? = false,
 )
 
-enum class EnOperation { SUCCESS, FAIL; }
-enum class EnScore { MINI, FINAL; }
-
-enum class EnRandom {
-    CONSEQUENCES,
-    MISSION;
-
-    fun getEnumString(): Int = when (this) {
-        CONSEQUENCES -> R.string.consequence
-        MISSION -> R.string.mission
-    }
-
-    fun getBackGroundColor(): Int = when (this) {
-        CONSEQUENCES -> R.color.deep_purple_200
-        MISSION -> R.color.deep_purple_600
-    }
-}
+fun makeLogD(sText: String) = Log.d("!", sText)
 
 fun AppCompatButton.btnChangeText(text: String) = apply { this@btnChangeText.text = text }
 
 fun Int.isZero() = (this == 0)
 fun Int.isEqualTo(value: Int) = (this == value)
-
-fun MutableList<String>.getRandomListIndex() = (0 until this.count()).random()
-
-fun Iterable<() -> Unit>.runIterateUnit() {
-    for (unit in this) unit()
-}
-
-fun Iterable<AppCompatButton>.clickable(clickable: Boolean) {
-    for (element in this) element.isClickable = clickable
-}
 
 //fun Boolean.runUnitTrue(uTrue: ()-> Unit) { if (this) uTrue() }
 //fun Boolean.runUnitTrueElse(uTrue: () -> Unit, uElse: () -> Unit) = if (this) { uTrue() } else { uElse() }
@@ -101,15 +77,28 @@ fun View.viewApplyVis(visibility: Int? = null) {
     }
 }
 
-fun makeLogD(sText: String) = Log.d("!", sText)
-
 fun createMediaPlayer(context: Context, rawRes: Int): MediaPlayer {
 
     return MediaPlayer.create(context, rawRes).apply {
 
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .apply {
+                    setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    setUsage(AudioAttributes.USAGE_GAME)
+                }.build()
+        )
+
+        playbackParams = PlaybackParams().apply {
+            audioFallbackMode = PlaybackParams.AUDIO_FALLBACK_MODE_MUTE
+            speed = 1.0f
+        }
+
         setOnCompletionListener {
             makeLogD("Sound completed $it + $duration")
-            pause()
+            if (isPlaying) {
+                pause()
+            }
         }
 
         setOnErrorListener(MediaPlayer.OnErrorListener { mp, _, _ ->
@@ -124,9 +113,7 @@ fun createMediaPlayer(context: Context, rawRes: Int): MediaPlayer {
         })
 
     }
-
 }
-
 
 fun FragmentInputSettings.newFragmentInstance(): FragmentTransaction {
 

@@ -1,6 +1,6 @@
 package com.example.myapplication.gaming
 
-import com.example.myapplication.EnRandom
+import com.example.myapplication.utilities.EnRandom
 
 data class CardMissionConsequence
     (

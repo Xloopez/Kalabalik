@@ -32,15 +32,12 @@ import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.*
-import com.example.myapplication.EnOperation.FAIL
-import com.example.myapplication.EnOperation.SUCCESS
 import com.example.myapplication.animators.View360Flip
 import com.example.myapplication.databinding.FragmentGamingBinding
 import com.example.myapplication.dataclasses.Player
-import com.example.myapplication.utilities.Animationz
+import com.example.myapplication.utilities.*
 import com.example.myapplication.utilities.Animationz.checkCameraDistance
 import com.example.myapplication.utilities.Animationz.slideOutRightInLeftSetText
-import com.example.myapplication.utilities.SharedPrefUtil
 
 class GamingFragment : Fragment(), View.OnClickListener {
 
@@ -80,7 +77,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private lateinit var fisTimedScore: FragmentInputSettings
 
 	private inline val isPrepareNextRound get() = calcCurrentTurn.isZero()
-	private inline val isStart get() = 	(currTurn == 0) and (calcCurrentTurn == 0)
+	private inline val isStart get() = (currTurn == 0) and (calcCurrentTurn == 0)
 	private inline val isNextFragment get() = currTurn.isEqualTo(totalTurns)
 	private inline val getCurrPlayerObj get() = sharedViewModel.listOfPlayers[calcPlayerTurn]
 	private inline val calcPlayerTurn: Int get() = calcCurrentTurn.minus(1)
@@ -89,9 +86,16 @@ class GamingFragment : Fragment(), View.OnClickListener {
 	private inline val isTimedTask get() = listOfTimedTaskTurns.contains(currTurn)
 
 	private var soundMissionOrConsequence: MediaPlayer? = null
-	private var soundTimedTask: MediaPlayer? = null
+	private val soundTimedTask: MediaPlayer? by lazy {
+		createMediaPlayer(requireActivity(),
+			R.raw.balalaika_russian_14_930)
+	}
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?,
+	): View? {
 		sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 		gamingViewModel = ViewModelProvider(requireActivity()).get(GamingViewModel::class.java)
 		_binding = FragmentGamingBinding.inflate(layoutInflater, container, false)
@@ -107,7 +111,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		(frameLayout).checkCameraDistance(targetScale = (scale * 16000))
 
 		soundMissionOrConsequence = createMediaPlayer(requireActivity(), R.raw.trail_swoosh_1_195)
-		soundTimedTask = createMediaPlayer(requireActivity(), R.raw.balalaika_russian_14_930)
+		//soundTimedTask = createMediaPlayer(requireActivity(), R.raw.balalaika_russian_14_930)
 
 		setFragmentInputs()
 		(fisCard).newFragmentInstance().commit()
@@ -131,10 +135,10 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		when (v?.id) {
 			R.id.button_Success -> {
-				updatePlayerPoints(SUCCESS)
+				updatePlayerPoints(EnOperation.SUCCESS)
 			}
 			R.id.button_Fail -> {
-				updatePlayerPoints(FAIL)
+				updatePlayerPoints(EnOperation.FAIL)
 			}
 		}
 	}
@@ -147,7 +151,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		try {
 			// TODO: 2020-10-18 uncomment below
-			//soundTimedTask?.start()
+			//	soundTimedTask?.start()
 		} catch (e: Exception) {
 			makeLogD("Sound timed task ERROR: $e")
 		}
@@ -388,7 +392,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		try {
 			// TODO: 2020-10-18 uncomment below
-			//soundMissionOrConsequence?.start()
+			//	soundMissionOrConsequence?.start()
 		} catch (e: Exception) {
 			makeLogD("$e")
 		}
@@ -456,12 +460,12 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		currPlayer.listAddCard(
 			when (operation) {
-				SUCCESS -> {
+				EnOperation.SUCCESS -> {
 					currCard.apply {
 						setRound(currRound)
 					}
 				}
-				FAIL -> {
+				EnOperation.FAIL -> {
 					currCard.apply {
 						setRound(currRound)
 						points = -5.0

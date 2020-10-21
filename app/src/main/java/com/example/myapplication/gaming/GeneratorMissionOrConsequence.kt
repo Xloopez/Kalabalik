@@ -2,9 +2,9 @@ package com.example.myapplication.gaming
 
 import android.content.Context
 import android.content.res.Resources
-import com.example.myapplication.EnRandom
 import com.example.myapplication.R
-import com.example.myapplication.getRandomListIndex
+import com.example.myapplication.utilities.EnRandom
+import com.example.myapplication.utilities.getRandomListIndex
 
 class GeneratorMissionOrConsequence(val context: Context) {
 

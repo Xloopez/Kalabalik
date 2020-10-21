@@ -23,5 +23,6 @@
     <string name="Flipp">flipp</string>
     <string name="Flopp">Flopp</string>
     <string name="detailed_view">Detaljerad vy</string>
+    <string name="final_score">Slutresultat</string>
 
 </resources>

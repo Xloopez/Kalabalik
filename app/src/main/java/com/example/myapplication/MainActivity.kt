@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.gaming.GamingFragment
 import com.example.myapplication.gaminginput.GameInputFragment
+import com.example.myapplication.utilities.EnScore
 import com.example.myapplication.utilities.SharedPrefUtil
 
 class MainActivity : AppCompatActivity() {

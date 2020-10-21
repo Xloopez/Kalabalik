@@ -1,16 +1,16 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.EnScore.FINAL
-import com.example.myapplication.EnScore.MINI
 import com.example.myapplication.adapters.CustomMutableListRecViewAdapter
 import com.example.myapplication.databinding.FragmentFinalScoreBinding
 import com.example.myapplication.databinding.FragmentItemGameScoreBinding
@@ -18,6 +18,10 @@ import com.example.myapplication.databinding.FragmentItemGameScoreDetailedBindin
 import com.example.myapplication.databinding.RecyclerViewScoreBinding
 import com.example.myapplication.dataclasses.Player
 import com.example.myapplication.gaming.CardMissionConsequence
+import com.example.myapplication.utilities.Animationz
+import com.example.myapplication.utilities.EnScore
+import com.example.myapplication.utilities.EnScore.FINAL
+import com.example.myapplication.utilities.EnScore.MINI
 
 class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
 
@@ -48,6 +52,7 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
             FINAL -> {
                 _binding2 = FragmentFinalScoreBinding.inflate(layoutInflater, container, false)
                 binding2.root
+
             }
         }
 
@@ -61,6 +66,28 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
             AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.recycler_view_layout_anim)
         setUpAdapter()
         recView.scheduleLayoutAnimation()
+
+        when (miniScore) {
+            MINI -> {
+            }
+            FINAL -> {
+
+                Animationz.sizeUpViewSlowly(
+                    binding2.buttonPlayAgain,
+                    0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f)
+                    .apply {
+                        doOnEnd {
+                            binding2.buttonPlayAgain.setOnClickListener {
+                                startActivity(Intent(activity!!, MainActivity::class.java))
+                                this@GameScoreFragment.activity!!.finish()
+                                // TODO: 2020-10-21 reset values
+                            }
+                        }
+
+                    }.start()
+            }
+        }
+
 
     }
 

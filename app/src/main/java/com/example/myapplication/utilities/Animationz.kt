@@ -6,6 +6,7 @@ import android.animation.PropertyValuesHolder
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.doOnEnd
@@ -107,8 +108,28 @@ object Animationz {
         return ObjectAnimator.ofFloat(this, View.SCALE_X, *float)
     }
 
+    fun View.sizeY(vararg float: Float): ObjectAnimator {
+        return ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, *float)
+    }
+
     fun View.translateY(vararg float: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, *float)
+    }
+
+    fun sizeUpViewSlowly(view: View, vararg float: Float): AnimatorSet {
+
+        val a1 = view.sizeX(*float).apply {
+            duration = 5000
+        }
+        val a2 = view.sizeY(*float).apply {
+            duration = 5000
+        }
+
+        return AnimatorSet().apply {
+            interpolator = BounceInterpolator()
+            playTogether(a1, a2)
+        }
+
     }
 
 
