@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/kalabalabakggrundcopy"
+    android:backgroundTint="#673AB7"
     tools:context=".HighScoreActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -29,7 +30,8 @@
         android:layout_marginBottom="30dp"
         android:text="@string/high_score_list"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,23 +41,12 @@
         android:id="@+id/playAgainButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="160dp"
         android:background="#A1A9B4"
         android:backgroundTint="#D08F959E"
         android:text="@string/play_again_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
-    <Button
-        android:id="@+id/finnishButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:background="#A1A9B4"
-        android:backgroundTint="#D08F959E"
-        android:text="@string/finnish_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

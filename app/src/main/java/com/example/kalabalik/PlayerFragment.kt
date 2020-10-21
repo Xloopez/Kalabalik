@@ -1,19 +1,23 @@
 package com.example.kalabalik
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.FragmentActivity
 
 
 class PlayerFragment : Fragment() {
 
     lateinit var playerName: EditText
     lateinit var addPlayerNameBtn: Button
+    lateinit var rootview: View
 
     var counter = 1
 
@@ -24,6 +28,7 @@ class PlayerFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_player, container, false)
+        rootview = view
         return view
     }
 
@@ -62,19 +67,25 @@ class PlayerFragment : Fragment() {
                 playerName.setHint("Spelare $counter")
                 //Log.d("!!!", "$name")
                 when (counter){
-                    GameSettings.playerCount -> addPlayerNameBtn.setText(R.string.button_start_game)  //buttonNextName.setText("Starta spelet")
+                    GameSettings.playerCount -> {
+                        addPlayerNameBtn.setText(R.string.button_start_game)
+                    }  //buttonNextName.setText("Starta spelet")
                 }
             }
             GameSettings.playerCount -> {
                 GameSettings.addPlayerToList(name)
-                //addPlayer(name)
+
                 increaseCounterByOne()
 
                 startGameFragment()
-                //val intent = Intent(this, GameActivity::class.java)
-                //startActivity(intent)
+                hidekeyBoardPlease(requireActivity(), playerName)
+
             }
         }
+    }
+
+    fun hidekeyBoardPlease(view1: FragmentActivity, view: View){
+        (view1.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun increaseCounterByOne(){
@@ -85,7 +96,7 @@ class PlayerFragment : Fragment() {
         val gameFragment = GameFragment()
         val transaction = activity?.supportFragmentManager!!.beginTransaction()
 
-        transaction.add(R.id.playerFragmentContainer, gameFragment, "gameFragment")
+        transaction.replace(R.id.playerFragmentContainer, gameFragment, "gameFragment")
         transaction.commit()
     }
     fun endPlayerFragment(){

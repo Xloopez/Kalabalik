@@ -225,6 +225,9 @@ class GameFragment : Fragment() {
 
                 if (currentRound == finalRoundReached){
                     Log.d("!!!", "Next Activity")
+
+
+
                     scoreBoardActivity()
                 }
             }
@@ -234,6 +237,7 @@ class GameFragment : Fragment() {
     fun consequenceOrMission() : String {
 
         //Log.d("!!!", "randomC: $randomC")
+        var stringD = StringBuilder()
 
         when (val str = listOfChoices.random()) {
             getString(R.string.consequence) -> {
@@ -253,18 +257,21 @@ class GameFragment : Fragment() {
                 backCardText.setBackgroundResource(R.drawable.konskortbakcopy)
 
                 //Back card text
-                val newString = StringBuilder().apply {
+                stringD.apply {
                     append(consequenceStr)
                     appendLine()
                     append("+$consequencePoints poäng")
                     appendLine()
+                    appendLine()
                     append("Eller")
                     appendLine()
+                    appendLine()
                     append(consequenceOption)
+                    appendLine()
                     append("+$consequenceOptionPoints poäng")
                 }.toString()
 
-                backCardText.text = newString
+                backCardText.text = stringD
 
                 rightButton.text = "+$consequencePoints"
 
@@ -286,8 +293,14 @@ class GameFragment : Fragment() {
                 //Log.d("!!!", "$missionStr")
                 //Log.d("!!!", "$missionPoints")
 
+                stringD.apply {
+                    append(missionStr)
+                    appendLine()
+                    append("+$missionPoints poäng (-2 poäng)")
+                }.toString()
 
-                backCardText.setText("$missionStr \n+$missionPoints poäng (-2 poäng)")
+
+                backCardText.setText(stringD)
 
                 rightButton.setText("+$missionPoints")
                 leftButton.setText("-2")
