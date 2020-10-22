@@ -51,7 +51,7 @@
         style="@style/RoundsStyle"
         android:shadowColor="@android:color/black"
         android:shadowRadius="1"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_14"
         android:textStyle="normal"
         app:layout_constraintEnd_toStartOf="@+id/textSwitcher_round_num"
         app:layout_constraintStart_toEndOf="@+id/space"
@@ -88,15 +88,11 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_card_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Playername" />
-
+        tools:text="PlayerName" />
 
     <FrameLayout
         android:id="@+id/frame_layout_card_points"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:background="@color/deep_purple_400"
+        style="@style/FragmentFrameLayoutStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline_card_top"
@@ -107,7 +103,7 @@
         android:id="@+id/textView_Counter"
         style="@style/TitleViews"
         android:textColor="@android:color/white"
-        android:textSize="32sp"
+        android:textSize="@dimen/text_size_32"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +115,7 @@
         style="@style/ButtonStyleGamingFragment"
         android:backgroundTint="@color/purple_800"
         android:text="@string/Flopp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="@dimen/element_margin_10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -129,7 +125,7 @@
         android:backgroundTintMode="src_over"
         android:backgroundTint="@color/deep_purple_200"
         android:text="@string/Flipp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/element_margin_10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

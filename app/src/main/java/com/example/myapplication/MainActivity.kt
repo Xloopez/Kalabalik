@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.Nullable
@@ -43,9 +44,12 @@ class MainActivity : AppCompatActivity() {
             putFloat(getString(R.string.displayMetrics), resources.displayMetrics.density)
         }
 
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+
         sharedViewModel.currentFragmentPos.observe(this, {
             listOfFragment[it].apply { newFragmentInstance(fragment, fragmentTag, replace) }
         })
+
     }
 
     private fun newFragmentInstance(fragment: Fragment, tag: String, replace: Boolean) {

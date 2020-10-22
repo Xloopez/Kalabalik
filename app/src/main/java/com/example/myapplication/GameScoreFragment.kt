@@ -52,7 +52,6 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
             FINAL -> {
                 _binding2 = FragmentFinalScoreBinding.inflate(layoutInflater, container, false)
                 binding2.root
-
             }
         }
 

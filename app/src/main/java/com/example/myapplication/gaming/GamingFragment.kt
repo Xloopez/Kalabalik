@@ -128,7 +128,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 		gamingViewModel.currentTurn.postEmpty() //NEEDED??
 
 //		sharedViewModel.listOfMissionOrConsequenceTurns.forEach { Log.d("!", "$it") }
-		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
+//		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
 	}
 
 	override fun onClick(v: View?) {

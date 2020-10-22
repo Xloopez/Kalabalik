@@ -26,7 +26,7 @@ class CardMissionConsequenceFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //sharedViewModel =  ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        gamingViewModel =  ViewModelProvider(requireActivity()).get(GamingViewModel::class.java) // SCOPE TO ACTIVITY? MAYBE..
+        gamingViewModel = ViewModelProvider(requireActivity()).get(GamingViewModel::class.java)
         _binding = FragmentCardBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -57,7 +57,9 @@ class CardMissionConsequenceFragment : Fragment() {
 
     }
 
-    private fun clearViews() { viewList.forEach { it.text = "" } }
+    private fun clearViews() {
+        viewList.forEach { it.text = "c" }
+    }
 
     private fun applyViewBinding(){
         binding.apply {
