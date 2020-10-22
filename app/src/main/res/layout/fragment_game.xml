@@ -5,8 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/kalabalabakggrundcopy"
-    android:backgroundTint="#673AB7"
+    android:background="@drawable/kalabalik"
     tools:context=".GameActivity">
 
     <TextView
@@ -14,9 +13,13 @@
         android:layout_width="412dp"
         android:layout_height="54dp"
         android:layout_marginTop="100dp"
+        android:background="#EDFFFFFF"
+        android:backgroundTint="#EDFFFFFF"
+        android:fadingEdge="horizontal|vertical"
         android:text="text"
         android:textAlignment="center"
         android:textSize="36sp"
+        app:barrierMargin="@dimen/cardview_default_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +28,7 @@
         android:id="@+id/card_Front"
         android:layout_width="355dp"
         android:layout_height="286dp"
-        android:background="@drawable/kalabalikframdesigncopy"
+        android:background="@drawable/nyk"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="20sp"

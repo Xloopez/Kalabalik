@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/kalabalabakggrundcopy"
-    android:backgroundTint="#673AB7"
+    android:background="@drawable/kalabalik"
     tools:context=".HighScoreActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -24,14 +23,15 @@
 
     <TextView
         android:id="@+id/highScoreView"
-        android:layout_width="183dp"
-        android:layout_height="39dp"
+        android:layout_width="412dp"
+        android:layout_height="54dp"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="30dp"
+        android:background="#EDFFFFFF"
         android:text="@string/high_score_list"
         android:textAlignment="center"
         android:textSize="30sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,6 @@ import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -19,13 +18,11 @@ import kotlin.properties.Delegates
 
 class GameFragment : Fragment() {
 
-    //
+
     lateinit var frontAnimation: AnimatorSet
     lateinit var backAnimation: AnimatorSet
     var isFront = false
-    //var isFront = true
 
-    //
     lateinit var displayPlayerName: TextView
     lateinit var backCardText: TextView
     lateinit var frontCardText: TextView
@@ -38,6 +35,8 @@ class GameFragment : Fragment() {
     lateinit var rightButton: Button
     lateinit var leftButton: Button
     lateinit var playerName: String
+
+    lateinit var instructionScreen: ConstraintLayout
 
     val randomConsequenceIndex get() =  (0 until arrayConsequence.count()).random()
     var consequencePoints by Delegates.notNull<Int>()
@@ -54,11 +53,6 @@ class GameFragment : Fragment() {
     val finalRoundReached = GameSettings.amountOfRounds.plus(1)
     val instructionFragment = InstructionFragment()
 
-    //val addPoints = consequenceOrMission()
-    //val consequenceFrontImage = ImageView
-
-
-    lateinit var instructionScreen: ConstraintLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,17 +68,13 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arrayConsequence = resources.getStringArray(R.array.Consequence)               
-        arrayConsequencePoints = resources.getIntArray(R.array.ConsequencePoints)      
-                                                                                       
+        arrayConsequencePoints = resources.getIntArray(R.array.ConsequencePoints)
         arrayMission = resources.getStringArray(R.array.Mission)                       
         arrayMissionPoints = resources.getIntArray(R.array.MissionPoints)
-
         instructionScreen = view!!.findViewById(R.id.constraintLayout)
         displayPlayerName = view.findViewById(R.id.playerNameTurn)
-
         backCardText = view.findViewById(R.id.card_back)
         frontCardText = view.findViewById(R.id.card_Front)
-
         rightButton = view.findViewById(R.id.right_btn)
         leftButton = view.findViewById(R.id.left_btn)
 
@@ -92,86 +82,31 @@ class GameFragment : Fragment() {
         consequencePoints = arrayConsequencePoints[randomConsequenceIndex]
         missionPoints = arrayMissionPoints[randomMissionIndexGet]
 
-        frontCardText.visibility = View.INVISIBLE
-        backCardText.visibility = View.INVISIBLE
+        makeViewsInvinsible()
 
-        displayPlayerName.text = ""
-
-        //Animator object
-        //modified camera scale
-        val appContext = getActivity()?.applicationContext
-        val scale: Float = appContext?.resources?.displayMetrics!!.density//applicationContext.resources.displayMetrics.density
-
-        frontCardText.cameraDistance = 8000 * scale
-        backCardText.cameraDistance = 8000 * scale
-
-        //front animation
-        frontAnimation = AnimatorInflater.loadAnimator(
-            appContext,
-            R.animator.front_animator
-        ) as AnimatorSet
-        backAnimation = AnimatorInflater.loadAnimator(
-            appContext,
-            R.animator.back_animator
-        ) as AnimatorSet
+        cardAnimator()
 
         instructionFragment()
+
         val snackBar = Snackbar.make(activity!!.findViewById(android.R.id.content), R.string.instruction_snackbar, Snackbar.LENGTH_INDEFINITE)
 
         instructionScreen.setOnTouchListener{v, event ->
             //Här sätter vi så att vår bild kan känna igen touch
             when(event?.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Log.d("!!!", "klickkkkk")
+
                     removeInstructionFragment()
-
                     snackBar.dismiss()
-
-                    frontCardText.visibility = View.VISIBLE
-                    backCardText.visibility = View.VISIBLE
-
-                    flipCard()             
+                    makeViewsVisible()
+                    flipCard()
                     playerTurn()
+                    consequenceOrMission()
 
-                        when (consequenceOrMission()){
-                            getString(R.string.consequence) -> {
-                                rightButton.setOnClickListener {
-                                    rightButtonConcequensePoints(consequencePoints)
-                                    flipCard()
-                                    playerTurn()
-                                }
-
-                                leftButton.setOnClickListener {
-                                    leftButtonConsequencePoints(consequenceOptionPoints)
-                                    flipCard()
-                                    playerTurn()
-                                }
-                            }
-                            getString(R.string.mission) -> {
-                                rightButton.setOnClickListener {
-                                    rightMissionButtonPoints(missionPoints)
-                                    flipCard()
-                                    playerTurn()
-                                }
-
-                                leftButton.setOnClickListener {
-                                    leftButtonMissionPoints(2)
-                                    flipCard()
-                                    playerTurn()
-                                }
-
-                            }
-
-                    }
                 }
             }
-
-
             true
         }
-        snackBar.show()
     }
-
 
     fun flipCard() {
         when (isFront) {
@@ -180,7 +115,6 @@ class GameFragment : Fragment() {
                 backAnimation.setTarget(backCardText)
                 frontAnimation.start()
                 backAnimation.start()
-                //isFront = false
             }
             true -> {
                 frontAnimation.setTarget(backCardText)
@@ -193,41 +127,26 @@ class GameFragment : Fragment() {
     }
 
     fun playerTurn() {
-
         val roundInterval = (1..GameSettings.amountOfRounds)
-        //val finalRoundReached = GameSettings.amountOfRounds.plus(1)
+
 
         when (currentRound) {
             0 -> {
                 increaseRounds()
-                Log.d("!!!", "Round $currentRound")
             }
             in roundInterval -> {
                 turn++
                 if (turn == GameSettings.listOfPlayers.count().plus(1)) {
                     increaseRounds()
                     restartcounter()
-
-                    playerName = GameSettings.listOfPlayers[turn-1].name
-                    displayPlayerName.text = "${playerName}:s tur!"
-
+                    setPlayerTurn()
                     consequenceOrMission()
-
-                    Log.d("!!!", "Turn non-existing: increasingRounds() & restartcounter(): ${GameSettings.listOfPlayers.count().plus(1)}")
                 } else {
-                    playerName = GameSettings.listOfPlayers[turn-1].name
-                    displayPlayerName.text = "${playerName}:s tur!"
-
+                    setPlayerTurn()
                     consequenceOrMission()
                 }
 
-                Log.d("!!!", "Player: ${playerName}! Round: $currentRound Turn: $turn")
-
                 if (currentRound == finalRoundReached){
-                    Log.d("!!!", "Next Activity")
-
-
-
                     scoreBoardActivity()
                 }
             }
@@ -235,26 +154,15 @@ class GameFragment : Fragment() {
     }
 
     fun consequenceOrMission() : String {
-
-        //Log.d("!!!", "randomC: $randomC")
         var stringD = StringBuilder()
 
         when (val str = listOfChoices.random()) {
+
             getString(R.string.consequence) -> {
-                //randomConsequenceIndex = (0 until arrayConsequence.count()).random()
-                //Log.d("!!!", "ranCIdex: $randomConsequenceIndex")
+                setCardImage(R.drawable.nyk, R.drawable.nykbak)
 
                 val consequenceStr = arrayConsequence[randomConsequenceIndex]
-                Log.d("!!!", randomConsequenceIndex.toString())
-                //consequencePoints = arrayConsequencePoints[randomConsequenceIndex]
                 val consequenceOption = consequenceChoice(randomConsequenceIndex)
-                //Log.d("!!!", "$consequenceStr")
-                //Log.d("!!!", "$consequencePoints")
-
-                //Front card image
-                frontCardText.setBackgroundResource(R.drawable.konsekvensfram)
-                //Back card image
-                backCardText.setBackgroundResource(R.drawable.konskortbakcopy)
 
                 //Back card text
                 stringD.apply {
@@ -274,24 +182,16 @@ class GameFragment : Fragment() {
                 backCardText.text = stringD
 
                 rightButton.text = "+$consequencePoints"
-
+                rightButtonPoints(consequencePoints)
                 leftButton.text = "+${consequenceOptionPoints}"
-
-                Log.d("!!!", "CON GENERATOR: $str")
+                leftButtonPoints(consequenceOptionPoints)
 
                 return str
             }
             getString(R.string.mission) -> {
-                //Front card image
-                frontCardText.setBackgroundResource(R.drawable.uppdragskortframcopy)
-                //Back card image
-                backCardText.setBackgroundResource(R.drawable.kalabalauppdragbakcopy)
-
-                //Log.d("!!!", "ranCIdex: $randomMissionIndex")
+                setCardImage(R.drawable.uppdragnyast, R.drawable.nyubak)
 
                 val missionStr = arrayMission[randomMissionIndexGet]
-                //Log.d("!!!", "$missionStr")
-                //Log.d("!!!", "$missionPoints")
 
                 stringD.apply {
                     append(missionStr)
@@ -299,17 +199,38 @@ class GameFragment : Fragment() {
                     append("+$missionPoints poäng (-2 poäng)")
                 }.toString()
 
-
                 backCardText.setText(stringD)
 
                 rightButton.setText("+$missionPoints")
+                rightButtonPoints(missionPoints)
                 leftButton.setText("-2")
+                leftButtonMissionPoints(-2)
 
-                Log.d("!!!", "CON GENERATOR: $str")
                 return str
             }
         }
         return ""
+    }
+
+
+    fun cardAnimator(){
+        //Animator object
+        //modified camera scale
+        val appContext = getActivity()?.applicationContext
+        val scale: Float = appContext?.resources?.displayMetrics!!.density
+
+        frontCardText.cameraDistance = 8000 * scale
+        backCardText.cameraDistance = 8000 * scale
+
+        //front animation
+        frontAnimation = AnimatorInflater.loadAnimator(
+            appContext,
+            R.animator.front_animator
+        ) as AnimatorSet
+        backAnimation = AnimatorInflater.loadAnimator(
+            appContext,
+            R.animator.back_animator
+        ) as AnimatorSet
     }
 
     fun consequenceChoice(index: Int): String {
@@ -327,33 +248,51 @@ class GameFragment : Fragment() {
 
         return consequenceCoiceStr
     }
-    fun increaseRounds() {
-        currentRound++
+    fun setCardImage(imageFront: Int, imageBack: Int) {
+        //Front card image
+        frontCardText.setBackgroundResource(imageFront)
+        //Back card image
+        backCardText.setBackgroundResource(imageBack)
     }
 
-    fun restartcounter() {
-        turn = 1
+    fun setPlayerTurn(){
+        playerName = GameSettings.listOfPlayers[turn-1].name
+        displayPlayerName.text = "${playerName}:s tur!"
+    }
+    fun makeViewsInvinsible(){
+        frontCardText.visibility = View.INVISIBLE
+        backCardText.visibility = View.INVISIBLE
+        displayPlayerName.visibility = View.INVISIBLE
     }
 
-    fun rightButtonConcequensePoints(points: Int){
-        //leftButton.visibility = View.VISIBLE
-        //rightButton.setText("+$points")
-        GameSettings.addPointsToPlayer(turn-1, points)
+    fun makeViewsVisible(){
+        frontCardText.visibility = View.VISIBLE
+        backCardText.visibility = View.VISIBLE
+        displayPlayerName.visibility = View.VISIBLE
     }
 
-    fun leftButtonConsequencePoints(points: Int){
-        GameSettings.addPointsToPlayer(turn-1, points)
+    fun rightButtonPoints(points: Int){
+        rightButton.setOnClickListener {
+            GameSettings.addPointsToPlayer(turn-1, points)
+            flipCard()
+            playerTurn()
+        }
     }
 
-    fun rightMissionButtonPoints(points: Int){
-        //leftButton.visibility = View.INVISIBLE
-        //rightButton.setText("+$points")
-        GameSettings.addPointsToPlayer(turn-1, points)
+    fun leftButtonPoints(points: Int){
+        leftButton.setOnClickListener {
+            GameSettings.addPointsToPlayer(turn-1, points)
+            flipCard()
+            playerTurn()
+        }
     }
 
     fun leftButtonMissionPoints(points: Int){
-        //GameSettings.addPointsToPlayer(turn-1, points)
-        GameSettings.removePointsFromPlayer(turn-1, points)
+        leftButton.setOnClickListener {
+            GameSettings.removePointsFromPlayer(turn-1, points)
+            flipCard()
+            playerTurn()
+        }
     }
 
     fun scoreBoardActivity (){
@@ -373,5 +312,12 @@ class GameFragment : Fragment() {
         val transaction = activity?.supportFragmentManager!!.beginTransaction()
         transaction.remove(instructionFragment)
         transaction.commit()
+    }
+    fun increaseRounds() {
+        currentRound++
+    }
+
+    fun restartcounter() {
+        turn = 1
     }
 }

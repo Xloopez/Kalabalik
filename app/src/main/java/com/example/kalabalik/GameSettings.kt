@@ -21,6 +21,6 @@ object GameSettings {
     }
     fun removePointsFromPlayer(counter: Int, points: Int){
         Log.d("!!!", "POÄNG $points")
-        listOfPlayers[counter].points -= points
+        listOfPlayers[counter].points += points
     }
 }

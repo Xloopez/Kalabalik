@@ -28,7 +28,9 @@ class PlayerFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_player, container, false)
+
         rootview = view
+
         return view
     }
 
@@ -38,38 +40,27 @@ class PlayerFragment : Fragment() {
         playerName = view.findViewById(R.id.personName1)
         addPlayerNameBtn = view.findViewById(R.id.buttonNextName)
 
-        //onClick(view)
         addPlayerNameBtn.setOnClickListener{
-            //Log.d("!!!", "Pressed")
-            //Log.d("!!!", "Counter: $counter")
             playersNames()
-
-
         }
     }
 
-    /*fun onClick(v: View){
-        when (v?.id) {
-            R.id.buttonNextName -> {playersNames()}
-        }
-    }*/
-
     fun playersNames(){
         val  name = playerName.text.toString()
-        //Log.d("!!!", "Name: $name")
 
         when (counter){
             in 1 until GameSettings.playerCount -> {
                 GameSettings.addPlayerToList(name)
-                //addPlayer(name)
+
                 increaseCounterByOne()
+
                 playerName.text.clear()
                 playerName.setHint("Spelare $counter")
-                //Log.d("!!!", "$name")
+
                 when (counter){
                     GameSettings.playerCount -> {
                         addPlayerNameBtn.setText(R.string.button_start_game)
-                    }  //buttonNextName.setText("Starta spelet")
+                    }
                 }
             }
             GameSettings.playerCount -> {
@@ -99,13 +90,4 @@ class PlayerFragment : Fragment() {
         transaction.replace(R.id.playerFragmentContainer, gameFragment, "gameFragment")
         transaction.commit()
     }
-    fun endPlayerFragment(){
-        val playerFragment = PlayerFragment()
-        val transaction = activity?.supportFragmentManager!!.beginTransaction()
-        transaction.remove(playerFragment)
-        transaction.commit()
-    }
-
-
-
 }
