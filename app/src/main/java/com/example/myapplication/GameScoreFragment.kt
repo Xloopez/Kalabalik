@@ -79,7 +79,7 @@ class GameScoreFragment(val miniScore: EnScore = FINAL) : Fragment() {
                             binding2.buttonPlayAgain.setOnClickListener {
                                 startActivity(Intent(activity!!, MainActivity::class.java))
                                 this@GameScoreFragment.activity!!.finish()
-                                // TODO: 2020-10-21 reset values
+                                // TODO: 2020-10-21 reset values if needed
                             }
                         }
 
