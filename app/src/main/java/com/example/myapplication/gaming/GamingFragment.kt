@@ -129,6 +129,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 //		sharedViewModel.listOfMissionOrConsequenceTurns.forEach { Log.d("!", "$it") }
 //		listOfTimedTaskTurns.forEach { Log.d("!", "Random task-turns: $it") }
+
 	}
 
 	override fun onClick(v: View?) {
@@ -151,7 +152,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		try {
 			// TODO: 2020-10-18 uncomment below
-			//	soundTimedTask?.start()
+			soundTimedTask?.start()
 		} catch (e: Exception) {
 			makeLogD("Sound timed task ERROR: $e")
 		}
@@ -392,7 +393,7 @@ class GamingFragment : Fragment(), View.OnClickListener {
 
 		try {
 			// TODO: 2020-10-18 uncomment below
-			//	soundMissionOrConsequence?.start()
+			soundMissionOrConsequence?.start()
 		} catch (e: Exception) {
 			makeLogD("$e")
 		}

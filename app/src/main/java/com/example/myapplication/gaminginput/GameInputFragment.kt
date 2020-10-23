@@ -43,8 +43,8 @@ class GameInputFragment : Fragment(), View.OnClickListener {
 
     private val inputNumbers = InputObject(
         inputType = InputType.TYPE_CLASS_NUMBER,
-        inputHint = "Amount of players",
-        infoStr = "Enter amount of players, 2-5!",
+        inputHint = "Antal spelare",
+        infoStr = "Ange antal spelare, 2-5!",
         inputMaxLength = 1,
     )
 
@@ -249,8 +249,8 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         var infoStr: String,
         val inputMaxLength: Int) {
 
-        private val strEnterName = "Enter the name of Player"
-        private val hintPlayer = "Player"
+        private val strEnterName = "Ange namnet för spelare"
+        private val hintPlayer = "Spelare"
 
         fun includeCounterValue(count: Int) {
             inputHint = "$hintPlayer $count"

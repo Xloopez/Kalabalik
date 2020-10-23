@@ -48,7 +48,7 @@ class CardMissionConsequenceFragment : Fragment() {
                 mutableListOf(
                     Pair(tvCon1, currCard.listStr),
                     Pair(tvCon1Points, "${currCard.points}"),
-                    Pair(tvCardType, resources.getString(currCard.getType())),
+                    // Pair(tvCardType, resources.getString(currCard.getType())),
                     Pair(tvPlusSign, "+")
                 )
             }.setTextFromListPair()
@@ -58,7 +58,7 @@ class CardMissionConsequenceFragment : Fragment() {
     }
 
     private fun clearViews() {
-        viewList.forEach { it.text = "c" }
+        viewList.forEach { it.text = "" }
     }
 
     private fun applyViewBinding(){
