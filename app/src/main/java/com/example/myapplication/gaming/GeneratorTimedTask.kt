@@ -19,9 +19,10 @@ class GeneratorTimedTask(val context: Context) {
     private val arrayOfCons = res.getStringArray(R.array.RandomTaskArrayOfCons)
 
     init {
-        //TODO ADD RANDOM SECS BETWEEN 30-60? at the least change the timer seconds
+
+
         for (i in 1.. listOfListTasks.count().times(arrayOfColors.count())){
-            listOfTasks.add(CardTimedTask(randomListTask(), randomListCon(), 2L))
+            listOfTasks.add(CardTimedTask(randomListTask(), randomListCon(), 15L))
         }
     }
 
