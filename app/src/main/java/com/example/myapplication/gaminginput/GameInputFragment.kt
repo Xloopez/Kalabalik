@@ -198,7 +198,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         (inputPlayers).clearEditTextForNewInput()
         (tilInput).slideOutRightSlideInLeft().start()
         (btnContinue).btnChangeText(getString(R.string.add_player))
-        etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
+        //etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
 
         sharedViewModel.apply {
             createRandomTaskList()
@@ -212,7 +212,7 @@ class GameInputFragment : Fragment(), View.OnClickListener {
         inputObjectUpdate()
         (tilInput).slideOutRightSlideInLeft().start()
         (inputPlayers).clearEditTextForNewInput()
-        etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
+        // etInput.setText("Player $counter") //TODO QUICK TESTING - REMOVE LINE LATER
     }
 
     private fun dnPrepareGameStart() {
