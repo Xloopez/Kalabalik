@@ -11,10 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-class HighScoreViewAdapter (
+class HighScoreFragmentAdapter (
     val context: Context,
-    val listOfPlayer: MutableList<Player> = mutableListOf()
-) : RecyclerView.Adapter<HighScoreViewAdapter.ViewHolder>()
+    var listOfPlayersHighscore: List<Item> = listOf()
+) : RecyclerView.Adapter<HighScoreFragmentAdapter.ViewHolder>()
 {
 
     val layoutInflater = LayoutInflater.from(context)
@@ -31,16 +31,9 @@ class HighScoreViewAdapter (
         return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //Tar rätt person från vår lista
-        val name = listOfPlayer[position]
-        holder.scoreOfPlayer.text = name.points.toString()
-        holder.nameOfPlayer.text = name.name
-    }
-
     override fun getItemCount(): Int {
         //Reurnerar vårt demand till recycklerViewn
-        return listOfPlayer.size
+        return listOfPlayersHighscore.size
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder (itemView) {
@@ -56,15 +49,22 @@ class HighScoreViewAdapter (
         while(swap){
             swap = false
 
-            for( i in 1 until listOfPlayer.size-1) {
-                if (listOfPlayer[i].points < listOfPlayer[i+1].points){
-                    var temp = listOfPlayer[i].points
-                    listOfPlayer[i].points = listOfPlayer[i+1].points
-                    listOfPlayer[i+1].points = temp
+            for( i in 1 until listOfPlayersHighscore.size-1) {
+                if (listOfPlayersHighscore[i].score < listOfPlayersHighscore[i+1].score){
+                    var temp = listOfPlayersHighscore[i].score
+                    listOfPlayersHighscore[i].score = listOfPlayersHighscore[i+1].score
+                    listOfPlayersHighscore[i+1].score = temp
 
                     swap = true
                 }
             }
         }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //Tar rätt person från vår lista
+        val name = listOfPlayersHighscore[position]
+        holder.scoreOfPlayer.text = name.score.toString()
+        holder.nameOfPlayer.text = name.name
     }
 }

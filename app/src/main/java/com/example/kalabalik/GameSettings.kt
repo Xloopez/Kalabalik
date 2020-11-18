@@ -1,13 +1,15 @@
 package com.example.kalabalik
 
-import android.text.Editable
 import android.util.Log
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
 
 object GameSettings {
 
     var playerCount: Int = 0
-    var amountOfRounds: Int = 6
+    var amountOfRounds: Int = 4
     var listOfPlayers: MutableList<Player> = mutableListOf()
+    var listOfPlayersHighscore: List<Item> = listOf()
     //var listOfPlayerPoints: MutableList<Player> = mutableListOf()
 
     fun addPlayerToList(name: String){
@@ -23,4 +25,22 @@ object GameSettings {
         Log.d("!!!", "POÄNG $points")
         listOfPlayers[counter].points += points
     }
+
+    /*fun highestScoreSorted(){
+        var swap = true
+
+        while(swap){
+            swap = false
+
+            for( i in 1 until listOfPlayers.size-1) {
+                if (listOfPlayers[i].points < listOfPlayers[i+1].points){
+                    var temp = listOfPlayers[i].points
+                    listOfPlayers[i].points = listOfPlayers[i+1].points
+                    listOfPlayers[i+1].points = temp
+
+                    swap = true
+                }
+            }
+        }
+    }*/
 }
