@@ -20,12 +20,17 @@ class HighScoreActivity : AppCompatActivity(), CoroutineScope {
 
     lateinit var replayBtn: Button
 
-    private lateinit var job: Job
+    lateinit var recyclerView: RecyclerView
 
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+    lateinit var job: Job
+    //private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private lateinit var db : AppDatabase //Klassen som vi skapade
 
+    //var playerList: PlayerList? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +41,10 @@ class HighScoreActivity : AppCompatActivity(), CoroutineScope {
         //applicationcontext = Hela appen, inte bara den här klassen (this)
         //fallbackToDestructiveMigration() = förstör den gamla datan om vi skapar en ny data -
         //Om man ändrar strukturen på hur datan ska lagras så raderas den gamla
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "high-score-list")
-            .fallbackToDestructiveMigration().build()
+        db = AppDatabase.getInstance(this)
 
         //Letar efter vår recyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView = findViewById(R.id.recyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -56,28 +60,8 @@ class HighScoreActivity : AppCompatActivity(), CoroutineScope {
             playAgain(this)
         }
 
-
-
-        for (i in 0..GameSettings.listOfPlayers.size) {
-            val item = Item(0, GameSettings.listOfPlayers[i].name, GameSettings.listOfPlayers[i].points)
-            saveItem(item)
-        }
-
-        val listOfScoreFromDb = loadAll()
-
-        GlobalScope.launch(Dispatchers.Main) {
-            //Vi tar listan och väntar på den
-            val itemsList = listOfScoreFromDb.await()
-
-            GameSettings.listOfPlayersHighscore = itemsList
-
-            for (item in itemsList) {
-                Log.d("!!!", "item: $item")
-            }
-
-            //GameSettings.listOfPlayersHighscore = listOfScoreFromDb
-
-        }
+        for (player in GameSettings.listOfPlayers)
+            savePlayer(player)
     }
 
     override fun onResume() {
@@ -91,7 +75,7 @@ class HighScoreActivity : AppCompatActivity(), CoroutineScope {
         this.finishActivity(0)
     }
 
-    fun saveItem(item: Item) {
+    fun savePlayer(player: Player) {
         //Den här raden kmr ta tid och blocka och istället vill vi starta en coorutin som låtr detta göras parallelt
         //Man kan starta en coorutin genom att göra en launch eller async
         //Launch skapar man bara en corutin som gör vad den vill och man bryr sig inte om att få tillbaka någonting
@@ -104,18 +88,7 @@ class HighScoreActivity : AppCompatActivity(), CoroutineScope {
         //VI vill att det inte ska köras på huvudtråden utan i dispatchers.IO
 
         GlobalScope.launch (Dispatchers.IO) {
-            db.itemDao().insert(item)
+            db.playerDao.insert(player)
         }
     }
-
-    fun loadAll() : Deferred<List<Item>> =
-        //Nu vill jag ha tillbaka något och jag skriver async
-        //Kmr göras paralellt med det andra
-        GlobalScope.async (Dispatchers.IO){
-            db.itemDao().getAll()
-
-    }
-
-
-
 }

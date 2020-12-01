@@ -5,22 +5,22 @@
     android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#00F8F8F5">
+    android:background="#36FFEB3B">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#56FFEB3B"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="#56FFEB3B"
         app:cardCornerRadius="4dp"
         app:cardElevation="1dp"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="10dp">
+
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF">
+            android:background="#DDF6F5F5">
 
             <TextView
                 android:id="@+id/scoreOfPlayer"

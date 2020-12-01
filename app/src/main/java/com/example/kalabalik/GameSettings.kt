@@ -9,12 +9,11 @@ object GameSettings {
     var playerCount: Int = 0
     var amountOfRounds: Int = 4
     var listOfPlayers: MutableList<Player> = mutableListOf()
-    var listOfPlayersHighscore: List<Item> = listOf()
+    var listOfPlayersHighscore: MutableList<Player> = mutableListOf()
     //var listOfPlayerPoints: MutableList<Player> = mutableListOf()
 
     fun addPlayerToList(name: String){
-        //var name = Player(name = playerName)
-        listOfPlayers.add(Player(name))
+        listOfPlayers.add(Player(0, name, 0))
     }
     fun addPointsToPlayer(counter: Int, points: Int){
         Log.d("!!!", "POÄNG $points")
@@ -25,22 +24,21 @@ object GameSettings {
         Log.d("!!!", "POÄNG $points")
         listOfPlayers[counter].points += points
     }
-
-    /*fun highestScoreSorted(){
+    fun highestScoreSorted(listOfPlayer: MutableList<Player>){
         var swap = true
 
         while(swap){
             swap = false
 
-            for( i in 1 until listOfPlayers.size-1) {
-                if (listOfPlayers[i].points < listOfPlayers[i+1].points){
-                    var temp = listOfPlayers[i].points
-                    listOfPlayers[i].points = listOfPlayers[i+1].points
-                    listOfPlayers[i+1].points = temp
+            for( i in 0 until listOfPlayer.size-1) {
+                if (listOfPlayer[i].points < listOfPlayer[i+1].points){
+                    var temp = listOfPlayer[i].points
+                    listOfPlayer[i].points = listOfPlayer[i+1].points
+                    listOfPlayer[i+1].points = temp
 
                     swap = true
                 }
             }
         }
-    }*/
+    }
 }

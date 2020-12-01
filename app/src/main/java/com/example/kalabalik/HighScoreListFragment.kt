@@ -15,11 +15,9 @@ import kotlinx.android.synthetic.main.activity_high_score.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class HighScoreListFragment: Fragment() {
+class HighScoreListFragment: Fragment(){
 
-    lateinit var highScoreRecyclerView: RecyclerView
-
-    //lateinit var list: MutableList<Player>
+    var highScoreRecyclerView: RecyclerView? = null
 
 
     override fun onCreateView(
@@ -28,41 +26,10 @@ class HighScoreListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        /*highScoreRecyclerView = view?.findViewById(R.id.fragmentRecyclerView)!!
-
-        job = Job()
-
-       // db = Room.databaseBuilder(getActivity()?.applicationContext!!, AppDatabase::class.java, "high-score-list")
-       //     .fallbackToDestructiveMigration().build()
-
-        dataB = getActivity()?.applicationContext?.let {
-            Room.databaseBuilder(it, AppDatabase::class.java, "high-score-list")
-                .fallbackToDestructiveMigration().build()
-        }!!
-
-
-        //Letar efter min highscore-recyclerView
-        highScoreRecyclerView = view?.findViewById<RecyclerView>(R.id.fragmentRecyclerView)!!
-        highScoreRecyclerView?.layoutManager = LinearLayoutManager(context)
-
-        //Skapar vår adapter
-        val adapter = context?.let { HighScoreViewAdapter(it, GameSettings.listOfPlayers) }
-
-        //Kopplar recyclerViewn med adaptern
-        highScoreRecyclerView?.adapter = adapter
-
-        //val player1 = Player("Nicole", 10)
-        //GameSettings.listOfPlayers.add(player1)
-
-        //val itemPlayer = Item(0, GameSettings.listOfPlayers[0].name, GameSettings.listOfPlayers[0].points)
-        //saveItem(itemPlayer)*/
-
-        //Letar efter min highscore-recyclerView
-
         return inflater.inflate(R.layout.fragment_high_score_list, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    fun recyclerView () {
         highScoreRecyclerView = view?.findViewById(R.id.fragmentRecyclerView)!!
 
 
@@ -71,21 +38,15 @@ class HighScoreListFragment: Fragment() {
         highScoreRecyclerView?.layoutManager = LinearLayoutManager(context)
 
         //Skapar vår adapter
-        val adapter = context?.let { HighScoreFragmentAdapter(it, GameSettings.listOfPlayersHighscore) }
+        val adapter = context?.let { HighScoreViewAdapter(it, GameSettings.listOfPlayersHighscore) }
 
         //Kopplar recyclerViewn med adaptern
         highScoreRecyclerView?.adapter = adapter
-
-        //val player1 = Player("Nicole", 10)
-        //GameSettings.listOfPlayers.add(player1)
-
-
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onResume() {
         super.onResume()
 
-        highScoreRecyclerView.adapter?.notifyDataSetChanged()
+        highScoreRecyclerView?.adapter?.notifyDataSetChanged()
     }
 }

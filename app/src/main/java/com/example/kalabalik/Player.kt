@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
+@Entity
 class Player(
-    var name: String = "",
-    var points: Int = 0,
-    //var listOfPlayerNamePoints: MutableList<Int> = mutableListOf()
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "points") var points: Int
 )

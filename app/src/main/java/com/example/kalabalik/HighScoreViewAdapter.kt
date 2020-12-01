@@ -25,7 +25,7 @@ class HighScoreViewAdapter (
     ): ViewHolder {
         val itemView = layoutInflater.inflate(R.layout.high_score_list_item, parent, false)
 
-        highestScoreSorted()
+        GameSettings.highestScoreSorted(listOfPlayer)
         //GameSettings.highestScoreSorted()
 
         return ViewHolder(itemView)
@@ -50,13 +50,13 @@ class HighScoreViewAdapter (
 
 
     }
-    fun highestScoreSorted(){
+    /*fun highestScoreSorted(){
         var swap = true
 
         while(swap){
             swap = false
 
-            for( i in 1 until listOfPlayer.size-1) {
+            for( i in 0 until listOfPlayer.size-1) {
                 if (listOfPlayer[i].points < listOfPlayer[i+1].points){
                     var temp = listOfPlayer[i].points
                     listOfPlayer[i].points = listOfPlayer[i+1].points
@@ -66,5 +66,5 @@ class HighScoreViewAdapter (
                 }
             }
         }
-    }
+    }*/
 }
